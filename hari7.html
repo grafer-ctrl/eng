@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .app-container { width: 100%; max-width: 500px; }
+
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Andi</h2><p id="sessionCounter">Sesi 1 / 10</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `How do you spell your name?`, pId: () => `Bagaimana cara mengeja namamu?`, aEn: () => `A-L-E-X.`, aId: () => `A-L-E-X.` },
+  { pEn: () => `What is the first letter of your name?`, pId: () => `Apa huruf pertama namamu?`, aEn: () => `It's J.`, aId: () => `Huruf J.` },
+  { pEn: () => `How many letters are in your name?`, pId: () => `Ada berapa huruf di namamu?`, aEn: () => `Five letters.`, aId: () => `Lima huruf.` },
+  { pEn: () => `Can you spell "cat"?`, pId: () => `Bisa eja "kucing"?`, aEn: () => `C-A-T.`, aId: () => `C-A-T.` },
+  { pEn: () => `What letter comes after A?`, pId: () => `Huruf apa setelah A?`, aEn: () => `B.`, aId: () => `B.` },
+  { pEn: () => `What letter comes before C?`, pId: () => `Huruf apa sebelum C?`, aEn: () => `B.`, aId: () => `B.` },
+  { pEn: () => `Is your name long or short?`, pId: () => `Namamu panjang atau pendek?`, aEn: () => `It's short, only 3 letters.`, aId: () => `Pendek, cuma 3 huruf.` },
+  { pEn: () => `How do you spell "dog"?`, pId: () => `Bagaimana ejaan "anjing"?`, aEn: () => `D-O-G.`, aId: () => `D-O-G.` },
+  { pEn: () => `What is the last letter of the alphabet?`, pId: () => `Apa huruf terakhir dari alfabet?`, aEn: () => `Z.`, aId: () => `Z.` },
+  { pEn: () => `What is the first letter of the alphabet?`, pId: () => `Apa huruf pertama dari alfabet?`, aEn: () => `A.`, aId: () => `A.` },
+  { pEn: () => `Does your name start with a vowel?`, pId: () => `Apakah namamu dimulai dengan huruf vokal?`, aEn: () => `Yes, it starts with E.`, aId: () => `Iya, dimulai dengan E.` },
+  { pEn: () => `How do you spell "sun"?`, pId: () => `Bagaimana ejaan "matahari"?`, aEn: () => `S-U-N.`, aId: () => `S-U-N.` },
+  { pEn: () => `What is your favorite letter?`, pId: () => `Apa huruf favoritmu?`, aEn: () => `I like the letter M.`, aId: () => `Aku suka huruf M.` },
+  { pEn: () => `Can you spell "fish"?`, pId: () => `Bisa eja "ikan"?`, aEn: () => `F-I-S-H.`, aId: () => `F-I-S-H.` },
+  { pEn: () => `How many vowels are in the alphabet?`, pId: () => `Ada berapa huruf vokal dalam alfabet?`, aEn: () => `Five: A, E, I, O, U.`, aId: () => `Lima: A, E, I, O, U.` },
+  { pEn: () => `What letter is in the middle of the alphabet?`, pId: () => `Huruf apa yang di tengah alfabet?`, aEn: () => `M and N.`, aId: () => `M dan N.` },
+  { pEn: () => `How do you spell your city name?`, pId: () => `Bagaimana ejaan nama kotamu?`, aEn: () => `N-E-W Y-O-R-K.`, aId: () => `N-E-W Y-O-R-K.` },
+  { pEn: () => `Does your name have the letter R?`, pId: () => `Apakah namamu memiliki huruf R?`, aEn: () => `Yes, it has two R's.`, aId: () => `Iya, ada dua R.` },
+  { pEn: () => `Can you spell "bird"?`, pId: () => `Bisa eja "burung"?`, aEn: () => `B-I-R-D.`, aId: () => `B-I-R-D.` },
+  { pEn: () => `What letter looks like a circle?`, pId: () => `Huruf apa yang terlihat seperti lingkaran?`, aEn: () => `O.`, aId: () => `O.` },
+  { pEn: () => `How do you spell "love"?`, pId: () => `Bagaimana ejaan "cinta"?`, aEn: () => `L-O-V-E.`, aId: () => `L-O-V-E.` },
+  { pEn: () => `What is the 10th letter of the alphabet?`, pId: () => `Apa huruf ke-10 dari alfabet?`, aEn: () => `J.`, aId: () => `J.` },
+  { pEn: () => `Can you spell your best friend's name?`, pId: () => `Bisa eja nama teman terbaikmu?`, aEn: () => `S-A-R-A-H.`, aId: () => `S-A-R-A-H.` },
+  { pEn: () => `Does your name end with a consonant?`, pId: () => `Apakah namamu berakhir dengan konsonan?`, aEn: () => `Yes, it ends with N.`, aId: () => `Iya, berakhir dengan N.` },
+  { pEn: () => `How do you spell "tree"?`, pId: () => `Bagaimana ejaan "pohon"?`, aEn: () => `T-R-E-E.`, aId: () => `T-R-E-E.` },
+  { pEn: () => `What letter is silent in "knife"?`, pId: () => `Huruf apa yang diam di kata "knife"?`, aEn: () => `K is silent.`, aId: () => `K tidak dibaca.` },
+  { pEn: () => `Can you spell "moon"?`, pId: () => `Bisa eja "bulan"?`, aEn: () => `M-O-O-N.`, aId: () => `M-O-O-N.` },
+  { pEn: () => `What is the shortest letter name?`, pId: () => `Apa nama huruf terpendek?`, aEn: () => `B, C, D, G, P, T, V, Z — one syllable.`, aId: () => `B, C, D, G, P, T, V, Z — satu suku kata.` },
+  { pEn: () => `How do you spell "happy"?`, pId: () => `Bagaimana ejaan "bahagia"?`, aEn: () => `H-A-P-P-Y.`, aId: () => `H-A-P-P-Y.` },
+  { pEn: () => `What letter is between K and M?`, pId: () => `Huruf apa yang berada di antara K dan M?`, aEn: () => `L.`, aId: () => `L.` },
+  { pEn: () => `Does your name have double letters?`, pId: () => `Apakah namamu memiliki huruf ganda?`, aEn: () => `Yes, like Anna has double N.`, aId: () => `Iya, seperti Anna punya N ganda.` },
+  { pEn: () => `Can you spell "flower"?`, pId: () => `Bisa eja "bunga"?`, aEn: () => `F-L-O-W-E-R.`, aId: () => `F-L-O-W-E-R.` },
+  { pEn: () => `What is the 1st letter of "Indonesia"?`, pId: () => `Apa huruf pertama dari "Indonesia"?`, aEn: () => `I.`, aId: () => `I.` },
+  { pEn: () => `How do you spell "blue"?`, pId: () => `Bagaimana ejaan "biru"?`, aEn: () => `B-L-U-E.`, aId: () => `B-L-U-E.` },
+  { pEn: () => `What letter is most common in English?`, pId: () => `Huruf apa yang paling umum dalam bahasa Inggris?`, aEn: () => `E.`, aId: () => `E.` },
+  { pEn: () => `Can you spell your mom's name?`, pId: () => `Bisa eja nama ibumu?`, aEn: () => `M-A-R-I-A.`, aId: () => `M-A-R-I-A.` },
+  { pEn: () => `How do you spell "water"?`, pId: () => `Bagaimana ejaan "air"?`, aEn: () => `W-A-T-E-R.`, aId: () => `W-A-T-E-R.` },
+  { pEn: () => `What letter is never silent?`, pId: () => `Huruf apa yang tidak pernah diam?`, aEn: () => `B is sometimes silent, V is never silent.`, aId: () => `B kadang diam, V tidak pernah diam.` },
+  { pEn: () => `Does the alphabet have 26 letters?`, pId: () => `Apakah alfabet memiliki 26 huruf?`, aEn: () => `Yes, that's correct.`, aId: () => `Ya, benar.` },
+  { pEn: () => `How do you spell "fire"?`, pId: () => `Bagaimana ejaan "api"?`, aEn: () => `F-I-R-E.`, aId: () => `F-I-R-E.` },
+  { pEn: () => `What is the last letter of your name?`, pId: () => `Apa huruf terakhir dari namamu?`, aEn: () => `It's N.`, aId: () => `Huruf N.` },
+  { pEn: () => `Can you spell "house"?`, pId: () => `Bisa eja "rumah"?`, aEn: () => `H-O-U-S-E.`, aId: () => `H-O-U-S-E.` },
+  { pEn: () => `What letter is in "cat" but not in "dog"?`, pId: () => `Huruf apa yang ada di "cat" tapi tidak ada di "dog"?`, aEn: () => `C, A, T.`, aId: () => `C, A, T.` },
+  { pEn: () => `How do you spell "star"?`, pId: () => `Bagaimana ejaan "bintang"?`, aEn: () => `S-T-A-R.`, aId: () => `S-T-A-R.` },
+  { pEn: () => `Do you know the alphabet song?`, pId: () => `Kamu tahu lagu alfabet?`, aEn: () => `Yes, A-B-C-D-E-F-G...`, aId: () => `Iya, A-B-C-D-E-F-G...` },
+  { pEn: () => `What is the 5th letter?`, pId: () => `Apa huruf ke-5?`, aEn: () => `E.`, aId: () => `E.` },
+  { pEn: () => `Can you spell "school"?`, pId: () => `Bisa eja "sekolah"?`, aEn: () => `S-C-H-O-O-L.`, aId: () => `S-C-H-O-O-L.` },
+  { pEn: () => `Is your name easy to spell?`, pId: () => `Apakah namamu mudah dieja?`, aEn: () => `Yes, it's very easy.`, aId: () => `Iya, sangat mudah.` },
+  { pEn: () => `How do you spell "green"?`, pId: () => `Bagaimana ejaan "hijau"?`, aEn: () => `G-R-E-E-N.`, aId: () => `G-R-E-E-N.` },
+  { pEn: () => `What letter looks like number 1?`, pId: () => `Huruf apa yang terlihat seperti angka 1?`, aEn: () => `I or l (lowercase L).`, aId: () => `I atau l (L kecil).` },
+  { pEn: () => `Can you spell "phone"?`, pId: () => `Bisa eja "telepon"?`, aEn: () => `P-H-O-N-E.`, aId: () => `P-H-O-N-E.` },
+  { pEn: () => `What is the 15th letter?`, pId: () => `Apa huruf ke-15?`, aEn: () => `O.`, aId: () => `O.` },
+  { pEn: () => `How do you spell "cloud"?`, pId: () => `Bagaimana ejaan "awan"?`, aEn: () => `C-L-O-U-D.`, aId: () => `C-L-O-U-D.` },
+  { pEn: () => `Does your name have the letter Y?`, pId: () => `Apakah namamu memiliki huruf Y?`, aEn: () => `No, my name has no Y.`, aId: () => `Tidak, namaku tidak ada Y.` },
+  { pEn: () => `Can you spell "light"?`, pId: () => `Bisa eja "cahaya"?`, aEn: () => `L-I-G-H-T.`, aId: () => `L-I-G-H-T.` },
+  { pEn: () => `What letter is in "boy" but not in "girl"?`, pId: () => `Huruf apa yang ada di "boy" tapi tidak di "girl"?`, aEn: () => `B, O, Y.`, aId: () => `B, O, Y.` },
+  { pEn: () => `How do you spell "bread"?`, pId: () => `Bagaimana ejaan "roti"?`, aEn: () => `B-R-E-A-D.`, aId: () => `B-R-E-A-D.` },
+  { pEn: () => `What is your name backwards?`, pId: () => `Apa namamu jika dibalik?`, aEn: () => `X-E-L-A.`, aId: () => `X-E-L-A.` },
+  { pEn: () => `Can you spell "earth"?`, pId: () => `Bisa eja "bumi"?`, aEn: () => `E-A-R-T-H.`, aId: () => `E-A-R-T-H.` },
+  { pEn: () => `What letter is always in "question"?`, pId: () => `Huruf apa yang selalu ada di "question"?`, aEn: () => `Q and U.`, aId: () => `Q dan U.` },
+  { pEn: () => `How do you spell "dream"?`, pId: () => `Bagaimana ejaan "mimpi"?`, aEn: () => `D-R-E-A-M.`, aId: () => `D-R-E-A-M.` },
+  { pEn: () => `Is the letter Z pronounced "zee" or "zed"?`, pId: () => `Apakah huruf Z diucapkan "zee" atau "zed"?`, aEn: () => `In the US it's "zee", in the UK it's "zed".`, aId: () => `Di Amerika "zee", di Inggris "zed".` },
+  { pEn: () => `Can you spell "strong"?`, pId: () => `Bisa eja "kuat"?`, aEn: () => `S-T-R-O-N-G.`, aId: () => `S-T-R-O-N-G.` },
+  { pEn: () => `What letter is the 25th?`, pId: () => `Apa huruf ke-25?`, aEn: () => `Y.`, aId: () => `Y.` },
+  { pEn: () => `How do you spell "mouse"?`, pId: () => `Bagaimana ejaan "tikus"?`, aEn: () => `M-O-U-S-E.`, aId: () => `M-O-U-S-E.` },
+  { pEn: () => `Does your name have more vowels or consonants?`, pId: () => `Apakah namamu lebih banyak vokal atau konsonan?`, aEn: () => `More consonants.`, aId: () => `Lebih banyak konsonan.` },
+  { pEn: () => `Can you spell "beautiful"?`, pId: () => `Bisa eja "cantik"?`, aEn: () => `B-E-A-U-T-I-F-U-L.`, aId: () => `B-E-A-U-T-I-F-U-L.` },
+  { pEn: () => `What letter is the 3rd in "alphabet"?`, pId: () => `Huruf apa yang ke-3 dalam kata "alphabet"?`, aEn: () => `P.`, aId: () => `P.` },
+  { pEn: () => `How do you spell "snake"?`, pId: () => `Bagaimana ejaan "ular"?`, aEn: () => `S-N-A-K-E.`, aId: () => `S-N-A-K-E.` },
+  { pEn: () => `Can you spell your country name?`, pId: () => `Bisa eja nama negaramu?`, aEn: () => `I-N-D-O-N-E-S-I-A.`, aId: () => `I-N-D-O-N-E-S-I-A.` },
+  { pEn: () => `What is the 20th letter?`, pId: () => `Apa huruf ke-20?`, aEn: () => `T.`, aId: () => `T.` },
+  { pEn: () => `How do you spell "laugh"?`, pId: () => `Bagaimana ejaan "tertawa"?`, aEn: () => `L-A-U-G-H.`, aId: () => `L-A-U-G-H.` },
+  { pEn: () => `Does your name start with the same letter as your city?`, pId: () => `Apakah namamu dimulai dengan huruf yang sama dengan kotamu?`, aEn: () => `Yes, both start with S.`, aId: () => `Iya, sama-sama S.` },
+  { pEn: () => `Can you spell "friend"?`, pId: () => `Bisa eja "teman"?`, aEn: () => `F-R-I-E-N-D.`, aId: () => `F-R-I-E-N-D.` },
+  { pEn: () => `What is the 12th letter?`, pId: () => `Apa huruf ke-12?`, aEn: () => `L.`, aId: () => `L.` },
+  { pEn: () => `How do you spell "night"?`, pId: () => `Bagaimana ejaan "malam"?`, aEn: () => `N-I-G-H-T.`, aId: () => `N-I-G-H-T.` },
+  { pEn: () => `Is the alphabet the same in every language?`, pId: () => `Apakah alfabet sama di setiap bahasa?`, aEn: () => `No, different languages have different alphabets.`, aId: () => `Tidak, setiap bahasa punya alfabet berbeda.` },
+  { pEn: () => `Can you spell "orange"?`, pId: () => `Bisa eja "jeruk"?`, aEn: () => `O-R-A-N-G-E.`, aId: () => `O-R-A-N-G-E.` },
+  { pEn: () => `What letter is in "mother" but not in "father"?`, pId: () => `Huruf apa yang ada di "mother" tapi tidak di "father"?`, aEn: () => `M, O, E.`, aId: () => `M, O, E.` },
+  { pEn: () => `How do you spell "peace"?`, pId: () => `Bagaimana ejaan "damai"?`, aEn: () => `P-E-A-C-E.`, aId: () => `P-E-A-C-E.` },
+  { pEn: () => `What is the longest letter name?`, pId: () => `Apa nama huruf terpanjang?`, aEn: () => `W — "double-u" has 3 syllables.`, aId: () => `W — "double-u" punya 3 suku kata.` },
+  { pEn: () => `Can you spell "world"?`, pId: () => `Bisa eja "dunia"?`, aEn: () => `W-O-R-L-D.`, aId: () => `W-O-R-L-D.` },
+  { pEn: () => `What is the 8th letter?`, pId: () => `Apa huruf ke-8?`, aEn: () => `H.`, aId: () => `H.` },
+  { pEn: () => `How do you spell "smart"?`, pId: () => `Bagaimana ejaan "pintar"?`, aEn: () => `S-M-A-R-T.`, aId: () => `S-M-A-R-T.` },
+  { pEn: () => `Does your nickname have fewer letters?`, pId: () => `Apakah nama panggilanmu memiliki lebih sedikit huruf?`, aEn: () => `Yes, my nickname is just 2 letters.`, aId: () => `Iya, nama panggilanku cuma 2 huruf.` },
+  { pEn: () => `Can you spell "queen"?`, pId: () => `Bisa eja "ratu"?`, aEn: () => `Q-U-E-E-N.`, aId: () => `Q-U-E-E-N.` },
+  { pEn: () => `What letter is most rare in English?`, pId: () => `Huruf apa yang paling jarang dalam bahasa Inggris?`, aEn: () => `Z and Q are rare.`, aId: () => `Z dan Q jarang.` },
+  { pEn: () => `How do you spell "space"?`, pId: () => `Bagaimana ejaan "ruang angkasa"?`, aEn: () => `S-P-A-C-E.`, aId: () => `S-P-A-C-E.` },
+  { pEn: () => `Can you spell your favorite word?`, pId: () => `Bisa eja kata favoritmu?`, aEn: () => `Yes, F-R-E-E-D-O-M.`, aId: () => `Iya, F-R-E-E-D-O-M.` },
+  { pEn: () => `What is the 18th letter?`, pId: () => `Apa huruf ke-18?`, aEn: () => `R.`, aId: () => `R.` },
+  { pEn: () => `How do you spell "faith"?`, pId: () => `Bagaimana ejaan "iman"?`, aEn: () => `F-A-I-T-H.`, aId: () => `F-A-I-T-H.` },
+  { pEn: () => `Do you like spelling bees?`, pId: () => `Kamu suka lomba eja?`, aEn: () => `Yes, they are fun.`, aId: () => `Iya, seru.` },
+  { pEn: () => `Can you spell "honest"?`, pId: () => `Bisa eja "jujur"?`, aEn: () => `H-O-N-E-S-T. The H is silent.`, aId: () => `H-O-N-E-S-T. H-nya tidak dibaca.` },
+  { pEn: () => `What is the 22nd letter?`, pId: () => `Apa huruf ke-22?`, aEn: () => `V.`, aId: () => `V.` },
+  { pEn: () => `How do you spell "power"?`, pId: () => `Bagaimana ejaan "kekuatan"?`, aEn: () => `P-O-W-E-R.`, aId: () => `P-O-W-E-R.` },
+  { pEn: () => `Does your name sound like a letter?`, pId: () => `Apakah namamu terdengar seperti nama huruf?`, aEn: () => `Yes, Jay sounds like J.`, aId: () => `Iya, Jay terdengar seperti J.` },
+  { pEn: () => `Can you spell "thank you"?`, pId: () => `Bisa eja "terima kasih"?`, aEn: () => `T-H-A-N-K Y-O-U.`, aId: () => `T-H-A-N-K Y-O-U.` },
+  { pEn: () => `What is the 26th letter?`, pId: () => `Apa huruf ke-26?`, aEn: () => `Z.`, aId: () => `Z.` },
+  { pEn: () => `How do you spell "young"?`, pId: () => `Bagaimana ejaan "muda"?`, aEn: () => `Y-O-U-N-G.`, aId: () => `Y-O-U-N-G.` },
+  { pEn: () => `Can you spell your full name?`, pId: () => `Bisa eja nama lengkapmu?`, aEn: () => `J-O-H-N S-M-I-T-H.`, aId: () => `J-O-H-N S-M-I-T-H.` }
+];
+  // ===[AKHIR TANDA] ===
+
+  let current = 0;
+  let voices =[];
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
+
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
+</body>
+</html>
