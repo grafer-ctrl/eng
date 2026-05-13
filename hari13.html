@@ -16,32 +16,26 @@
         * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* Header Modern */
         header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
         .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
         .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
 
-        /* Screen */
         .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
 
-        /* Label Tugas Baru */
         .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-        
         .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
         .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
         
         .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
-
         #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
         #btn-reveal.hidden { display: none; }
 
         .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
         .answer-area.visible { display: block; }
-
         .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
         .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
         .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
@@ -54,7 +48,7 @@
 
     <header>
         <h1 class="app-title">Aktif Bertanya</h1>
-        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya, karena sejak kecil kita selalu diajarkan menjawab soal.</p>
+        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya.</p>
     </header>
 
     <div id="screen-settings" class="screen active">
@@ -63,6 +57,10 @@
             <div style="text-align: left; margin: 20px 0;">
                 <label>Volume: <span id="val-volume">240</span></label>
                 <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
+            </div>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Timer Jeda (Max 120s): <span id="val-timer">10</span>s</label>
+                <input type="range" id="input-timer" min="5" max="120" step="1" value="10" style="width:100%">
             </div>
             <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
         </div>
@@ -202,8 +200,14 @@
 ];
 
         let currentIndex = 0;
-        let appSettings = { volume: 0.8 };
+        let timerInterval;
+        let timeLeft = 10;
         const synth = window.speechSynthesis;
+
+        // Update display slider
+        document.getElementById('input-timer').addEventListener('input', function() {
+            document.getElementById('val-timer').innerText = this.value;
+        });
 
         function navTo(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -212,16 +216,33 @@
         }
 
         function startChallenge() {
+            clearInterval(timerInterval);
             synth.cancel();
+            
             const data = database[currentIndex];
+            timeLeft = parseInt(document.getElementById('input-timer').value);
+            
             document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
+            document.getElementById('timer-display').innerText = timeLeft;
             document.getElementById('text-indo').innerText = data.indo;
             document.getElementById('answer-area').classList.remove('visible');
             document.getElementById('btn-reveal').classList.remove('hidden');
+
             speak(data.indo, 'id-ID');
+
+            // Jalankan Timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    revealAnswer();
+                }
+            }, 1000);
         }
 
         function revealAnswer() {
+            clearInterval(timerInterval);
             const data = database[currentIndex];
             document.getElementById('text-en').innerText = data.en;
             document.getElementById('text-phonetic').innerText = data.phonetic;
