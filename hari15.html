@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aktif Bertanya - Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #5154d8;
+            --pink-accent: #ff1a75;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        /* Header Modern */
+        header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
+        .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+        /* Screen */
+        .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
+
+        /* Label Tugas Baru */
+        .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        
+        .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
+        .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
+        
+        .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
+
+        #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
+        #btn-reveal.hidden { display: none; }
+
+        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
+        .answer-area.visible { display: block; }
+
+        .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
+        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
+
+        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; }
+        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="app-title">Aktif Bertanya</h1>
+        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya, karena sejak kecil kita selalu diajarkan menjawab soal.</p>
+    </header>
+
+    <div id="screen-settings" class="screen active">
+        <div class="card">
+            <h3>⚙️ Pengaturan</h3>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Volume: <span id="val-volume">240</span></label>
+                <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
+            </div>
+            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
+        </div>
+    </div>
+
+    <div id="screen-exercise" class="screen">
+        <div class="card">
+            <div class="task-label">Tugas kamu: terjemahkan dan ucapkan dalam B Inggris</div>
+            <div class="btn-progress" id="progress-badge">SOAL 1</div>
+            <div id="timer-display" class="timer-pill">10</div>
+            <div class="challenge-box" id="text-indo">--</div>
+            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
+
+            <div id="answer-area" class="answer-area">
+                <div class="english-text" id="text-en">--</div>
+                <div class="phonetic" id="text-phonetic">--</div>
+                <div class="edu-box"><strong id="text-explanation">--</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="navTo('settings')">Seting</button>
+        <button class="nav-item" onclick="changeQuestion(-1)">Prev</button>
+        <button class="nav-item" onclick="changeQuestion(1)">Next</button>
+    </div>
+
+    <script>
+        const database =[
+            { indo: "Kamu sedang sibuk?", en: "Are you busy?", phonetic: "ar yu bi-zi?", explanation: "Pertanyaan pembuka untuk mengetahui kesediaan lawan bicara." },
+            { indo: "Bolehkah aku bertanya sesuatu?", en: "Can I ask you something?", phonetic: "kan ai ask yu sum-thing?", explanation: "Sopan sebelum mengajukan pertanyaan pribadi." },
+            { indo: "Kamu sendirian di sini?", en: "Are you alone here?", phonetic: "ar yu a-lon hir?", explanation: "Pertanyaan umum di video call random." },
+            { indo: "Dari negara mana kamu?", en: "Which country are you from?", phonetic: "wich kan-tri ar yu from?", explanation: "Variasi dari 'where are you from'." },
+            { indo: "Kamu tinggal di kota atau desa?", en: "Do you live in a city or village?", phonetic: "du yu liv in a si-ti or vi-lij?", explanation: "Menanyakan tipe tempat tinggal." },
+            { indo: "Apakah kamu tinggal bersama orang tua?", en: "Do you live with your parents?", phonetic: "du yu liv wit yor pe-rents?", explanation: "Menanyakan status tinggal." },
+            { indo: "Berapa jumlah saudara kamu?", en: "How many siblings do you have?", phonetic: "haw me-ni sib-lingz du yu hav?", explanation: "Menanyakan jumlah saudara kandung." },
+            { indo: "Kamu anak ke berapa?", en: "Are you the first child?", phonetic: "ar yu de first chayld?", explanation: "Menanyakan urutan kelahiran." },
+            { indo: "Apakah kamu punya kakak laki-laki?", en: "Do you have an older brother?", phonetic: "du yu hav an ol-der bra-ther?", explanation: "Menanyakan saudara laki-laki yang lebih tua." },
+            { indo: "Apakah kamu punya kakak perempuan?", en: "Do you have an older sister?", phonetic: "du yu hav an ol-der sis-ter?", explanation: "Menanyakan saudara perempuan yang lebih tua." },
+            { indo: "Apakah kamu punya adik laki-laki?", en: "Do you have a younger brother?", phonetic: "du yu hav a yung-er bra-ther?", explanation: "Menanyakan saudara laki-laki yang lebih muda." },
+            { indo: "Apakah kamu punya adik perempuan?", en: "Do you have a younger sister?", phonetic: "du yu hav a yung-er sis-ter?", explanation: "Menanyakan saudara perempuan yang lebih muda." },
+            { indo: "Apakah kamu anak tunggal?", en: "Are you an only child?", phonetic: "ar yu an on-li chayld?", explanation: "Menanyakan apakah tidak memiliki saudara." },
+            { indo: "Kamu sekolah di mana?", en: "Where do you go to school?", phonetic: "wer du yu go tu skul?", explanation: "Untuk yang masih pelajar." },
+            { indo: "Kamu kelas berapa?", en: "What grade are you in?", phonetic: "wat greyd ar yu in?", explanation: "Menanyakan tingkatan kelas." },
+            { indo: "Kamu kerja di mana?", en: "Where do you work?", phonetic: "wer du yu werk?", explanation: "Untuk yang sudah bekerja." },
+            { indo: "Apakah kamu menyukai pekerjaanmu?", en: "Do you like your job?", phonetic: "du yu layk yor job?", explanation: "Menanyakan kepuasan kerja." },
+            { indo: "Sudah berapa lama kamu bekerja di sana?", en: "How long have you worked there?", phonetic: "haw long hav yu werkt ther?", explanation: "Menanyakan durasi bekerja." },
+            { indo: "Apakah kamu kuliah?", en: "Are you in college?", phonetic: "ar yu in ko-lij?", explanation: "Menanyakan status mahasiswa." },
+            { indo: "Kamu ambil jurusan apa?", en: "What is your major?", phonetic: "wat iz yor mey-jor?", explanation: "Menanyakan jurusan kuliah." },
+            { indo: "Kamu semester berapa?", en: "What semester are you in?", phonetic: "wat se-mes-ter ar yu in?", explanation: "Menanyakan semester saat ini." },
+            { indo: "Apakah kamu suka sekolah?", en: "Do you like school?", phonetic: "du yu layk skul?", explanation: "Pertanyaan sederhana untuk pelajar." },
+            { indo: "Siapa guru favoritmu?", en: "Who is your favorite teacher?", phonetic: "hu iz yor fey-vor-it ti-cher?", explanation: "Menanyakan sosok guru yang disukai." },
+            { indo: "Apakah kamu suka tugas rumah?", en: "Do you like homework?", phonetic: "du yu layk hom-werk?", explanation: "Pertanyaan yang sering dijawab 'tidak'." },
+            { indo: "Apakah kamu suka ujian?", en: "Do you like exams?", phonetic: "du yu layk eg-zams?", explanation: "Kebanyakan orang tidak suka ujian." },
+            { indo: "Apakah kamu sudah lulus?", en: "Have you graduated?", phonetic: "hav yu gra-ju-ey-ted?", explanation: "Menanyakan kelulusan." },
+            { indo: "Apa cita-citamu dulu?", en: "What was your childhood dream?", phonetic: "wat waz yor chayld-hud drim?", explanation: "Menanyakan impian masa kecil." },
+            { indo: "Apakah kamu suka binatang?", en: "Do you like animals?", phonetic: "du yu layk a-ni-mals?", explanation: "Pertanyaan umum tentang hewan." },
+            { indo: "Apakah kamu punya kucing?", en: "Do you have a cat?", phonetic: "du yu hav e kat?", explanation: "Hewan peliharaan populer." },
+            { indo: "Apakah kamu punya anjing?", en: "Do you have a dog?", phonetic: "du yu hav e dog?", explanation: "Hewan peliharaan populer lainnya." },
+            { indo: "Apa nama hewan peliharaanmu?", en: "What is your pet's name?", phonetic: "wat iz yor pets neym?", explanation: "Menanyakan nama binatang peliharaan." },
+            { indo: "Apakah kamu suka kucing atau anjing?", en: "Do you like cats or dogs?", phonetic: "du yu layk kats or dogz?", explanation: "Pertanyaan pilihan klasik." },
+            { indo: "Apa warna favoritmu?", en: "What's your favorite color?", phonetic: "wats yor fey-vor-it kol-or?", explanation: "Versi singkat dari pertanyaan warna." },
+            { indo: "Apakah kamu suka warna biru?", en: "Do you like blue?", phonetic: "du yu layk blu?", explanation: "Menanyakan preferensi warna spesifik." },
+            { indo: "Apakah kamu suka warna merah?", en: "Do you like red?", phonetic: "du yu layk red?", explanation: "Warna berani." },
+            { indo: "Apakah kamu suka warna hitam?", en: "Do you like black?", phonetic: "du yu layk blak?", explanation: "Warna netral favorit banyak orang." },
+            { indo: "Apakah kamu suka warna putih?", en: "Do you like white?", phonetic: "du yu layk wayt?", explanation: "Warna bersih dan sederhana." },
+            { indo: "Musim apa yang kamu suka?", en: "What season do you like?", phonetic: "wat si-zon du yu layk?", explanation: "Menanyakan preferensi musim." },
+            { indo: "Apakah kamu suka musim panas?", en: "Do you like summer?", phonetic: "du yu layk su-mer?", explanation: "Musim yang hangat." },
+            { indo: "Apakah kamu suka musim hujan?", en: "Do you like rainy season?", phonetic: "du yu layk rey-ni si-zon?", explanation: "Cocok untuk negara tropis seperti Indonesia." },
+            { indo: "Apakah kamu suka angin?", en: "Do you like wind?", phonetic: "du yu layk wind?", explanation: "Menanyakan preferensi cuaca berangin." },
+            { indo: "Apakah kamu suka salju?", en: "Do you like snow?", phonetic: "du yu layk sno?", explanation: "Untuk yang tinggal di negara empat musim." },
+            { indo: "Apakah kamu pernah melihat salju?", en: "Have you ever seen snow?", phonetic: "hav yu ev-er sin sno?", explanation: "Untuk yang dari negara tropis." },
+            { indo: "Apakah kamu suka bermain di luar?", en: "Do you like playing outside?", phonetic: "du yu layk play-ing aut-sayd?", explanation: "Aktivitas luar ruangan." },
+            { indo: "Apakah kamu suka berdiam di rumah?", en: "Do you like staying at home?", phonetic: "du yu layk stey-ing at hom?", explanation: "Kebalikan dari suka keluar." },
+            { indo: "Apa yang kamu lakukan di akhir pekan?", en: "What do you do on weekends?", phonetic: "wat du yu du on wik-ends?", explanation: "Menanyakan aktivitas Sabtu-Minggu." },
+            { indo: "Apakah kamu suka bangun siang?", en: "Do you like waking up late?", phonetic: "du yu layk weyk-ing ap leyt?", explanation: "Kebiasaan di akhir pekan." },
+            { indo: "Apakah kamu suka memasak?", en: "Do you like to cook?", phonetic: "du yu layk tu kuk?", explanation: "Versi lain dari hobi memasak." },
+            { indo: "Masakan apa yang bisa kamu buat?", en: "What food can you make?", phonetic: "wat fud kan yu meyk?", explanation: "Menanyakan kemampuan memasak." },
+            { indo: "Apakah kamu suka mie instan?", en: "Do you like instant noodles?", phonetic: "du yu layk in-stant nu-dels?", explanation: "Makanan favorit banyak orang." },
+            { indo: "Apakah kamu suka nasi goreng?", en: "Do you like fried rice?", phonetic: "du yu layk frayd rays?", explanation: "Makanan khas Indonesia yang terkenal." },
+            { indo: "Apakah kamu suka sate?", en: "Do you like satay?", phonetic: "du yu layk sa-tay?", explanation: "Makanan Indonesia lainnya." },
+            { indo: "Apakah kamu suka pizza?", en: "Do you like pizza?", phonetic: "du yu layk pit-za?", explanation: "Makanan Italia yang populer." },
+            { indo: "Apakah kamu suka hamburger?", en: "Do you like hamburger?", phonetic: "du yu layk ham-bur-ger?", explanation: "Makanan cepat saji." },
+            { indo: "Apakah kamu suka cokelat?", en: "Do you like chocolate?", phonetic: "du yu layk chok-let?", explanation: "Camilan favorit banyak orang." },
+            { indo: "Apakah kamu suka es krim?", en: "Do you like ice cream?", phonetic: "du yu layk ays krim?", explanation: "Makanan penutup yang dingin." },
+            { indo: "Apakah kamu suka permen?", en: "Do you like candy?", phonetic: "du yu layk kan-di?", explanation: "Camilan manis." },
+            { indo: "Apakah kamu suka keripik?", en: "Do you like chips?", phonetic: "du yu layk chips?", explanation: "Camilan asin." },
+            { indo: "Minuman apa yang sering kamu minum?", en: "What drink do you often drink?", phonetic: "wat drink du yu of-en drink?", explanation: "Menanyakan kebiasaan minum." },
+            { indo: "Apakah kamu suka air putih?", en: "Do you like plain water?", phonetic: "du yu layk pleyn wa-ter?", explanation: "Minuman paling sehat." },
+            { indo: "Apakah kamu suka susu?", en: "Do you like milk?", phonetic: "du yu layk milk?", explanation: "Minuman bernutrisi." },
+            { indo: "Apakah kamu suka jus jeruk?", en: "Do you like orange juice?", phonetic: "du yu layk o-renj jus?", explanation: "Jus buah yang populer." },
+            { indo: "Apakah kamu suka teh manis?", en: "Do you like sweet tea?", phonetic: "du yu layk swit ti?", explanation: "Minuman favorit di Indonesia." },
+            { indo: "Apakah kamu suka minuman dingin?", en: "Do you like cold drinks?", phonetic: "du yu layk cold drinks?", explanation: "Pertanyaan preferensi suhu minuman." },
+            { indo: "Apakah kamu suka minuman panas?", en: "Do you like hot drinks?", phonetic: "du yu layk hot drinks?", explanation: "Kebalikan dari dingin." },
+            { indo: "Apakah kamu suka menonton TV?", en: "Do you like watching TV?", phonetic: "du yu layk wot-ching ti-vi?", explanation: "Aktivitas santai." },
+            { indo: "Acara TV apa yang sering kamu tonton?", en: "What TV show do you often watch?", phonetic: "wat ti-vi sho du yu of-en wotch?", explanation: "Menanyakan acara TV favorit." },
+            { indo: "Apakah kamu suka berita?", en: "Do you like news?", phonetic: "du yu layk nyuz?", explanation: "Menanyakan minat terhadap berita." },
+            { indo: "Apakah kamu suka acara olahraga?", en: "Do you like sports shows?", phonetic: "du yu layk sports shoz?", explanation: "Untuk penggemar olahraga." },
+            { indo: "Apakah kamu suka kartun?", en: "Do you like cartoons?", phonetic: "du yu layk kar-tuns?", explanation: "Tontonan untuk semua umur." },
+            { indo: "Apakah kamu suka anime?", en: "Do you like anime?", phonetic: "du yu layk a-ni-mey?", explanation: "Kartun Jepang yang populer." },
+            { indo: "Anime apa yang kamu tonton?", en: "What anime do you watch?", phonetic: "wat a-ni-mey du yu wotch?", explanation: "Menanyakan judul anime." },
+            { indo: "Apakah kamu suka membaca komik?", en: "Do you like reading comics?", phonetic: "du yu layk red-ing ko-miks?", explanation: "Hobi membaca komik." },
+            { indo: "Apakah kamu suka bermain di ponsel?", en: "Do you like playing on your phone?", phonetic: "du yu layk play-ing on yor fon?", explanation: "Aktivitas umum saat ini." },
+            { indo: "Aplikasi apa yang paling sering kamu buka?", en: "What app do you open the most?", phonetic: "wat ap du yu o-pen de most?", explanation: "Menanyakan aplikasi favorit." },
+            { indo: "Apakah kamu suka TikTok?", en: "Do you like TikTok?", phonetic: "du yu layk tik-tok?", explanation: "Platform media sosial populer." },
+            { indo: "Apakah kamu suka Instagram?", en: "Do you like Instagram?", phonetic: "du yu layk in-sta-gram?", explanation: "Media sosial untuk berbagi foto." },
+            { indo: "Apakah kamu suka YouTube?", en: "Do you like YouTube?", phonetic: "du yu layk yu-tub?", explanation: "Platform video." },
+            { indo: "Apa channel YouTube favoritmu?", en: "What is your favorite YouTube channel?", phonetic: "wat iz yor fey-vor-it yu-tub cha-nel?", explanation: "Menanyakan konten kreator favorit." },
+            { indo: "Apakah kamu suka belanja online?", en: "Do you like online shopping?", phonetic: "du yu layk on-layn shop-ing?", explanation: "Kegiatan belanja di internet." },
+            { indo: "Apakah kamu suka musik pop?", en: "Do you like pop music?", phonetic: "du yu layk pop myu-zik?", explanation: "Genre musik populer." },
+            { indo: "Apakah kamu suka musik rock?", en: "Do you like rock music?", phonetic: "du yu layk rok myu-zik?", explanation: "Genre musik yang lebih keras." },
+            { indo: "Apakah kamu suka musik klasik?", en: "Do you like classical music?", phonetic: "du yu layk kla-si-kal myu-zik?", explanation: "Genre musik yang tenang." },
+            { indo: "Apakah kamu suka musik dangdut?", en: "Do you like dangdut music?", phonetic: "du yu layk dang-dut myu-zik?", explanation: "Genre musik khas Indonesia." },
+            { indo: "Bisakah kamu menyanyikan sebuah lagu?", en: "Can you sing a song?", phonetic: "kan yu sing e song?", explanation: "Ajakan bernyanyi." },
+            { indo: "Apakah kamu suka karaoke?", en: "Do you enjoy karaoke?", phonetic: "du yu en-joy ka-ra-o-ke?", explanation: "Versi lain dari suka karaoke." },
+            { indo: "Apakah kamu bisa bermain alat musik?", en: "Can you play a musical instrument?", phonetic: "kan yu pley a myu-zi-kal in-stru-ment?", explanation: "Menanyakan kemampuan musik secara umum." },
+            { indo: "Apakah kamu suka menulis puisi?", en: "Do you like writing poems?", phonetic: "du yu layk ray-ting po-ems?", explanation: "Hobi sastra." },
+            { indo: "Apakah kamu suka fotografi?", en: "Do you like photography?", phonetic: "du yu layk fo-to-gra-fi?", explanation: "Hobi mengambil gambar." },
+            { indo: "Apakah kamu punya kamera?", en: "Do you have a camera?", phonetic: "du yu hav e ka-me-ra?", explanation: "Menanyakan peralatan fotografi." },
+            { indo: "Apakah kamu suka berbelanja?", en: "Do you like shopping?", phonetic: "du yu layk shop-ing?", explanation: "Kegiatan membeli barang." },
+            { indo: "Apakah kamu suka pakaian bagus?", en: "Do you like nice clothes?", phonetic: "du yu layk nays klothz?", explanation: "Minat terhadap fashion." },
+            { indo: "Apa warna pakaian favoritmu?", en: "What is your favorite clothing color?", phonetic: "wat iz yor fey-vor-it klo-thing kol-or?", explanation: "Menanyakan warna baju favorit." },
+            { indo: "Apakah kamu suka topi?", en: "Do you like hats?", phonetic: "du yu layk hats?", explanation: "Aksesoris kepala." },
+            { indo: "Apakah kamu suka sepatu?", en: "Do you like shoes?", phonetic: "du yu layk shuz?", explanation: "Banyak orang suka koleksi sepatu." },
+            { indo: "Apakah kamu sering keluar malam?", en: "Do you often go out at night?", phonetic: "du yu of-en go aut at nayt?", explanation: "Menanyakan kebiasaan malam hari." },
+            { indo: "Apakah kamu suka melihat bintang?", en: "Do you like looking at stars?", phonetic: "du yu layk luk-ing at starz?", explanation: "Aktivitas romantis." },
+            { indo: "Apakah kamu suka bulan?", en: "Do you like the moon?", phonetic: "du yu layk de mun?", explanation: "Pertanyaan sederhana tentang alam." },
+            { indo: "Apakah kamu suka matahari terbit?", en: "Do you like sunrise?", phonetic: "du yu layk sun-rayz?", explanation: "Pemandangan pagi hari." },
+            { indo: "Apakah kamu suka matahari terbenam?", en: "Do you like sunset?", phonetic: "du yu layk sun-set?", explanation: "Pemandangan sore yang indah." },
+            { indo: "Apakah kamu orang yang sabar?", en: "Are you a patient person?", phonetic: "ar yu e pey-shent per-son?", explanation: "Menanyakan kesabaran." },
+            { indo: "Apakah kamu mudah marah?", en: "Do you get angry easily?", phonetic: "du yu get ang-gri i-zi-li?", explanation: "Menanyakan temperamen." },
+            { indo: "Apakah kamu orang yang optimis?", en: "Are you an optimistic person?", phonetic: "ar yu an op-ti-mis-tik per-son?", explanation: "Menanyakan pandangan positif." },
+            { indo: "Apakah kamu suka bercanda?", en: "Do you like joking?", phonetic: "du yu layk jo-king?", explanation: "Menanyakan selera humor." },
+            { indo: "Bisakah kamu membuatku tertawa?", en: "Can you make me laugh?", phonetic: "kan yu meyk mi laf?", explanation: "Ajakan bercanda." },
+            { indo: "Apa hal favoritmu dalam hidup?", en: "What is your favorite thing in life?", phonetic: "wat iz yor fey-vor-it thing in layf?", explanation: "Pertanyaan reflektif sederhana." },
+            { indo: "Terima kasih sudah mengobrol denganku!", en: "Thanks for chatting with me!", phonetic: "thanks for chat-ing wit mi!", explanation: "Ucapan terima kasih untuk menutup obrolan." }
+];
+
+        let currentIndex = 0;
+        let appSettings = { volume: 0.8 };
+        const synth = window.speechSynthesis;
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            if (screenId === 'exercise') startChallenge();
+        }
+
+        function startChallenge() {
+            synth.cancel();
+            const data = database[currentIndex];
+            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
+            document.getElementById('text-indo').innerText = data.indo;
+            document.getElementById('answer-area').classList.remove('visible');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            speak(data.indo, 'id-ID');
+        }
+
+        function revealAnswer() {
+            const data = database[currentIndex];
+            document.getElementById('text-en').innerText = data.en;
+            document.getElementById('text-phonetic').innerText = data.phonetic;
+            document.getElementById('text-explanation').innerText = data.explanation;
+            document.getElementById('answer-area').classList.add('visible');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            speak(data.en, 'en-US');
+        }
+
+        function speak(text, lang) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang;
+            utter.volume = document.getElementById('input-volume').value / 300;
+            synth.speak(utter);
+        }
+
+        function changeQuestion(dir) {
+            currentIndex = (currentIndex + dir + database.length) % database.length;
+            startChallenge();
+        }
+    </script>
+</body>
+</html>
