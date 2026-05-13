@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .app-container { width: 100%; max-width: 500px; }
+
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 100</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `Hi! How's your day going?`, pId: () => `Hai! Bagaimana harimu?`, aEn: () => `Pretty good, thanks for asking!`, aId: () => `Cukup baik, makasih sudah tanya!` },
+  { pEn: () => `What's something good that happened today?`, pId: () => `Ada hal baik apa yang terjadi hari ini?`, aEn: () => `I had a nice breakfast.`, aId: () => `Aku tadi sarapan enak.` },
+  { pEn: () => `Do you prefer morning or night?`, pId: () => `Kamu lebih suka pagi atau malam?`, aEn: () => `Night for sure. It's so peaceful.`, aId: () => `Pasti malam. Sangat tenang.` },
+  { pEn: () => `What's your go-to comfort food?`, pId: () => `Makanan penghibur favoritmu apa?`, aEn: () => `Instant noodles, always.`, aId: () => `Mie instan, selalu.` },
+  { pEn: () => `Do you like rainy days?`, pId: () => `Kamu suka hari hujan?`, aEn: () => `Yes, it's perfect for sleeping.`, aId: () => `Iya, enak buat tidur.` },
+  { pEn: () => `What's the last thing you laughed about?`, pId: () => `Hal terakhir apa yang membuatmu tertawa?`, aEn: () => `A funny video my friend sent me.`, aId: () => `Video lucu yang dikirim temanku.` },
+  { pEn: () => `Do you have any plans for the weekend?`, pId: () => `Ada rencana untuk akhir pekan?`, aEn: () => `Just relaxing at home.`, aId: () => `Cuma santai di rumah.` },
+  { pEn: () => `What's your favorite drink?`, pId: () => `Minuman favoritmu apa?`, aEn: () => `Iced coffee, even when it's cold.`, aId: () => `Kopi dingin, bahkan saat cuaca dingin.` },
+  { pEn: () => `Are you an introvert or extrovert?`, pId: () => `Kamu introvert atau extrovert?`, aEn: () => `Introvert, but I'm trying to talk more.`, aId: () => `Introvert, tapi aku sedang berusaha bicara lebih banyak.` },
+  { pEn: () => `What's something you're looking forward to?`, pId: () => `Apa yang kamu nantikan?`, aEn: () => `The next holiday for sure.`, aId: () => `Pasti liburan berikutnya.` },
+  { pEn: () => `Do you believe in luck?`, pId: () => `Kamu percaya keberuntungan?`, aEn: () => `Sometimes, but hard work is better.`, aId: () => `Kadang, tapi kerja keras lebih baik.` },
+  { pEn: () => `What's your favorite simple pleasure?`, pId: () => `Kesenangan sederhana favoritmu apa?`, aEn: () => `Watching the sunset.`, aId: () => `Melihat matahari terbenam.` },
+  { pEn: () => `Do you like to cook or order food?`, pId: () => `Kamu suka masak atau pesan makanan?`, aEn: () => `Order food, I'm lazy.`, aId: () => `Pesan makanan, aku malas.` },
+  { pEn: () => `What's your favorite season?`, pId: () => `Musim favoritmu apa?`, aEn: () => `Autumn, because the weather is nice.`, aId: () => `Musim gugur, karena cuacanya bagus.` },
+  { pEn: () => `Do you collect anything?`, pId: () => `Apa kamu mengoleksi sesuatu?`, aEn: () => `Stickers and keychains.`, aId: () => `Stiker dan gantungan kunci.` },
+  { pEn: () => `What's your favorite smell?`, pId: () => `Aroma favoritmu apa?`, aEn: () => `Fresh bread or coffee.`, aId: () => `Roti segar atau kopi.` },
+  { pEn: () => `Do you like trying new things?`, pId: () => `Kamu suka mencoba hal baru?`, aEn: () => `Yes, but I'm a little nervous at first.`, aId: () => `Iya, tapi agak gugup di awal.` },
+  { pEn: () => `What's your favorite social media?`, pId: () => `Media sosial favoritmu apa?`, aEn: () => `YouTube for learning and fun.`, aId: () => `YouTube buat belajar dan hiburan.` },
+  { pEn: () => `Do you prefer phone calls or texts?`, pId: () => `Kamu lebih suka telepon atau chat?`, aEn: () => `Texts, calls make me nervous.`, aId: () => `Chat, telepon bikin gugup.` },
+  { pEn: () => `What's something you're good at?`, pId: () => `Apa yang kamu kuasai?`, aEn: () => `Listening to people.`, aId: () => `Mendengarkan orang.` },
+  { pEn: () => `Do you like art or music more?`, pId: () => `Kamu lebih suka seni atau musik?`, aEn: () => `Music, it helps me feel emotions.`, aId: () => `Musik, membantu merasakan emosi.` },
+  { pEn: () => `What's your favorite room in your house?`, pId: () => `Ruangan favorit di rumahmu?`, aEn: () => `My bedroom, it's cozy.`, aId: () => `Kamarku, nyaman.` },
+  { pEn: () => `Do you like to dance?`, pId: () => `Kamu suka dansa?`, aEn: () => `Only when nobody's watching.`, aId: () => `Cuma saat tidak ada yang lihat.` },
+  { pEn: () => `What's your favorite meme?`, pId: () => `Meme favoritmu apa?`, aEn: () => `The "this is fine" dog.`, aId: () => `Anjing "this is fine".` },
+  { pEn: () => `Do you believe in aliens?`, pId: () => `Kamu percaya alien?`, aEn: () => `Maybe, the universe is huge.`, aId: () => `Mungkin, alam semesta itu luas.` },
+  { pEn: () => `What's your favorite snack?`, pId: () => `Camilan favoritmu apa?`, aEn: () => `Potato chips.`, aId: () => `Keripik kentang.` },
+  { pEn: () => `Do you like morning or evening showers?`, pId: () => `Kamu suka mandi pagi atau sore?`, aEn: () => `Evening, to wash off the day.`, aId: () => `Sore, buat menghapus penat.` },
+  { pEn: () => `What's your dream vacation?`, pId: () => `Liburan impianmu?`, aEn: () => `Japan, for the food and culture.`, aId: () => `Jepang, buat makanan dan budaya.` },
+  { pEn: () => `Do you like to read?`, pId: () => `Kamu suka membaca?`, aEn: () => `Yes, but I'm slow at it.`, aId: () => `Iya, tapi lambat.` },
+  { pEn: () => `What's your favorite time of day?`, pId: () => `Waktu favoritmu dalam sehari?`, aEn: () => `Late night, around 11 PM.`, aId: () => `Larut malam, sekitar jam 11.` },
+  { pEn: () => `Do you prefer sweet or savory?`, pId: () => `Kamu lebih suka manis atau gurih?`, aEn: () => `Sweet, I have a big sweet tooth.`, aId: () => `Manis, aku suka banget yang manis.` },
+  { pEn: () => `What's something you want to learn?`, pId: () => `Apa yang ingin kamu pelajari?`, aEn: () => `How to play guitar.`, aId: () => `Cara main gitar.` },
+  { pEn: () => `Do you like to take photos?`, pId: () => `Kamu suka foto?`, aEn: () => `Yes, especially of nature.`, aId: () => `Iya, terutama alam.` },
+  { pEn: () => `What's your favorite board game?`, pId: () => `Permainan papan favoritmu?`, aEn: () => `Monopoly, even though it takes forever.`, aId: () => `Monopoli, meskipun lama banget.` },
+  { pEn: () => `Do you like to exercise?`, pId: () => `Kamu suka olahraga?`, aEn: () => `Not really, but I try.`, aId: () => `Enggak juga, tapi aku coba.` },
+  { pEn: () => `What's your favorite color?`, pId: () => `Warna favoritmu?`, aEn: () => `Blue, like the ocean.`, aId: () => `Biru, seperti lautan.` },
+  { pEn: () => `Do you like to give or receive gifts?`, pId: () => `Kamu lebih suka memberi atau menerima hadiah?`, aEn: () => `Both, but giving feels better.`, aId: () => `Dua-duanya, tapi memberi terasa lebih baik.` },
+  { pEn: () => `What's your favorite animal?`, pId: () => `Hewan favoritmu?`, aEn: () => `Dogs, they're so loyal.`, aId: () => `Anjing, mereka sangat setia.` },
+  { pEn: () => `Do you like to travel alone or with friends?`, pId: () => `Kamu suka traveling sendiri atau dengan teman?`, aEn: () => `With friends, more fun.`, aId: () => `Dengan teman, lebih seru.` },
+  { pEn: () => `What's something you're grateful for today?`, pId: () => `Apa yang kamu syukuri hari ini?`, aEn: () => `Good health and a roof over my head.`, aId: () => `Kesehatan dan tempat tinggal.` },
+  { pEn: () => `Do you like to sleep in?`, pId: () => `Kamu suka tidur larut?`, aEn: () => `Yes, weekends are for sleeping late.`, aId: () => `Iya, akhir pekan buat tidur siang.` },
+  { pEn: () => `What's your favorite type of weather?`, pId: () => `Cuaca favoritmu?`, aEn: () => `Cloudy and cool, not too hot.`, aId: () => `Berawan dan sejuk, tidak terlalu panas.` },
+  { pEn: () => `Do you like to write?`, pId: () => `Kamu suka menulis?`, aEn: () => `Yes, journaling helps me think.`, aId: () => `Iya, jurnal membantu berpikir.` },
+  { pEn: () => `What's your favorite pizza topping?`, pId: () => `Topping pizza favoritmu?`, aEn: () => `Pepperoni, classic.`, aId: () => `Pepperoni, klasik.` },
+  { pEn: () => `Do you like to be busy or relaxed?`, pId: () => `Kamu suka sibuk atau santai?`, aEn: () => `Relaxed most of the time.`, aId: () => `Santai sepanjang waktu.` },
+  { pEn: () => `What's your favorite TV show?`, pId: () => `Acara TV favoritmu?`, aEn: () => `"The Office" - I've watched it many times.`, aId: () => `"The Office" - aku sudah nonton berkali-kali.` },
+  { pEn: () => `Do you like to sing?`, pId: () => `Kamu suka bernyanyi?`, aEn: () => `In the shower, yes.`, aId: () => `Di kamar mandi, iya.` },
+  { pEn: () => `What's your favorite kind of candy?`, pId: () => `Permen favoritmu?`, aEn: () => `Chocolate, anything with chocolate.`, aId: () => `Coklat, apapun yang ada coklatnya.` },
+  { pEn: () => `Do you like to help people?`, pId: () => `Kamu suka membantu orang?`, aEn: () => `Yes, it makes me happy.`, aId: () => `Iya, itu membuatku bahagia.` },
+  { pEn: () => `What's your favorite thing to do when bored?`, pId: () => `Hal favoritmu saat bosan?`, aEn: () => `Scroll on my phone.`, aId: () => `Scroll HP.` },
+  { pEn: () => `Do you like the beach or mountains more?`, pId: () => `Kamu lebih suka pantai atau gunung?`, aEn: () => `Beach, I love the sound of waves.`, aId: () => `Pantai, aku suka suara ombak.` },
+  { pEn: () => `What's your favorite fruit?`, pId: () => `Buah favoritmu?`, aEn: () => `Mango, sweet and juicy.`, aId: () => `Mangga, manis dan segar.` },
+  { pEn: () => `Do you like to dress up?`, pId: () => `Kamu suka berdandan?`, aEn: () => `Only for special occasions.`, aId: () => `Cuma untuk acara khusus.` },
+  { pEn: () => `What's your favorite holiday?`, pId: () => `Liburan favoritmu?`, aEn: () => `Christmas, the vibes are great.`, aId: () => `Natal, suasananya bagus.` },
+  { pEn: () => `Do you like to make new friends?`, pId: () => `Kamu suka berteman baru?`, aEn: () => `Yes, but it's not always easy.`, aId: () => `Iya, tapi tidak selalu mudah.` },
+  { pEn: () => `What's your favorite ice cream flavor?`, pId: () => `Rasa es krim favoritmu?`, aEn: () => `Vanilla, simple but good.`, aId: () => `Vanila, sederhana tapi enak.` },
+  { pEn: () => `Do you like to stay up late?`, pId: () => `Kamu suka begadang?`, aEn: () => `Sometimes, but I regret it in the morning.`, aId: () => `Kadang, tapi nyesal di pagi hari.` },
+  { pEn: () => `What's your favorite way to relax?`, pId: () => `Cara relaksasi favoritmu?`, aEn: () => `Listening to music and lying down.`, aId: () => `Dengerin musik dan rebahan.` },
+  { pEn: () => `Do you like to learn languages?`, pId: () => `Kamu suka belajar bahasa?`, aEn: () => `Yes, I'm learning English now.`, aId: () => `Iya, aku sedang belajar Inggris.` },
+  { pEn: () => `What's your favorite kind of movie?`, pId: () => `Genre film favoritmu?`, aEn: () => `Comedy, I need to laugh.`, aId: () => `Komedi, aku butuh tertawa.` },
+  { pEn: () => `Do you like to clean?`, pId: () => `Kamu suka bersih-bersih?`, aEn: () => `No, but I like a clean room.`, aId: () => `Tidak, tapi aku suka kamar bersih.` },
+  { pEn: () => `What's your favorite kind of tea?`, pId: () => `Jenis teh favoritmu?`, aEn: () => `Green tea, it's calming.`, aId: () => `Teh hijau, menenangkan.` },
+  { pEn: () => `Do you like to window shop?`, pId: () => `Kamu suka lihat-lihat barang tanpa beli?`, aEn: () => `Yes, it's fun to see things.`, aId: () => `Iya, seru liat-lihat barang.` },
+  { pEn: () => `What's your favorite thing to do on a Sunday?`, pId: () => `Hal favoritmu di hari Minggu?`, aEn: () => `Sleep in and do nothing.`, aId: () => `Tidur dan gak ngapa-ngapain.` },
+  { pEn: () => `Do you like to plan things or be spontaneous?`, pId: () => `Kamu suka merencanakan atau spontan?`, aEn: () => `Spontaneous, plans stress me out.`, aId: () => `Spontan, rencana bikin stres.` },
+  { pEn: () => `What's your favorite sound?`, pId: () => `Suara favoritmu?`, aEn: () => `Rain on the roof.`, aId: () => `Hujan di atap.` },
+  { pEn: () => `Do you like to draw or paint?`, pId: () => `Kamu suka menggambar atau melukis?`, aEn: () => `Doodle sometimes, but not serious.`, aId: () => `Kadang corat-coret, tapi tidak serius.` },
+  { pEn: () => `What's your favorite kind of bread?`, pId: () => `Roti favoritmu?`, aEn: () => `Sourdough, tangy and chewy.`, aId: () => `Sourdough, asam dan kenyal.` },
+  { pEn: () => `Do you like to tell jokes?`, pId: () => `Kamu suka bercanda?`, aEn: () => `I'm not funny, but I try.`, aId: () => `Aku tidak lucu, tapi aku coba.` },
+  { pEn: () => `What's your favorite thing to watch on YouTube?`, pId: () => `Hal favoritmu untuk ditonton di YouTube?`, aEn: () => `Vlogs and travel videos.`, aId: () => `Vlog dan video perjalanan.` },
+  { pEn: () => `Do you like to play video games?`, pId: () => `Kamu suka main video game?`, aEn: () => `Yes, it's my escape.`, aId: () => `Iya, itu pelarianku.` },
+  { pEn: () => `What's your favorite flower?`, pId: () => `Bunga favoritmu?`, aEn: () => `Sunflowers, they look happy.`, aId: () => `Bunga matahari, kelihatan bahagia.` },
+  { pEn: () => `Do you like to DIY or buy things?`, pId: () => `Kamu suka bikin sendiri atau beli?`, aEn: () => `Buy, I'm not crafty.`, aId: () => `Beli, aku tidak kreatif.` },
+  { pEn: () => `What's your favorite part of the day?`, pId: () => `Bagian favoritmu dalam sehari?`, aEn: () => `Dinner time with family.`, aId: () => `Waktu makan malam dengan keluarga.` },
+  { pEn: () => `Do you like to wear matching clothes?`, pId: () => `Kamu suka pakaian serasi?`, aEn: () => `Sometimes, but not too matchy.`, aId: () => `Kadang, tapi tidak terlalu serasi.` },
+  { pEn: () => `What's your favorite memory from childhood?`, pId: () => `Kenangan masa kecil favoritmu?`, aEn: () => `Playing outside until sunset.`, aId: () => `Bermain di luar sampai matahari terbenam.` },
+  { pEn: () => `Do you like to be alone sometimes?`, pId: () => `Kamu suka sendirian kadang-kadang?`, aEn: () => `Yes, I need it to recharge.`, aId: () => `Iya, aku butuh buat isi ulang energi.` },
+  { pEn: () => `What's your favorite thing to drink in the morning?`, pId: () => `Minuman favoritmu di pagi hari?`, aEn: () => `Coffee, always coffee.`, aId: () => `Kopi, selalu kopi.` },
+  { pEn: () => `Do you like to make lists?`, pId: () => `Kamu suka buat daftar?`, aEn: () => `Yes, it helps me remember things.`, aId: () => `Iya, membantu mengingat.` },
+  { pEn: () => `What's your favorite kind of cheese?`, pId: () => `Keju favoritmu?`, aEn: () => `Cheddar, sharp and tasty.`, aId: () => `Cheddar, tajam dan enak.` },
+  { pEn: () => `Do you like to ride bikes?`, pId: () => `Kamu suka naik sepeda?`, aEn: () => `Yes, it's fun and healthy.`, aId: () => `Iya, seru dan sehat.` },
+  { pEn: () => `What's your favorite kind of soup?`, pId: () => `Sup favoritmu?`, aEn: () => `Tomato soup with grilled cheese.`, aId: () => `Sup tomat dengan roti keju panggang.` },
+  { pEn: () => `Do you like to watch the news?`, pId: () => `Kamu suka nonton berita?`, aEn: () => `Sometimes, but it's often sad.`, aId: () => `Kadang, tapi sering sedih.` },
+  { pEn: () => `What's your favorite thing about yourself?`, pId: () => `Hal favoritmu tentang dirimu sendiri?`, aEn: () => `I'm a good listener.`, aId: () => `Aku pendengar yang baik.` },
+  { pEn: () => `Do you like to celebrate birthdays?`, pId: () => `Kamu suka merayakan ulang tahun?`, aEn: () => `Yes, but not too big.`, aId: () => `Iya, tapi tidak terlalu besar.` },
+  { pEn: () => `What's your favorite app on your phone?`, pId: () => `Aplikasi favorit di HP-mu?`, aEn: () => `Spotify, for music.`, aId: () => `Spotify, buat musik.` },
+  { pEn: () => `Do you like to try new foods?`, pId: () => `Kamu suka mencoba makanan baru?`, aEn: () => `Yes, I'm adventurous with food.`, aId: () => `Iya, aku suka tantangan dengan makanan.` },
+  { pEn: () => `What's your favorite kind of cookie?`, pId: () => `Kue kering favoritmu?`, aEn: () => `Chocolate chip, warm and soft.`, aId: () => `Chocolate chip, hangat dan lembut.` },
+  { pEn: () => `Do you like to meditate?`, pId: () => `Kamu suka meditasi?`, aEn: () => `I want to, but I can't sit still.`, aId: () => `Aku ingin, tapi tidak bisa diam.` },
+  { pEn: () => `What's your favorite way to spend a Friday night?`, pId: () => `Cara favoritmu menghabiskan Jumat malam?`, aEn: () => `Watching a movie with snacks.`, aId: () => `Nonton film dengan camilan.` },
+  { pEn: () => `Do you like to laugh a lot?`, pId: () => `Kamu suka tertawa banyak?`, aEn: () => `Yes, laughing is the best medicine.`, aId: () => `Iya, tertawa adalah obat terbaik.` },
+  { pEn: () => `What's your favorite word?`, pId: () => `Kata favoritmu?`, aEn: () => `"Serendipity" - it sounds nice.`, aId: () => `"Serendipity" - kedengarannya bagus.` },
+  { pEn: () => `Do you like to keep a journal?`, pId: () => `Kamu suka membuat jurnal?`, aEn: () => `Yes, I write down my thoughts.`, aId: () => `Iya, aku menulis pikiranku.` },
+  { pEn: () => `What's your favorite thing to do in the summer?`, pId: () => `Hal favoritmu di musim panas?`, aEn: () => `Go to the beach and swim.`, aId: () => `Pergi ke pantai dan berenang.` },
+  { pEn: () => `Do you like to decorate your room?`, pId: () => `Kamu suka dekorasi kamar?`, aEn: () => `Yes, it makes me feel at home.`, aId: () => `Iya, membuatku merasa di rumah.` },
+  { pEn: () => `What's your favorite kind of music to relax?`, pId: () => `Musik favorit untuk relaksasi?`, aEn: () => `Lofi or acoustic.`, aId: () => `Lofi atau akustik.` },
+  { pEn: () => `Do you like to call your family often?`, pId: () => `Kamu suka telepon keluarga sering-sering?`, aEn: () => `Yes, every few days.`, aId: () => `Iya, setiap beberapa hari.` },
+  { pEn: () => `What's your favorite thing about your city?`, pId: () => `Hal favoritmu tentang kotamu?`, aEn: () => `The food, so many options.`, aId: () => `Makanannya, banyak pilihan.` }
+];
+  // ===[AKHIR TANDA] ===
+
+  let current = 0;
+  let voices =[];
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
+
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
+</body>
+</html>
