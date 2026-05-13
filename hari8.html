@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .app-container { width: 100%; max-width: 500px; }
+
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 100</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `How old are you?`, pId: () => `Berapa umurmu?`, aEn: () => `I'm 20 years old.`, aId: () => `Umurku 20 tahun.` },
+  { pEn: () => `What year were you born?`, pId: () => `Kamu lahir tahun berapa?`, aEn: () => `I was born in 2005.`, aId: () => `Aku lahir tahun 2005.` },
+  { pEn: () => `What is your favorite number?`, pId: () => `Apa angka favoritmu?`, aEn: () => `My favorite number is 7.`, aId: () => `Angka favoritku adalah 7.` },
+  { pEn: () => `How many siblings do you have?`, pId: () => `Berapa jumlah saudaramu?`, aEn: () => `I have 2 siblings.`, aId: () => `Aku punya 2 saudara.` },
+  { pEn: () => `What time is it there?`, pId: () => `Jam berapa di sana?`, aEn: () => `It's 3:30 PM.`, aId: () => `Sekarang jam 3:30 sore.` },
+  { pEn: () => `How many hours do you sleep?`, pId: () => `Berapa jam kamu tidur?`, aEn: () => `About 7 hours.`, aId: () => `Sekitar 7 jam.` },
+  { pEn: () => `What's your phone number?`, pId: () => `Nomor teleponmu berapa?`, aEn: () => `Sorry, I can't share that.`, aId: () => `Maaf, aku tidak bisa bagikan.` },
+  { pEn: () => `How many letters are in your name?`, pId: () => `Ada berapa huruf di namamu?`, aEn: () => `There are 5 letters.`, aId: () => `Ada 5 huruf.` },
+  { pEn: () => `What is 5 plus 3?`, pId: () => `Berapa 5 ditambah 3?`, aEn: () => `It's 8.`, aId: () => `Hasilnya 8.` },
+  { pEn: () => `How many countries have you visited?`, pId: () => `Berapa negara yang sudah kamu kunjungi?`, aEn: () => `I've visited 3 countries.`, aId: () => `Aku sudah mengunjungi 3 negara.` },
+  { pEn: () => `What year is it now?`, pId: () => `Sekarang tahun berapa?`, aEn: () => `It's 2025.`, aId: () => `Sekarang tahun 2025.` },
+  { pEn: () => `How many people live in your house?`, pId: () => `Berapa orang tinggal di rumahmu?`, aEn: () => `There are 4 people.`, aId: () => `Ada 4 orang.` },
+  { pEn: () => `What is your lucky number?`, pId: () => `Berapa angka keberuntunganmu?`, aEn: () => `My lucky number is 3.`, aId: () => `Angka keberuntunganku adalah 3.` },
+  { pEn: () => `How many times a week do you exercise?`, pId: () => `Berapa kali seminggu kamu olahraga?`, aEn: () => `I exercise 3 times a week.`, aId: () => `Aku olahraga 3 kali seminggu.` },
+  { pEn: () => `What is 9 times 4?`, pId: () => `Berapa 9 dikali 4?`, aEn: () => `It's 36.`, aId: () => `Hasilnya 36.` },
+  { pEn: () => `How many fingers do you have?`, pId: () => `Berapa jumlah jarimu?`, aEn: () => `I have 10 fingers.`, aId: () => `Aku punya 10 jari.` },
+  { pEn: () => `What month were you born?`, pId: () => `Kamu lahir bulan apa?`, aEn: () => `I was born in July.`, aId: () => `Aku lahir di bulan Juli.` },
+  { pEn: () => `How many hours are in a day?`, pId: () => `Ada berapa jam dalam sehari?`, aEn: () => `24 hours.`, aId: () => `24 jam.` },
+  { pEn: () => `What year did you start school?`, pId: () => `Tahun berapa kamu mulai sekolah?`, aEn: () => `I started in 2011.`, aId: () => `Aku mulai tahun 2011.` },
+  { pEn: () => `How old is your mom?`, pId: () => `Berapa umur ibumu?`, aEn: () => `She is 45 years old.`, aId: () => `Beliau 45 tahun.` },
+  { pEn: () => `What is 20 divided by 4?`, pId: () => `Berapa 20 dibagi 4?`, aEn: () => `It's 5.`, aId: () => `Hasilnya 5.` },
+  { pEn: () => `How many days are in a week?`, pId: () => `Ada berapa hari dalam seminggu?`, aEn: () => `7 days.`, aId: () => `7 hari.` },
+  { pEn: () => `What is your house number?`, pId: () => `Nomor rumahmu berapa?`, aEn: () => `It's number 12.`, aId: () => `Nomor 12.` },
+  { pEn: () => `How many meals do you eat a day?`, pId: () => `Berapa kali makan sehari?`, aEn: () => `I eat 3 meals a day.`, aId: () => `Aku makan 3 kali sehari.` },
+  { pEn: () => `What year did you graduate?`, pId: () => `Tahun berapa kamu lulus?`, aEn: () => `I graduated in 2023.`, aId: () => `Aku lulus tahun 2023.` },
+  { pEn: () => `How old will you be next year?`, pId: () => `Berapa umurmu tahun depan?`, aEn: () => `I'll be 21.`, aId: () => `Aku akan berusia 21 tahun.` },
+  { pEn: () => `What is 100 minus 30?`, pId: () => `Berapa 100 dikurangi 30?`, aEn: () => `It's 70.`, aId: () => `Hasilnya 70.` },
+  { pEn: () => `How many pets do you have?`, pId: () => `Berapa banyak hewan peliharaanmu?`, aEn: () => `I have 1 cat.`, aId: () => `Aku punya 1 kucing.` },
+  { pEn: () => `What is your favorite year?`, pId: () => `Tahun favoritmu?`, aEn: () => `2019 was my favorite year.`, aId: () => `2019 adalah tahun favoritku.` },
+  { pEn: () => `How many minutes are in an hour?`, pId: () => `Ada berapa menit dalam satu jam?`, aEn: () => `60 minutes.`, aId: () => `60 menit.` },
+  { pEn: () => `What is 7 plus 8?`, pId: () => `Berapa 7 ditambah 8?`, aEn: () => `It's 15.`, aId: () => `Hasilnya 15.` },
+  { pEn: () => `How many languages do you speak?`, pId: () => `Berapa bahasa yang kamu kuasai?`, aEn: () => `I speak 2 languages.`, aId: () => `Aku bisa 2 bahasa.` },
+  { pEn: () => `What year did you get your first phone?`, pId: () => `Tahun berapa kamu punya HP pertama?`, aEn: () => `I got it in 2018.`, aId: () => `Aku dapatnya tahun 2018.` },
+  { pEn: () => `How many days in a year?`, pId: () => `Ada berapa hari dalam setahun?`, aEn: () => `365 days.`, aId: () => `365 hari.` },
+  { pEn: () => `What is 12 divided by 3?`, pId: () => `Berapa 12 dibagi 3?`, aEn: () => `It's 4.`, aId: () => `Hasilnya 4.` },
+  { pEn: () => `How many times have you moved houses?`, pId: () => `Berapa kali kamu pindah rumah?`, aEn: () => `I've moved 2 times.`, aId: () => `Aku sudah pindah 2 kali.` },
+  { pEn: () => `What year is your favorite movie from?`, pId: () => `Film favoritmu dari tahun berapa?`, aEn: () => `It's from 1994.`, aId: () => `Dari tahun 1994.` },
+  { pEn: () => `How many zeros in one hundred?`, pId: () => `Ada berapa angka nol dalam seratus?`, aEn: () => `Two zeros.`, aId: () => `Dua angka nol.` },
+  { pEn: () => `What is 50 plus 50?`, pId: () => `Berapa 50 ditambah 50?`, aEn: () => `It's 100.`, aId: () => `Hasilnya 100.` },
+  { pEn: () => `How old is your best friend?`, pId: () => `Berapa umur teman terbaikmu?`, aEn: () => `She is also 20.`, aId: () => `Dia juga 20 tahun.` },
+  { pEn: () => `What year did you learn to ride a bike?`, pId: () => `Tahun berapa kamu belajar naik sepeda?`, aEn: () => `I learned in 2012.`, aId: () => `Aku belajar tahun 2012.` },
+  { pEn: () => `How many seconds in a minute?`, pId: () => `Ada berapa detik dalam semenit?`, aEn: () => `60 seconds.`, aId: () => `60 detik.` },
+  { pEn: () => `What is your locker number?`, pId: () => `Nomor lokermu berapa?`, aEn: () => `It's number 24.`, aId: () => `Nomor 24.` },
+  { pEn: () => `How many books did you read last year?`, pId: () => `Berapa buku yang kamu baca tahun lalu?`, aEn: () => `I read 10 books.`, aId: () => `Aku baca 10 buku.` },
+  { pEn: () => `What year was your phone made?`, pId: () => `HP-mu buatan tahun berapa?`, aEn: () => `It was made in 2023.`, aId: () => `Dibuat tahun 2023.` },
+  { pEn: () => `How many legs does a dog have?`, pId: () => `Berapa jumlah kaki anjing?`, aEn: () => `4 legs.`, aId: () => `4 kaki.` },
+  { pEn: () => `What is 6 times 6?`, pId: () => `Berapa 6 dikali 6?`, aEn: () => `It's 36.`, aId: () => `Hasilnya 36.` },
+  { pEn: () => `How old were you when you started kindergarten?`, pId: () => `Berapa umurmu saat mulai TK?`, aEn: () => `I was 5 years old.`, aId: () => `Aku berusia 5 tahun.` },
+  { pEn: () => `What year did your parents get married?`, pId: () => `Tahun berapa orang tuamu menikah?`, aEn: () => `They got married in 2000.`, aId: () => `Mereka menikah tahun 2000.` },
+  { pEn: () => `How many months are in a year?`, pId: () => `Ada berapa bulan dalam setahun?`, aEn: () => `12 months.`, aId: () => `12 bulan.` },
+  { pEn: () => `What is 99 plus 1?`, pId: () => `Berapa 99 ditambah 1?`, aEn: () => `It's 100.`, aId: () => `Hasilnya 100.` },
+  { pEn: () => `How many times do you brush your teeth a day?`, pId: () => `Berapa kali kamu sikat gigi sehari?`, aEn: () => `Twice a day.`, aId: () => `Dua kali sehari.` },
+  { pEn: () => `What is your seat number in class?`, pId: () => `Nomor kursimu di kelas berapa?`, aEn: () => `Seat number 8.`, aId: () => `Nomor kursi 8.` },
+  { pEn: () => `What year is your birthday?`, pId: () => `Tahun berapa ulang tahunmu?`, aEn: () => `My birthday is in 2005.`, aId: () => `Ulang tahunku tahun 2005.` },
+  { pEn: () => `How many wheels does a car have?`, pId: () => `Berapa jumlah roda mobil?`, aEn: () => `4 wheels.`, aId: () => `4 roda.` },
+  { pEn: () => `What is 8 minus 3?`, pId: () => `Berapa 8 dikurangi 3?`, aEn: () => `It's 5.`, aId: () => `Hasilnya 5.` },
+  { pEn: () => `How many cousins do you have?`, pId: () => `Berapa banyak sepupumu?`, aEn: () => `I have 6 cousins.`, aId: () => `Aku punya 6 sepupu.` },
+  { pEn: () => `What year did you start using social media?`, pId: () => `Tahun berapa kamu mulai pakai media sosial?`, aEn: () => `I started in 2017.`, aId: () => `Aku mulai tahun 2017.` },
+  { pEn: () => `How many hours do you study a day?`, pId: () => `Berapa jam kamu belajar sehari?`, aEn: () => `About 2 hours.`, aId: () => `Sekitar 2 jam.` },
+  { pEn: () => `What is your jersey number?`, pId: () => `Nomor jerseymu berapa?`, aEn: () => `Number 10.`, aId: () => `Nomor 10.` },
+  { pEn: () => `How many days in February?`, pId: () => `Ada berapa hari di bulan Februari?`, aEn: () => `Usually 28, but 29 in leap year.`, aId: () => `Biasanya 28, tapi 29 di tahun kabisat.` },
+  { pEn: () => `What is 4 times 7?`, pId: () => `Berapa 4 dikali 7?`, aEn: () => `It's 28.`, aId: () => `Hasilnya 28.` },
+  { pEn: () => `How old is your grandfather?`, pId: () => `Berapa umur kakekmu?`, aEn: () => `He is 70 years old.`, aId: () => `Beliau 70 tahun.` },
+  { pEn: () => `What year did you get your first pet?`, pId: () => `Tahun berapa kamu punya hewan peliharaan pertama?`, aEn: () => `I got my first pet in 2015.`, aId: () => `Aku punya hewan pertama tahun 2015.` },
+  { pEn: () => `How many glasses of water do you drink a day?`, pId: () => `Berapa gelas air yang kamu minum sehari?`, aEn: () => `About 6 glasses.`, aId: () => `Sekitar 6 gelas.` },
+  { pEn: () => `What is your apartment number?`, pId: () => `Nomor apartemenmu berapa?`, aEn: () => `Unit number 5B.`, aId: () => `Nomor unit 5B.` },
+  { pEn: () => `How many weeks are in a year?`, pId: () => `Ada berapa minggu dalam setahun?`, aEn: () => `52 weeks.`, aId: () => `52 minggu.` },
+  { pEn: () => `What is 15 plus 20?`, pId: () => `Berapa 15 ditambah 20?`, aEn: () => `It's 35.`, aId: () => `Hasilnya 35.` },
+  { pEn: () => `How many times have you flown on a plane?`, pId: () => `Berapa kali kamu naik pesawat?`, aEn: () => `I've flown 5 times.`, aId: () => `Aku sudah naik pesawat 5 kali.` },
+  { pEn: () => `What year did you first travel abroad?`, pId: () => `Tahun berapa kamu pertama kali ke luar negeri?`, aEn: () => `It was in 2019.`, aId: () => `Itu tahun 2019.` },
+  { pEn: () => `How many eggs do you eat in a week?`, pId: () => `Berapa telur yang kamu makan dalam seminggu?`, aEn: () => `About 4 eggs.`, aId: () => `Sekitar 4 telur.` },
+  { pEn: () => `What is your grade level?`, pId: () => `Kelas berapa kamu sekarang?`, aEn: () => `I'm in 11th grade.`, aId: () => `Aku kelas 11.` },
+  { pEn: () => `What is 100 divided by 10?`, pId: () => `Berapa 100 dibagi 10?`, aEn: () => `It's 10.`, aId: () => `Hasilnya 10.` },
+  { pEn: () => `How many teeth do adults have?`, pId: () => `Berapa jumlah gigi orang dewasa?`, aEn: () => `32 teeth.`, aId: () => `32 gigi.` },
+  { pEn: () => `What year was your favorite song released?`, pId: () => `Lagu favoritmu rilis tahun berapa?`, aEn: () => `It was released in 2020.`, aId: () => `Dirilis tahun 2020.` },
+  { pEn: () => `How many hours do you work a day?`, pId: () => `Berapa jam kamu bekerja sehari?`, aEn: () => `I work 6 hours a day.`, aId: () => `Aku bekerja 6 jam sehari.` },
+  { pEn: () => `What is your bus number?`, pId: () => `Nomor busmu berapa?`, aEn: () => `Bus number 12.`, aId: () => `Nomor bus 12.` },
+  { pEn: () => `How many seconds are in 5 minutes?`, pId: () => `Ada berapa detik dalam 5 menit?`, aEn: () => `300 seconds.`, aId: () => `300 detik.` },
+  { pEn: () => `What is 3 times 9?`, pId: () => `Berapa 3 dikali 9?`, aEn: () => `It's 27.`, aId: () => `Hasilnya 27.` },
+  { pEn: () => `How old were you when you learned to swim?`, pId: () => `Berapa umurmu saat belajar berenang?`, aEn: () => `I was 7 years old.`, aId: () => `Aku berusia 7 tahun.` },
+  { pEn: () => `What year did you watch your first movie in cinema?`, pId: () => `Tahun berapa kamu nonton film pertama di bioskop?`, aEn: () => `It was 2010.`, aId: () => `Itu tahun 2010.` },
+  { pEn: () => `How many pairs of shoes do you own?`, pId: () => `Berapa pasang sepatu yang kamu punya?`, aEn: () => `I own 5 pairs.`, aId: () => `Aku punya 5 pasang.` },
+  { pEn: () => `What is your room number?`, pId: () => `Nomor kamarmu berapa?`, aEn: () => `Room 207.`, aId: () => `Kamar 207.` },
+  { pEn: () => `How many years does it take to become a doctor?`, pId: () => `Berapa tahun untuk menjadi dokter?`, aEn: () => `About 10 years.`, aId: () => `Sekitar 10 tahun.` },
+  { pEn: () => `What is 25 minus 10?`, pId: () => `Berapa 25 dikurangi 10?`, aEn: () => `It's 15.`, aId: () => `Hasilnya 15.` },
+  { pEn: () => `How many times a year do you celebrate your birthday?`, pId: () => `Berapa kali setahun kamu merayakan ulang tahun?`, aEn: () => `Once a year, of course.`, aId: () => `Sekali setahun, tentu saja.` },
+  { pEn: () => `What year did you start learning English?`, pId: () => `Tahun berapa kamu mulai belajar bahasa Inggris?`, aEn: () => `I started in 2013.`, aId: () => `Aku mulai tahun 2013.` },
+  { pEn: () => `How many slices in a pizza?`, pId: () => `Ada berapa potong dalam satu pizza?`, aEn: () => `Usually 8 slices.`, aId: () => `Biasanya 8 potong.` },
+  { pEn: () => `What is your favorite number from 1 to 10?`, pId: () => `Angka favoritmu dari 1 sampai 10?`, aEn: () => `Number 9.`, aId: () => `Angka 9.` },
+  { pEn: () => `How old is your father?`, pId: () => `Berapa umur ayahmu?`, aEn: () => `He is 48 years old.`, aId: () => `Beliau 48 tahun.` },
+  { pEn: () => `What year was your house built?`, pId: () => `Rumahmu dibangun tahun berapa?`, aEn: () => `It was built in 1995.`, aId: () => `Dibangun tahun 1995.` },
+  { pEn: () => `How many minutes do you shower?`, pId: () => `Berapa menit kamu mandi?`, aEn: () => `About 10 minutes.`, aId: () => `Sekitar 10 menit.` },
+  { pEn: () => `What is 11 plus 11?`, pId: () => `Berapa 11 ditambah 11?`, aEn: () => `It's 22.`, aId: () => `Hasilnya 22.` },
+  { pEn: () => `How many times have you changed schools?`, pId: () => `Berapa kali kamu pindah sekolah?`, aEn: () => `I changed schools once.`, aId: () => `Aku pindah sekolah sekali.` },
+  { pEn: () => `What year do you want to get married?`, pId: () => `Tahun berapa kamu ingin menikah?`, aEn: () => `Maybe in 2030.`, aId: () => `Mungkin tahun 2030.` },
+  { pEn: () => `How many stars are on the US flag?`, pId: () => `Ada berapa bintang di bendera AS?`, aEn: () => `50 stars.`, aId: () => `50 bintang.` },
+  { pEn: () => `What is 16 divided by 2?`, pId: () => `Berapa 16 dibagi 2?`, aEn: () => `It's 8.`, aId: () => `Hasilnya 8.` },
+  { pEn: () => `How old is your favorite celebrity?`, pId: () => `Berapa umur selebriti favoritmu?`, aEn: () => `She is 30 years old.`, aId: () => `Dia berusia 30 tahun.` },
+  { pEn: () => `What year did you join social media?`, pId: () => `Tahun berapa kamu gabung media sosial?`, aEn: () => `I joined Instagram in 2018.`, aId: () => `Aku gabung Instagram tahun 2018.` },
+  { pEn: () => `How many eyes do humans have?`, pId: () => `Berapa jumlah mata manusia?`, aEn: () => `2 eyes.`, aId: () => `2 mata.` }
+];
+  // ===[AKHIR TANDA] ===
+
+  let current = 0;
+  let voices =[];
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
+
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
+</body>
+</html>
