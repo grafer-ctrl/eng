@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aktif bertanya-Terjemahkan dan ucapkan dalam b Inggris</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #5154d8;
+            --pink-accent: #ff1a75;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+            --shadow: 0 15px 35px rgba(0,0,0,0.07);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-light); color: var(--text-dark); 
+            margin: 0; padding: 0; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: 20px; display: flex; align-items: center; background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); z-index: 1000;
+        }
+        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.1rem; margin-left: 10px; }
+
+        /* Screen */
+        .screen { display: none; padding: 20px; height: calc(100vh - 150px); overflow-y: auto; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Card Modern */
+        .card {
+            background: white; border-radius: 30px; padding: 25px;
+            box-shadow: var(--shadow); margin-bottom: 20px; text-align: center;
+        }
+
+        /* Elements */
+        .btn-progress { 
+            background: #eef2ff; color: var(--primary-blue); padding: 6px 15px;
+            border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 15px; display: inline-block;
+        }
+        .timer-pill { 
+            background: var(--pink-accent); color: white; padding: 8px 30px;
+            border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; 
+        }
+        .challenge-box { font-size: 1.4rem; font-weight: 600; margin: 25px 0; min-height: 60px; color: var(--text-dark); }
+
+        #btn-reveal { 
+            background: var(--primary-blue); color: white; border: none; padding: 18px;
+            border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem;
+        }
+        #btn-reveal.hidden { display: none; }
+
+        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
+        .answer-area.visible { display: block; }
+
+        .english-text { color: var(--primary-blue); font-size: 1.4rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
+        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
+
+        /* Floating Nav */
+        .bottom-nav {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: white; display: flex;
+            justify-content: space-around; padding: 15px; border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; border: 1px solid #f1f5f9;
+        }
+        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <title>Metode Aktif Bertanya-terjemahkan dan ucapkan dalam b Inggris</title>
+<meta name="description" content="Metode ini mengubah mindset dari pasif menjadi aktif">
+
+    </header>
+
+    <div id="screen-settings" class="screen active">
+        <div class="card">
+            <h3 style="margin-top:0">⚙️ Pengaturan</h3>
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label>Volume: <span id="val-volume">240</span></label>
+                <input type="range" id="input-volume" min="0" max="300" step="1" value="240">
+            </div>
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label>Timer Jeda: <span id="val-timer">10</span>s</label>
+                <input type="range" id="input-timer" min="3" max="120" step="1" value="10">
+            </div>
+            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                SIMPAN & MULAI
+            </button>
+        </div>
+    </div>
+
+    <div id="screen-exercise" class="screen">
+        <div class="card">
+            <div class="btn-progress" id="progress-badge">SOAL 1 / 5</div>
+            <div id="timer-display" class="timer-pill">10</div>
+            <div class="challenge-box" id="text-indo">--</div>
+            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
+
+            <div id="answer-area" class="answer-area">
+                <div class="english-text" id="text-en">--</div>
+                <div class="phonetic" id="text-phonetic">--</div>
+                <div class="edu-box">
+                    <strong id="text-explanation">--</strong>
+                </div>
+            </div>
+        </div>
+        <div style="height: 100px;"></div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="navTo('settings')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Seting
+        </button>
+        <button class="nav-item" onclick="changeQuestion(-1)">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            Prev
+        </button>
+        <button class="nav-item" onclick="changeQuestion(1)">
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            Next
+        </button>
+    </div>
+
+    <script>
+        // (Logika JS Anda tetap sama seperti sebelumnya)
+        const database =[
+            { indo: "Halo, apa kabar?", en: "Hi, how's it going?", phonetic: "hai, hauz it go-ing?", explanation: "Sapaan kasual yang sangat umum." },
+            { indo: "Ada apa?", en: "What's up?", phonetic: "wats ap?", explanation: "Sapaan santai untuk memulai obrolan." },
+            { indo: "Kamu baik-baik saja?", en: "Are you okay?", phonetic: "ar yu o-key?", explanation: "Menanyakan kondisi lawan bicara." },
+            { indo: "Ada yang bisa aku bantu?", en: "Can I help you?", phonetic: "kan ai help yu?", explanation: "Menawarkan bantuan." },
+            { indo: "Kamu tahu bahasa Inggris?", en: "Do you know English?", phonetic: "du yu no ing-glish?", explanation: "Versi sederhana dari 'can you speak English'." },
+            { indo: "Kamu bisa bicara Bahasa Indonesia?", en: "Can you speak Indonesian?", phonetic: "kan yu spik in-do-ne-syan?", explanation: "Menanyakan kemampuan Bahasa Indonesia." },
+            { indo: "Aku bisa bicara sedikit bahasa Inggris.", en: "I can speak a little English.", phonetic: "ai kan spik e li-tel ing-glish.", explanation: "Pernyataan untuk memberi tahu lawan bicara." },
+            { indo: "Maaf, aku tidak mengerti.", en: "Sorry, I don't understand.", phonetic: "so-ri, ai dont un-der-stand.", explanation: "Saat tidak paham apa yang dikatakan." },
+            { indo: "Bisa tolong ulangi?", en: "Can you repeat that please?", phonetic: "kan yu ri-pit dat pliz?", explanation: "Meminta lawan bicara mengulang perkataan." },
+            { indo: "Kamu bicara terlalu cepat.", en: "You speak too fast.", phonetic: "yu spik tu fast.", explanation: "Meminta lawan bicara melambat." },
+            { indo: "Tolong bicara pelan-pelan.", en: "Please speak slowly.", phonetic: "pliz spik slo-li.", explanation: "Permintaan agar lebih mudah dimengerti." },
+            { indo: "Apa itu artinya?", en: "What does that mean?", phonetic: "wat daz dat min?", explanation: "Menanyakan arti kata atau kalimat." },
+            { indo: "Bagaimana cara mengucapkannya?", en: "How do you say it?", phonetic: "hau du yu sey it?", explanation: "Menanyakan pengucapan yang benar." },
+            { indo: "Bisakah kamu menulisnya?", en: "Can you write it?", phonetic: "kan yu rayt it?", explanation: "Meminta tulisan agar lebih jelas." },
+            { indo: "Kamu sangat baik.", en: "You are very nice.", phonetic: "yu ar ve-ri nays.", explanation: "Memberi pujian." },
+            { indo: "Kamu kelihatan ramah.", en: "You look friendly.", phonetic: "yu luk frend-li.", explanation: "Memberi kesan positif." },
+            { indo: "Kamu kelihatan keren.", en: "You look cool.", phonetic: "yu luk kul.", explanation: "Pujian sederhana." },
+            { indo: "Kamu cantik/ganteng.", en: "You are beautiful/handsome.", phonetic: "yu ar byu-ti-ful / hand-sum.", explanation: "Pujian untuk penampilan." },
+            { indo: "Aku suka gayamu.", en: "I like your style.", phonetic: "ai layk yor stayl.", explanation: "Pujian untuk gaya." },
+            { indo: "Kamu membuatku tersenyum.", en: "You make me smile.", phonetic: "yu meyk mi smayl.", explanation: "Ekspresi positif." },
+            { indo: "Aku merindukanmu.", en: "I miss you.", phonetic: "ai mis yu.", explanation: "Ekspresi rindu (biasanya untuk kenalan lama)." },
+            { indo: "Aku memikirkanmu.", en: "I'm thinking of you.", phonetic: "aym thing-king ov yu.", explanation: "Ekspresi perhatian." },
+            { indo: "Aku senang bertemu denganmu.", en: "I'm happy to meet you.", phonetic: "aym ha-pi tu mit yu.", explanation: "Perasaan senang berkenalan." },
+            { indo: "Ini menyenangkan.", en: "This is fun.", phonetic: "dis iz fan.", explanation: "Mengekspresikan kesenangan." },
+            { indo: "Aku bersenang-senang.", en: "I'm having fun.", phonetic: "aym hav-ing fan.", explanation: "Mengatakan bahwa obrolan menyenangkan." },
+            { indo: "Apakah kamu senang bicara denganku?", en: "Are you happy talking to me?", phonetic: "ar yu ha-pi to-king tu mi?", explanation: "Memastikan lawan bicara nyaman." },
+            { indo: "Kamu membuat hariku.", en: "You made my day.", phonetic: "yu meyd may dey.", explanation: "Ungkapan terima kasih yang hangat." },
+            { indo: "Apa kamu lelah?", en: "Are you tired?", phonetic: "ar yu tay-erd?", explanation: "Menanyakan kondisi fisik." },
+            { indo: "Apa kamu mengantuk?", en: "Are you sleepy?", phonetic: "ar yu sli-pi?", explanation: "Menanyakan rasa kantuk." },
+            { indo: "Apa kamu lapar?", en: "Are you hungry?", phonetic: "ar yu hang-gri?", explanation: "Menanyakan rasa lapar." },
+            { indo: "Apa kamu haus?", en: "Are you thirsty?", phonetic: "ar yu thurs-ti?", explanation: "Menanyakan rasa haus." },
+            { indo: "Kamu sakit?", en: "Are you sick?", phonetic: "ar yu sik?", explanation: "Menanyakan kondisi kesehatan." },
+            { indo: "Apa yang salah?", en: "What's wrong?", phonetic: "wats rong?", explanation: "Menanyakan masalah." },
+            { indo: "Kenapa kamu sedih?", en: "Why are you sad?", phonetic: "wai ar yu sad?", explanation: "Menanyakan alasan kesedihan." },
+            { indo: "Jangan sedih.", en: "Don't be sad.", phonetic: "dont bi sad.", explanation: "Menghibur lawan bicara." },
+            { indo: "Semuanya akan baik-baik saja.", en: "Everything will be okay.", phonetic: "ev-ri-thing wil bi o-key.", explanation: "Memberi semangat." },
+            { indo: "Tersenyumlah!", en: "Smile!", phonetic: "smayl!", explanation: "Ajakan untuk tersenyum." },
+            { indo: "Apakah kamu sendirian?", en: "Are you by yourself?", phonetic: "ar yu bay yor-self?", explanation: "Menanyakan apakah sedang sendiri." },
+            { indo: "Siapa yang ada di sampingmu?", en: "Who is next to you?", phonetic: "hu iz nekst tu yu?", explanation: "Menanyakan orang di sekitar." },
+            { indo: "Apakah itu temanmu?", en: "Is that your friend?", phonetic: "iz dat yor frend?", explanation: "Menunjuk seseorang di layar." },
+            { indo: "Apakah itu keluargamu?", en: "Is that your family?", phonetic: "iz dat yor fa-mi-li?", explanation: "Menanyakan anggota keluarga." },
+            { indo: "Bolehkah aku melihat wajahmu?", en: "Can I see your face?", phonetic: "kan ai si yor feys?", explanation: "Jika kamera tidak menampilkan wajah." },
+            { indo: "Bolehkah aku mendengar suaramu?", en: "Can I hear your voice?", phonetic: "kan ai hir yor voys?", explanation: "Jika suara tidak terdengar jelas." },
+            { indo: "Kamera kamu buram.", en: "Your camera is blurry.", phonetic: "yor ka-me-ra iz bler-ri.", explanation: "Memberi tahu masalah teknis." },
+            { indo: "Suaramu putus-putus.", en: "Your voice is breaking.", phonetic: "yor voys iz brey-king.", explanation: "Memberi tahu masalah suara." },
+            { indo: "Koneksi internetku lambat.", en: "My internet is slow.", phonetic: "mai in-ter-net iz slo.", explanation: "Menjelaskan kondisi koneksi." },
+            { indo: "Tunggu sebentar.", en: "Wait a moment.", phonetic: "weyt e mo-ment.", explanation: "Meminta lawan bicara untuk menunggu." },
+            { indo: "Aku akan kembali.", en: "I'll be right back.", phonetic: "ayl bi rayt bak.", explanation: "Memberi tahu akan segera kembali." },
+            { indo: "Jangan pergi.", en: "Don't go.", phonetic: "dont go.", explanation: "Meminta lawan bicara tetap tinggal." },
+            { indo: "Tinggallah sebentar lagi.", en: "Stay a little longer.", phonetic: "stey e li-tel long-er.", explanation: "Meminta memperpanjang obrolan." },
+            { indo: "Apakah kamu harus pergi?", en: "Do you have to go?", phonetic: "du yu hav tu go?", explanation: "Menanyakan apakah lawan bicara akan meninggalkan obrolan." },
+            { indo: "Kapan kamu akan pergi?", en: "When will you go?", phonetic: "wen wil yu go?", explanation: "Menanyakan waktu berpisah." },
+            { indo: "Bisakah kita bicara lagi nanti?", en: "Can we talk again later?", phonetic: "kan wi tok a-gen ley-ter?", explanation: "Mengajak bertemu lagi di lain waktu." },
+            { indo: "Aku akan mencari kamu lagi.", en: "I will find you again.", phonetic: "ai wil faynd yu a-gen.", explanation: "Berniat untuk bertemu lagi." },
+            { indo: "Sampai jumpa!", en: "See you later!", phonetic: "si yu ley-ter!", explanation: "Ucapan perpisahan umum." },
+            { indo: "Sampai jumpa lagi!", en: "See you again!", phonetic: "si yu a-gen!", explanation: "Ucapan perpisahan dengan harapan bertemu lagi." },
+            { indo: "Hati-hati di jalan.", en: "Take care.", phonetic: "teyk ker.", explanation: "Ucapan perpisahan yang penuh perhatian." },
+            { indo: "Semoga harimu menyenangkan.", en: "Have a nice day.", phonetic: "hav e nays dey.", explanation: "Doa untuk lawan bicara." },
+            { indo: "Semoga berhasil!", en: "Good luck!", phonetic: "gud lak!", explanation: "Memberi semangat untuk sesuatu." },
+            { indo: "Apakah kamu percaya pada Tuhan?", en: "Do you believe in God?", phonetic: "du yu bi-liv in god?", explanation: "Pertanyaan tentang keyakinan." },
+            { indo: "Apa agamamu?", en: "What is your religion?", phonetic: "wat iz yor ri-li-jun?", explanation: "Menanyakan agama." },
+            { indo: "Apakah kamu berpuasa?", en: "Are you fasting?", phonetic: "ar yu fas-ting?", explanation: "Sesuai musim (Ramadhan)." },
+            { indo: "Selamat hari raya!", en: "Happy holiday!", phonetic: "ha-pi ho-li-dey!", explanation: "Ucapan selamat hari besar." },
+            { indo: "Selamat ulang tahun!", en: "Happy birthday!", phonetic: "ha-pi burth-dey!", explanation: "Ucapan untuk yang berulang tahun." },
+            { indo: "Kapan ulang tahunmu?", en: "When is your birthday?", phonetic: "wen iz yor burth-dey?", explanation: "Menanyakan tanggal lahir." },
+            { indo: "Berapa berat badanmu?", en: "How much do you weigh?", phonetic: "haw mach du yu wey?", explanation: "Pertanyaan pribadi yang sensitif." },
+            { indo: "Berapa tinggi badannya?", en: "How tall are you?", phonetic: "haw tol ar yu?", explanation: "Menanyakan tinggi badan." },
+            { indo: "Kamu lebih tinggi dariku.", en: "You are taller than me.", phonetic: "yu ar tol-er dan mi.", explanation: "Membandingkan tinggi." },
+            { indo: "Apakah kamu kidal?", en: "Are you left-handed?", phonetic: "ar yu left-han-ded?", explanation: "Menanyakan tangan dominan." },
+            { indo: "Apakah kamu memakai kacamata?", en: "Do you wear glasses?", phonetic: "du yu wer gla-sis?", explanation: "Menanyakan penggunaan kacamata." },
+            { indo: "Apa warna rambutmu?", en: "What color is your hair?", phonetic: "wat kol-or iz yor her?", explanation: "Menanyakan warna rambut." },
+            { indo: "Rambutmu bagus.", en: "Your hair is nice.", phonetic: "yor her iz nays.", explanation: "Pujian untuk rambut." },
+            { indo: "Matamu indah.", en: "Your eyes are beautiful.", phonetic: "yor ayz ar byu-ti-ful.", explanation: "Pujian untuk mata." },
+            { indo: "Apa warna mata kamu?", en: "What color are your eyes?", phonetic: "wat kol-or ar yor ayz?", explanation: "Menanyakan warna mata." },
+            { indo: "Apakah kamu memakai riasan?", en: "Do you wear makeup?", phonetic: "du yu wer meyk-ap?", explanation: "Menanyakan penggunaan make-up." },
+            { indo: "Kamu terlihat muda.", en: "You look young.", phonetic: "yu luk yung.", explanation: "Pujian bahwa terlihat lebih muda." },
+            { indo: "Kamu terlihat tua.", en: "You look old.", phonetic: "yu luk old.", explanation: "Pernyataan yang bisa dianggap kurang sopan." },
+            { indo: "Apakah kamu perokok?", en: "Do you smoke?", phonetic: "du yu smok?", explanation: "Menanyakan kebiasaan merokok." },
+            { indo: "Apakah kamu minum alkohol?", en: "Do you drink alcohol?", phonetic: "du yu drink al-ko-hol?", explanation: "Menanyakan kebiasaan minum alkohol." },
+            { indo: "Apakah kamu sudah pernah mabuk?", en: "Have you ever been drunk?", phonetic: "hav yu ev-er bin drunk?", explanation: "Pertanyaan tentang pengalaman mabuk." },
+            { indo: "Hati-hati dengan kesehatanmu.", en: "Take care of your health.", phonetic: "teyk ker ov yor helth.", explanation: "Nasihat menjaga kesehatan." },
+            { indo: "Apa kamu suka olahraga pagi?", en: "Do you like morning exercise?", phonetic: "du yu layk mor-ning ek-ser-sayz?", explanation: "Menanyakan kebiasaan olahraga pagi." },
+            { indo: "Apakah kamu suka bersepeda?", en: "Do you like riding a bike?", phonetic: "du yu layk ray-ding e bayk?", explanation: "Versi lain dari suka bersepeda." },
+            { indo: "Apakah kamu punya SIM?", en: "Do you have a driver's license?", phonetic: "du yu hav e drai-vers lai-sens?", explanation: "Menanyakan surat izin mengemudi." },
+            { indo: "Apakah kamu punya mobil?", en: "Do you have a car?", phonetic: "du yu hav e kar?", explanation: "Menanyakan kepemilikan mobil." },
+            { indo: "Apakah kamu punya motor?", en: "Do you have a motorcycle?", phonetic: "du yu hav e mo-tor-sai-kel?", explanation: "Menanyakan kepemilikan motor." },
+            { indo: "Bagaimana cara ke rumahmu?", en: "How to get to your house?", phonetic: "hau tu get tu yor haus?", explanation: "Menanyakan arah (jika sudah dekat)." },
+            { indo: "Apakah kita bisa bertemu?", en: "Can we meet?", phonetic: "kan wi mit?", explanation: "Mengajak bertemu langsung (hati-hati)." },
+            { indo: "Aku tidak percaya orang asing.", en: "I don't trust strangers.", phonetic: "ai dont trast streyn-jers.", explanation: "Peringatan untuk diri sendiri." },
+            { indo: "Jangan percaya semua orang.", en: "Don't trust everyone.", phonetic: "dont trast ev-ri-wan.", explanation: "Nasihat untuk lawan bicara." },
+            { indo: "Internet itu berbahaya.", en: "The internet is dangerous.", phonetic: "de in-ter-net iz deyn-jer-us.", explanation: "Peringatan umum." },
+            { indo: "Jaga privasimu.", en: "Protect your privacy.", phonetic: "pro-tekt yor prai-va-si.", explanation: "Nasihat keamanan." },
+            { indo: "Jangan beri tahu siapa pun.", en: "Don't tell anyone.", phonetic: "dont tel en-i-wan.", explanation: "Meminta merahasiakan sesuatu." },
+            { indo: "Ini rahasia.", en: "This is a secret.", phonetic: "dis iz e si-kret.", explanation: "Memberi tahu bahwa itu rahasia." },
+            { indo: "Boleh aku curhat?", en: "Can I tell you something personal?", phonetic: "kan ai tel yu sum-thing per-so-nal?", explanation: "Meminta izin untuk cerita pribadi." },
+            { indo: "Aku percaya padamu.", en: "I trust you.", phonetic: "ai trast yu.", explanation: "Menyatakan kepercayaan." },
+            { indo: "Kamu bisa percaya padaku.", en: "You can trust me.", phonetic: "yu kan trast mi.", explanation: "Meyakinkan lawan bicara." },
+            { indo: "Aku akan menjaga rahasiamu.", en: "I will keep your secret.", phonetic: "ai wil kip yor si-kret.", explanation: "Janji untuk tidak membocorkan rahasia." },
+            { indo: "Aku tidak akan memberitahu siapapun.", en: "I won't tell anyone.", phonetic: "ai wont tel en-i-wan.", explanation: "Janji untuk diam." },
+            { indo: "Apakah ini pertama kalinya kamu di sini?", en: "Is this your first time here?", phonetic: "iz dis yor first taym hir?", explanation: "Menanyakan pengalaman di platform." },
+            { indo: "Berapa lama kamu di sini?", en: "How long have you been here?", phonetic: "haw long hav yu bin hir?", explanation: "Menanyakan durasi berada di platform." },
+            { indo: "Apakah kamu suka aplikasi ini?", en: "Do you like this app?", phonetic: "du yu layk dis ap?", explanation: "Menanyakan pendapat tentang Ome TV." },
+            { indo: "Apa pendapatmu tentang Ome TV?", en: "What do you think about Ome TV?", phonetic: "wat du yu thingk a-baut om ti-vi?", explanation: "Meminta opini." },
+            { indo: "Aku baru pertama kali pakai ini.", en: "This is my first time using this.", phonetic: "dis iz may first taym yuz-ing dis.", explanation: "Memberi tahu bahwa masih baru." }
+];
+
+        let currentIndex = 0;
+        let timerInterval;
+        let appSettings = { volume: 0.8, timer: 10 };
+        const synth = window.speechSynthesis;
+
+        window.onload = () => {
+            document.getElementById('input-volume').oninput = (e) => {
+                appSettings.volume = e.target.value / 300;
+                document.getElementById('val-volume').innerText = e.target.value;
+            };
+            document.getElementById('input-timer').oninput = (e) => {
+                appSettings.timer = parseInt(e.target.value);
+                document.getElementById('val-timer').innerText = e.target.value;
+                document.getElementById('timer-display').innerText = e.target.value;
+            };
+            updateQuestionUI();
+        };
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            if (screenId === 'exercise') startChallenge();
+        }
+
+        function changeQuestion(dir) {
+            currentIndex += dir;
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= database.length) currentIndex = database.length - 1;
+            startChallenge();
+        }
+
+        function startChallenge() {
+            clearInterval(timerInterval);
+            synth.cancel();
+            const data = database[currentIndex];
+            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1} / ${database.length}`;
+            document.getElementById('text-indo').innerText = data.indo;
+            document.getElementById('answer-area').classList.remove('visible');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+            speak(data.indo, 'id-ID');
+            let timeLeft = appSettings.timer;
+            document.getElementById('timer-display').innerText = timeLeft;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = timeLeft;
+                if (timeLeft <= 0) revealAnswer();
+            }, 1000);
+        }
+
+        function revealAnswer() {
+            clearInterval(timerInterval);
+            const data = database[currentIndex];
+            document.getElementById('text-en').innerText = data.en;
+            document.getElementById('text-phonetic').innerText = data.phonetic;
+            document.getElementById('text-explanation').innerText = data.explanation;
+            document.getElementById('answer-area').classList.add('visible');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            setTimeout(() => { speak(data.en, 'en-US'); }, 300);
+        }
+
+        function speak(text, lang) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang;
+            utter.volume = appSettings.volume;
+            synth.speak(utter);
+        }
+
+        function updateQuestionUI() {
+            document.getElementById('text-indo').innerText = database[currentIndex].indo;
+        }
+    </script>
+</body>
+</html>
