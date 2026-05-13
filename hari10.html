@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .app-container { width: 100%; max-width: 500px; }
+
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Andi</h2><p id="sessionCounter">Sesi 1 / 10</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `What day is it today?`, pId: () => `Hari apa hari ini?`, aEn: () => `Today is Monday.`, aId: () => `Hari ini Senin.` },
+  { pEn: () => `What is today's date?`, pId: () => `Tanggal berapa hari ini?`, aEn: () => `It's June 15th.`, aId: () => `Sekarang tanggal 15 Juni.` },
+  { pEn: () => `What month is it?`, pId: () => `Bulan apa ini?`, aEn: () => `It's December.`, aId: () => `Ini bulan Desember.` },
+  { pEn: () => `What year is it?`, pId: () => `Tahun berapa ini?`, aEn: () => `It's 2025.`, aId: () => `Ini tahun 2025.` },
+  { pEn: () => `What day comes after Tuesday?`, pId: () => `Hari apa setelah Selasa?`, aEn: () => `Wednesday.`, aId: () => `Rabu.` },
+  { pEn: () => `What day comes before Friday?`, pId: () => `Hari apa sebelum Jumat?`, aEn: () => `Thursday.`, aId: () => `Kamis.` },
+  { pEn: () => `Is today your birthday?`, pId: () => `Apakah hari ini ulang tahunmu?`, aEn: () => `No, my birthday is next week.`, aId: () => `Bukan, ulang tahunku minggu depan.` },
+  { pEn: () => `When is your birthday?`, pId: () => `Kapan ulang tahunmu?`, aEn: () => `My birthday is on July 10th.`, aId: () => `Ulang tahunku tanggal 10 Juli.` },
+  { pEn: () => `What is your favorite month?`, pId: () => `Bulan apa favoritmu?`, aEn: () => `I love October.`, aId: () => `Aku suka Oktober.` },
+  { pEn: () => `What is your favorite day of the week?`, pId: () => `Hari apa favoritmu dalam seminggu?`, aEn: () => `Saturday is my favorite.`, aId: () => `Sabtu adalah favoritku.` },
+  { pEn: () => `What day was yesterday?`, pId: () => `Kemarin hari apa?`, aEn: () => `Yesterday was Sunday.`, aId: () => `Kemarin Minggu.` },
+  { pEn: () => `What day is tomorrow?`, pId: () => `Besok hari apa?`, aEn: () => `Tomorrow is Wednesday.`, aId: () => `Besok Rabu.` },
+  { pEn: () => `How many months are in a year?`, pId: () => `Ada berapa bulan dalam setahun?`, aEn: () => `12 months.`, aId: () => `12 bulan.` },
+  { pEn: () => `How many days are in a week?`, pId: () => `Ada berapa hari dalam seminggu?`, aEn: () => `7 days.`, aId: () => `7 hari.` },
+  { pEn: () => `What month comes after March?`, pId: () => `Bulan apa setelah Maret?`, aEn: () => `April.`, aId: () => `April.` },
+  { pEn: () => `What month comes before August?`, pId: () => `Bulan apa sebelum Agustus?`, aEn: () => `July.`, aId: () => `Juli.` },
+  { pEn: () => `What is the first month of the year?`, pId: () => `Apa bulan pertama dalam setahun?`, aEn: () => `January.`, aId: () => `Januari.` },
+  { pEn: () => `What is the last month of the year?`, pId: () => `Apa bulan terakhir dalam setahun?`, aEn: () => `December.`, aId: () => `Desember.` },
+  { pEn: () => `What date is New Year's Eve?`, pId: () => `Tanggal berapa malam tahun baru?`, aEn: () => `December 31st.`, aId: () => `31 Desember.` },
+  { pEn: () => `What date is New Year's Day?`, pId: () => `Tanggal berapa hari tahun baru?`, aEn: () => `January 1st.`, aId: () => `1 Januari.` },
+  { pEn: () => `When is Christmas?`, pId: () => `Kapan hari Natal?`, aEn: () => `Christmas is on December 25th.`, aId: () => `Natal tanggal 25 Desember.` },
+  { pEn: () => `When is Halloween?`, pId: () => `Kapan Halloween?`, aEn: () => `October 31st.`, aId: () => `31 Oktober.` },
+  { pEn: () => `When is Valentine's Day?`, pId: () => `Kapan hari Valentine?`, aEn: () => `February 14th.`, aId: () => `14 Februari.` },
+  { pEn: () => `What day is the weekend?`, pId: () => `Hari apa yang termasuk akhir pekan?`, aEn: () => `Saturday and Sunday.`, aId: () => `Sabtu dan Minggu.` },
+  { pEn: () => `Do you like Mondays?`, pId: () => `Apakah kamu suka hari Senin?`, aEn: () => `No, I don't like Mondays.`, aId: () => `Tidak, aku tidak suka Senin.` },
+  { pEn: () => `What is your birth month?`, pId: () => `Bulan apa kamu lahir?`, aEn: () => `I was born in May.`, aId: () => `Aku lahir di bulan Mei.` },
+  { pEn: () => `What year were you born?`, pId: () => `Kamu lahir tahun berapa?`, aEn: () => `I was born in 2005.`, aId: () => `Aku lahir tahun 2005.` },
+  { pEn: () => `What is the date today in numbers?`, pId: () => `Tanggal berapa hari ini dalam angka?`, aEn: () => `Today is 15/06/2025.`, aId: () => `Hari ini 15/06/2025.` },
+  { pEn: () => `What month has 28 days?`, pId: () => `Bulan apa yang memiliki 28 hari?`, aEn: () => `All months have 28 days, but February has only 28 usually.`, aId: () => `Semua bulan punya 28 hari, tapi Februari biasanya cuma 28.` },
+  { pEn: () => `What month has 31 days?`, pId: () => `Bulan apa yang memiliki 31 hari?`, aEn: () => `January, March, May, July, August, October, December.`, aId: () => `Januari, Maret, Mei, Juli, Agustus, Oktober, Desember.` },
+  { pEn: () => `Is this a leap year?`, pId: () => `Apakah ini tahun kabisat?`, aEn: () => `No, 2025 is not a leap year.`, aId: () => `Tidak, 2025 bukan tahun kabisat.` },
+  { pEn: () => `What day is your favorite day?`, pId: () => `Hari apa yang kamu sukai?`, aEn: () => `Friday because the weekend is coming.`, aId: () => `Jumat karena akhir pekan akan tiba.` },
+  { pEn: () => `Do you celebrate your birthday big?`, pId: () => `Apakah kamu merayakan ulang tahunmu dengan meriah?`, aEn: () => `Just a small party with family.`, aId: () => `Hanya pesta kecil dengan keluarga.` },
+  { pEn: () => `What is your zodiac sign?`, pId: () => `Apa zodiakmu?`, aEn: () => `I'm a Leo, born in August.`, aId: () => `Aku Leo, lahir di bulan Agustus.` },
+  { pEn: () => `Do you know the day of the week you were born?`, pId: () => `Kamu tahu hari apa kamu lahir?`, aEn: () => `I was born on a Tuesday.`, aId: () => `Aku lahir hari Selasa.` },
+  { pEn: () => `What date is your mom's birthday?`, pId: () => `Tanggal berapa ulang tahun ibumu?`, aEn: () => `Her birthday is on March 20th.`, aId: () => `Ulang tahunnya tanggal 20 Maret.` },
+  { pEn: () => `What is the date of independence day in your country?`, pId: () => `Tanggal berapa hari kemerdekaan di negaramu?`, aEn: () => `In Indonesia, it's August 17th.`, aId: () => `Di Indonesia, tanggal 17 Agustus.` },
+  { pEn: () => `What year did you start school?`, pId: () => `Tahun berapa kamu mulai sekolah?`, aEn: () => `I started in 2011.`, aId: () => `Aku mulai tahun 2011.` },
+  { pEn: () => `What year will you graduate?`, pId: () => `Tahun berapa kamu akan lulus?`, aEn: () => `I will graduate in 2026.`, aId: () => `Aku akan lulus tahun 2026.` },
+  { pEn: () => `Do you like summer months?`, pId: () => `Apakah kamu suka bulan-bulan musim panas?`, aEn: () => `Yes, June, July, and August are great.`, aId: () => `Iya, Juni, Juli, dan Agustus bagus.` },
+  { pEn: () => `What month is the coldest in your country?`, pId: () => `Bulan apa yang paling dingin di negaramu?`, aEn: () => `January is the coldest.`, aId: () => `Januari adalah yang terdingin.` },
+  { pEn: () => `What month is the hottest?`, pId: () => `Bulan apa yang paling panas?`, aEn: () => `July and August are the hottest.`, aId: () => `Juli dan Agustus yang terpanas.` },
+  { pEn: () => `What is the 10th month of the year?`, pId: () => `Apa bulan ke-10 dalam setahun?`, aEn: () => `October.`, aId: () => `Oktober.` },
+  { pEn: () => `What is the 6th month?`, pId: () => `Apa bulan ke-6?`, aEn: () => `June.`, aId: () => `Juni.` },
+  { pEn: () => `How many days in September?`, pId: () => `Ada berapa hari di bulan September?`, aEn: () => `30 days.`, aId: () => `30 hari.` },
+  { pEn: () => `How many days in April?`, pId: () => `Ada berapa hari di bulan April?`, aEn: () => `Also 30 days.`, aId: () => `Juga 30 hari.` },
+  { pEn: () => `When is the first day of spring?`, pId: () => `Kapan hari pertama musim semi?`, aEn: () => `Around March 20th or 21st.`, aId: () => `Sekitar tanggal 20 atau 21 Maret.` },
+  { pEn: () => `What day do you usually do laundry?`, pId: () => `Hari apa kamu biasanya mencuci baju?`, aEn: () => `On Sundays.`, aId: () => `Hari Minggu.` },
+  { pEn: () => `What day is trash day?`, pId: () => `Hari apa jadwal buang sampah?`, aEn: () => `Every Wednesday morning.`, aId: () => `Setiap Rabu pagi.` },
+  { pEn: () => `Do you plan for next year?`, pId: () => `Apakah kamu merencanakan untuk tahun depan?`, aEn: () => `Yes, I have big plans for 2026.`, aId: () => `Iya, aku punya rencana besar untuk 2026.` },
+  { pEn: () => `What date is your parents' anniversary?`, pId: () => `Tanggal berapa hari jadi orang tuamu?`, aEn: () => `Their anniversary is on May 5th.`, aId: () => `Hari jadi mereka tanggal 5 Mei.` },
+  { pEn: () => `When is the last day of school?`, pId: () => `Kapan hari terakhir sekolah?`, aEn: () => `It's on June 20th.`, aId: () => `Tanggal 20 Juni.` },
+  { pEn: () => `What year did you travel the most?`, pId: () => `Tahun apa kamu paling sering bepergian?`, aEn: () => `I traveled most in 2023.`, aId: () => `Aku paling sering bepergian tahun 2023.` },
+  { pEn: () => `What year is your favorite memory from?`, pId: () => `Tahun berapa kenangan favoritmu?`, aEn: () => `2019 was the best year.`, aId: () => `2019 adalah tahun terbaik.` },
+  { pEn: () => `Do you remember the year 2020?`, pId: () => `Apakah kamu ingat tahun 2020?`, aEn: () => `Yes, that was the pandemic year.`, aId: () => `Iya, itu tahun pandemi.` },
+  { pEn: () => `What day is your day off?`, pId: () => `Hari apa hari liburmu?`, aEn: () => `Saturday is my day off.`, aId: () => `Sabtu adalah hari liburku.` },
+  { pEn: () => `What month do you like least?`, pId: () => `Bulan apa yang paling tidak kamu sukai?`, aEn: () => `I don't like February because it's cold.`, aId: () => `Aku tidak suka Februari karena dingin.` },
+  { pEn: () => `What is the 12th month?`, pId: () => `Apa bulan ke-12?`, aEn: () => `December.`, aId: () => `Desember.` },
+  { pEn: () => `What is the 1st month?`, pId: () => `Apa bulan pertama?`, aEn: () => `January.`, aId: () => `Januari.` },
+  { pEn: () => `What year did you get your first phone?`, pId: () => `Tahun berapa kamu punya HP pertama?`, aEn: () => `I got it in 2018.`, aId: () => `Aku dapatnya tahun 2018.` },
+  { pEn: () => `What year did you join social media?`, pId: () => `Tahun berapa kamu bergabung dengan media sosial?`, aEn: () => `I joined Instagram in 2017.`, aId: () => `Aku gabung Instagram tahun 2017.` },
+  { pEn: () => `What is your favorite year of the 2000s?`, pId: () => `Apa tahun favoritmu di tahun 2000-an?`, aEn: () => `2007 was awesome.`, aId: () => `2007 itu keren.` },
+  { pEn: () => `When is the full moon this month?`, pId: () => `Kapan bulan purnama bulan ini?`, aEn: () => `Around the 15th or 16th.`, aId: () => `Sekitar tanggal 15 atau 16.` },
+  { pEn: () => `What day do you have your weekly meeting?`, pId: () => `Hari apa kamu ada rapat mingguan?`, aEn: () => `Every Monday at 9 AM.`, aId: () => `Setiap Senin jam 9 pagi.` },
+  { pEn: () => `Do you like Friday the 13th?`, pId: () => `Apakah kamu suka hari Jumat tanggal 13?`, aEn: () => `It's just a normal day for me.`, aId: () => `Itu hari biasa bagiku.` },
+  { pEn: () => `What is the date of the summer solstice?`, pId: () => `Tanggal berapa titik balik matahari musim panas?`, aEn: () => `Around June 20th to 22nd.`, aId: () => `Sekitar tanggal 20 sampai 22 Juni.` },
+  { pEn: () => `What year did you learn to swim?`, pId: () => `Tahun berapa kamu belajar berenang?`, aEn: () => `I learned in 2012.`, aId: () => `Aku belajar tahun 2012.` },
+  { pEn: () => `What year did you go to your first concert?`, pId: () => `Tahun berapa kamu pergi ke konser pertama?`, aEn: () => `It was in 2022.`, aId: () => `Itu tahun 2022.` },
+  { pEn: () => `Do you look forward to a specific month?`, pId: () => `Apakah kamu menantikan bulan tertentu?`, aEn: () => `Yes, December because of Christmas.`, aId: () => `Iya, Desember karena Natal.` },
+  { pEn: () => `What day is movie night?`, pId: () => `Hari apa malam nonton film?`, aEn: () => `Friday night is movie night.`, aId: () => `Jumat malam adalah malam nonton film.` },
+  { pEn: () => `What year did you first fly on a plane?`, pId: () => `Tahun berapa kamu pertama kali naik pesawat?`, aEn: () => `I first flew in 2019.`, aId: () => `Aku pertama kali naik pesawat tahun 2019.` },
+  { pEn: () => `What date is your favorite holiday?`, pId: () => `Tanggal berapa hari libur favoritmu?`, aEn: () => `My favorite is December 25th.`, aId: () => `Favoritku tanggal 25 Desember.` },
+  { pEn: () => `Do you know what day it is?`, pId: () => `Kamu tahu hari apa ini?`, aEn: () => `It's Wednesday, right?`, aId: () => `Ini hari Rabu, kan?` },
+  { pEn: () => `What month do people celebrate Thanksgiving?`, pId: () => `Bulan apa orang merayakan Thanksgiving?`, aEn: () => `In November.`, aId: () => `Di bulan November.` },
+  { pEn: () => `What year will we have the next Olympics?`, pId: () => `Tahun berapa Olimpiade berikutnya?`, aEn: () => `The next Olympics is in 2026.`, aId: () => `Olimpiade berikutnya tahun 2026.` },
+  { pEn: () => `What is the date of your final exam?`, pId: () => `Tanggal berapa ujian akhirmu?`, aEn: () => `It's on May 25th.`, aId: () => `Tanggal 25 Mei.` },
+  { pEn: () => `When is payday?`, pId: () => `Kapan hari gajian?`, aEn: () => `Payday is on the last Friday of the month.`, aId: () => `Hari gajian di Jumat terakhir bulan ini.` },
+  { pEn: () => `What year do you want to buy a car?`, pId: () => `Tahun berapa kamu ingin membeli mobil?`, aEn: () => `Hopefully in 2027.`, aId: () => `Semoga tahun 2027.` },
+  { pEn: () => `What day is your weekly grocery shopping?`, pId: () => `Hari apa kamu belanja kebutuhan mingguan?`, aEn: () => `I shop every Saturday.`, aId: () => `Aku belanja setiap Sabtu.` },
+  { pEn: () => `Do you remember the year 2008?`, pId: () => `Apakah kamu ingat tahun 2008?`, aEn: () => `I was a child, but I remember some things.`, aId: () => `Aku masih kecil, tapi aku ingat beberapa hal.` },
+  { pEn: () => `What is the first day of the week in your calendar?`, pId: () => `Apa hari pertama dalam seminggu di kalendermu?`, aEn: () => `Sunday or Monday, depending.`, aId: () => `Minggu atau Senin, tergantung.` },
+  { pEn: () => `What month has the most holidays?`, pId: () => `Bulan apa yang paling banyak hari liburnya?`, aEn: () => `December has many holidays.`, aId: () => `Desember punya banyak hari libur.` },
+  { pEn: () => `When is your favorite festival?`, pId: () => `Kapan festival favoritmu?`, aEn: () => `In July, there's a big festival.`, aId: () => `Di bulan Juli, ada festival besar.` },
+  { pEn: () => `What year did you get your first pet?`, pId: () => `Tahun berapa kamu punya hewan peliharaan pertama?`, aEn: () => `I got my first pet in 2016.`, aId: () => `Aku punya hewan pertama tahun 2016.` },
+  { pEn: () => `What day is laundry day for you?`, pId: () => `Hari apa hari mencucimu?`, aEn: () => `I do laundry on Thursdays.`, aId: () => `Aku cuci baju hari Kamis.` },
+  { pEn: () => `Do you like the month of April?`, pId: () => `Apakah kamu suka bulan April?`, aEn: () => `Yes, spring is beautiful in April.`, aId: () => `Iya, musim semi indah di bulan April.` },
+  { pEn: () => `What year was your parents married?`, pId: () => `Tahun berapa orang tuamu menikah?`, aEn: () => `They got married in 2003.`, aId: () => `Mereka menikah tahun 2003.` },
+  { pEn: () => `What day is your longest day of the week?`, pId: () => `Hari apa hari terpanjangmu dalam seminggu?`, aEn: () => `Tuesday is my longest day.`, aId: () => `Selasa adalah hari terpanjangku.` },
+  { pEn: () => `What date is Earth Day?`, pId: () => `Tanggal berapa Hari Bumi?`, aEn: () => `April 22nd.`, aId: () => `22 April.` },
+  { pEn: () => `What year did you start your first job?`, pId: () => `Tahun berapa kamu memulai pekerjaan pertamamu?`, aEn: () => `I started working in 2024.`, aId: () => `Aku mulai bekerja tahun 2024.` },
+  { pEn: () => `Do you prefer odd or even years?`, pId: () => `Apakah kamu lebih suka tahun ganjil atau genap?`, aEn: () => `I like even years better.`, aId: () => `Aku lebih suka tahun genap.` },
+  { pEn: () => `What month is your wedding anniversary?`, pId: () => `Bulan apa hari jadi pernikahanmu?`, aEn: () => `I'm not married yet.`, aId: () => `Aku belum menikah.` },
+  { pEn: () => `What year did you move to your current house?`, pId: () => `Tahun berapa kamu pindah ke rumahmu sekarang?`, aEn: () => `We moved in 2021.`, aId: () => `Kami pindah tahun 2021.` },
+  { pEn: () => `What day is garbage pickup day?`, pId: () => `Hari apa jadwal angkut sampah?`, aEn: () => `It's every Tuesday morning.`, aId: () => `Setiap Selasa pagi.` },
+  { pEn: () => `What is the date of the next full moon?`, pId: () => `Tanggal berapa bulan purnama berikutnya?`, aEn: () => `I think it's on the 8th.`, aId: () => `Aku pikir tanggal 8.` },
+  { pEn: () => `What year was your favorite vacation?`, pId: () => `Tahun berapa liburan favoritmu?`, aEn: () => `My favorite was in 2022.`, aId: () => `Liburan favoritku tahun 2022.` },
+  { pEn: () => `Do you remember what day it was yesterday?`, pId: () => `Apakah kamu ingat kemarin hari apa?`, aEn: () => `Yes, yesterday was Thursday.`, aId: () => `Iya, kemarin Kamis.` },
+  { pEn: () => `What is the date of your driver's license?`, pId: () => `Tanggal berapa SIM-mu?`, aEn: () => `I got my license on March 3rd.`, aId: () => `Aku mendapat SIM tanggal 3 Maret.` },
+  { pEn: () => `What year will you turn 21?`, pId: () => `Tahun berapa kamu akan berusia 21 tahun?`, aEn: () => `I will turn 21 in 2026.`, aId: () => `Aku akan berusia 21 tahun di 2026.` }
+];
+  // ===[AKHIR TANDA] ===
+
+  let current = 0;
+  let voices =[];
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
+
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
+</body>
+</html>
