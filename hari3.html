@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .app-container { width: 100%; max-width: 500px; }
+
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 10</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  {
+    pEn: () => `Good morning!`,
+    pId: () => `Selamat pagi!`,
+    aEn: () => `Good morning too!`,
+    aId: () => `Selamat pagi juga!`
+  },
+
+  {
+    pEn: () => `Good evening!`,
+    pId: () => `Selamat malam!`,
+    aEn: () => `Good evening!`,
+    aId: () => `Selamat malam!`
+  },
+
+  {
+    pEn: () => `How is your day?`,
+    pId: () => `Bagaimana harimu?`,
+    aEn: () => `My day is good.`,
+    aId: () => `Hari saya baik.`
+  },
+
+  {
+    pEn: () => `Are you at home now?`,
+    pId: () => `Apakah kamu di rumah sekarang?`,
+    aEn: () => `Yes, I am at home.`,
+    aId: () => `Ya, saya di rumah.`
+  },
+
+  {
+    pEn: () => `Are you alone?`,
+    pId: () => `Apakah kamu sendirian?`,
+    aEn: () => `No, I’m with my family.`,
+    aId: () => `Tidak, saya bersama keluarga.`
+  },
+
+  {
+    pEn: () => `Do you like pizza?`,
+    pId: () => `Apakah kamu suka pizza?`,
+    aEn: () => `Yes, I like pizza.`,
+    aId: () => `Ya, saya suka pizza.`
+  },
+
+  {
+    pEn: () => `What is your favorite snack?`,
+    pId: () => `Apa camilan favoritmu?`,
+    aEn: () => `Chips.`,
+    aId: () => `Keripik.`
+  },
+
+  {
+    pEn: () => `Do you drink milk?`,
+    pId: () => `Apakah kamu minum susu?`,
+    aEn: () => `Yes, every morning.`,
+    aId: () => `Ya, setiap pagi.`
+  },
+
+  {
+    pEn: () => `Can you play guitar?`,
+    pId: () => `Bisakah kamu bermain gitar?`,
+    aEn: () => `No, I can’t.`,
+    aId: () => `Tidak, saya tidak bisa.`
+  },
+
+  {
+    pEn: () => `Can you play piano?`,
+    pId: () => `Bisakah kamu bermain piano?`,
+    aEn: () => `A little.`,
+    aId: () => `Sedikit.`
+  },
+
+  {
+    pEn: () => `What is your favorite song?`,
+    pId: () => `Apa lagu favoritmu?`,
+    aEn: () => `I like pop songs.`,
+    aId: () => `Saya suka lagu pop.`
+  },
+
+  {
+    pEn: () => `Do you like K-pop?`,
+    pId: () => `Apakah kamu suka K-pop?`,
+    aEn: () => `Yes, I do.`,
+    aId: () => `Ya, saya suka.`
+  },
+
+  {
+    pEn: () => `Who is your favorite actor?`,
+    pId: () => `Siapa aktor favoritmu?`,
+    aEn: () => `Tom Holland.`,
+    aId: () => `Tom Holland.`
+  },
+
+  {
+    pEn: () => `Do you like comedy movies?`,
+    pId: () => `Apakah kamu suka film komedi?`,
+    aEn: () => `Yes, they are funny.`,
+    aId: () => `Ya, itu lucu.`
+  },
+
+  {
+    pEn: () => `What do you usually do after school?`,
+    pId: () => `Apa yang biasanya kamu lakukan setelah sekolah?`,
+    aEn: () => `I play games.`,
+    aId: () => `Saya bermain game.`
+  },
+
+  {
+    pEn: () => `Do you clean your room?`,
+    pId: () => `Apakah kamu membersihkan kamarmu?`,
+    aEn: () => `Yes, sometimes.`,
+    aId: () => `Ya, kadang-kadang.`
+  },
+
+  {
+    pEn: () => `What color is your room?`,
+    pId: () => `Apa warna kamarmu?`,
+    aEn: () => `It is white.`,
+    aId: () => `Warnanya putih.`
+  },
+
+  {
+    pEn: () => `Do you have many friends?`,
+    pId: () => `Apakah kamu punya banyak teman?`,
+    aEn: () => `Yes, I do.`,
+    aId: () => `Ya, saya punya.`
+  },
+
+  {
+    pEn: () => `Who do you talk to every day?`,
+    pId: () => `Dengan siapa kamu berbicara setiap hari?`,
+    aEn: () => `My best friend.`,
+    aId: () => `Sahabat saya.`
+  },
+
+  {
+    pEn: () => `Do you like phone calls?`,
+    pId: () => `Apakah kamu suka teleponan?`,
+    aEn: () => `Not really.`,
+    aId: () => `Tidak terlalu.`
+  },
+
+  {
+    pEn: () => `Do you like chatting online?`,
+    pId: () => `Apakah kamu suka chatting online?`,
+    aEn: () => `Yes, it is fun.`,
+    aId: () => `Ya, itu menyenangkan.`
+  },
+
+  {
+    pEn: () => `What is your favorite game?`,
+    pId: () => `Apa game favoritmu?`,
+    aEn: () => `Minecraft.`,
+    aId: () => `Minecraft.`
+  },
+
+  {
+    pEn: () => `Do you play games at night?`,
+    pId: () => `Apakah kamu bermain game malam hari?`,
+    aEn: () => `Yes, sometimes.`,
+    aId: () => `Ya, kadang-kadang.`
+  },
+
+  {
+    pEn: () => `What time do you eat dinner?`,
+    pId: () => `Jam berapa kamu makan malam?`,
+    aEn: () => `At 7 p.m.`,
+    aId: () => `Jam 7 malam.`
+  },
+
+  {
+    pEn: () => `Can you speak slowly?`,
+    pId: () => `Bisakah kamu bicara pelan-pelan?`,
+    aEn: () => `Yes, of course.`,
+    aId: () => `Ya, tentu saja.`
+  },
+
+  {
+    pEn: () => `Can you repeat that?`,
+    pId: () => `Bisakah kamu mengulanginya?`,
+    aEn: () => `Sure.`,
+    aId: () => `Tentu.`
+  },
+
+  {
+    pEn: () => `Do you understand me?`,
+    pId: () => `Apakah kamu mengerti saya?`,
+    aEn: () => `Yes, I understand.`,
+    aId: () => `Ya, saya mengerti.`
+  },
+
+  {
+    pEn: () => `Is English difficult for you?`,
+    pId: () => `Apakah bahasa Inggris sulit untukmu?`,
+    aEn: () => `A little difficult.`,
+    aId: () => `Sedikit sulit.`
+  },
+
+  {
+    pEn: () => `Do you study English every day?`,
+    pId: () => `Apakah kamu belajar bahasa Inggris setiap hari?`,
+    aEn: () => `Yes, every day.`,
+    aId: () => `Ya, setiap hari.`
+  },
+
+  {
+    pEn: () => `What do you do in the morning?`,
+    pId: () => `Apa yang kamu lakukan di pagi hari?`,
+    aEn: () => `I take a shower.`,
+    aId: () => `Saya mandi.`
+  },
+
+  {
+    pEn: () => `Do you eat breakfast?`,
+    pId: () => `Apakah kamu sarapan?`,
+    aEn: () => `Yes, always.`,
+    aId: () => `Ya, selalu.`
+  },
+
+  {
+    pEn: () => `What is your favorite breakfast?`,
+    pId: () => `Apa sarapan favoritmu?`,
+    aEn: () => `Fried rice.`,
+    aId: () => `Nasi goreng.`
+  },
+
+  {
+    pEn: () => `Do you like ice cream?`,
+    pId: () => `Apakah kamu suka es krim?`,
+    aEn: () => `Yes, very much.`,
+    aId: () => `Ya, sangat suka.`
+  },
+
+  {
+    pEn: () => `What flavor do you like?`,
+    pId: () => `Rasa apa yang kamu suka?`,
+    aEn: () => `Chocolate.`,
+    aId: () => `Cokelat.`
+  },
+
+  {
+    pEn: () => `Do you like hot weather?`,
+    pId: () => `Apakah kamu suka cuaca panas?`,
+    aEn: () => `No, I like cold weather.`,
+    aId: () => `Tidak, saya suka cuaca dingin.`
+  },
+
+  {
+    pEn: () => `Do you wear glasses?`,
+    pId: () => `Apakah kamu memakai kacamata?`,
+    aEn: () => `Yes, I do.`,
+    aId: () => `Ya, saya memakai.`
+  },
+
+  {
+    pEn: () => `What is your favorite clothes color?`,
+    pId: () => `Apa warna baju favoritmu?`,
+    aEn: () => `Black.`,
+    aId: () => `Hitam.`
+  },
+
+  {
+    pEn: () => `Do you like sneakers?`,
+    pId: () => `Apakah kamu suka sepatu sneakers?`,
+    aEn: () => `Yes, I love sneakers.`,
+    aId: () => `Ya, saya sangat suka sneakers.`
+  },
+
+  {
+    pEn: () => `How many hours do you sleep?`,
+    pId: () => `Berapa jam kamu tidur?`,
+    aEn: () => `About seven hours.`,
+    aId: () => `Sekitar tujuh jam.`
+  },
+
+  {
+    pEn: () => `Do you like cooking?`,
+    pId: () => `Apakah kamu suka memasak?`,
+    aEn: () => `Yes, it is fun.`,
+    aId: () => `Ya, itu menyenangkan.`
+  },
+
+  {
+    pEn: () => `What can you cook?`,
+    pId: () => `Apa yang bisa kamu masak?`,
+    aEn: () => `Noodles and eggs.`,
+    aId: () => `Mie dan telur.`
+  },
+
+  {
+    pEn: () => `Do you like taking selfies?`,
+    pId: () => `Apakah kamu suka selfie?`,
+    aEn: () => `Yes, sometimes.`,
+    aId: () => `Ya, kadang-kadang.`
+  },
+
+  {
+    pEn: () => `Are you funny?`,
+    pId: () => `Apakah kamu lucu?`,
+    aEn: () => `Maybe a little.`,
+    aId: () => `Mungkin sedikit.`
+  },
+
+  {
+    pEn: () => `Do you laugh a lot?`,
+    pId: () => `Apakah kamu sering tertawa?`,
+    aEn: () => `Yes, I do.`,
+    aId: () => `Ya, saya sering.`
+  },
+
+  {
+    pEn: () => `What makes you happy?`,
+    pId: () => `Apa yang membuatmu bahagia?`,
+    aEn: () => `My family and friends.`,
+    aId: () => `Keluarga dan teman-teman saya.`
+  },
+
+  {
+    pEn: () => `Do you like animals?`,
+    pId: () => `Apakah kamu suka hewan?`,
+    aEn: () => `Yes, especially cats.`,
+    aId: () => `Ya, terutama kucing.`
+  },
+
+  {
+    pEn: () => `What is your dream?`,
+    pId: () => `Apa impianmu?`,
+    aEn: () => `I want to travel the world.`,
+    aId: () => `Saya ingin keliling dunia.`
+  },
+
+  {
+    pEn: () => `Do you like learning new things?`,
+    pId: () => `Apakah kamu suka belajar hal baru?`,
+    aEn: () => `Yes, I do.`,
+    aId: () => `Ya, saya suka.`
+  },
+
+  {
+    pEn: () => `Are you ready to study English?`,
+    pId: () => `Apakah kamu siap belajar bahasa Inggris?`,
+    aEn: () => `Yes, I am ready.`,
+    aId: () => `Ya, saya siap.`
+  },
+
+  {
+    pEn: () => `See you tomorrow!`,
+    pId: () => `Sampai jumpa besok!`,
+    aEn: () => `See you!`,
+    aId: () => `Sampai jumpa!`
+  }
+];
+  // ===[AKHIR TANDA] ===
+
+  let current = 0;
+  let voices =[];
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
+
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
+</body>
+</html>
