@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .app-container { width: 100%; max-width: 500px; }
+
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Andi</h2><p id="sessionCounter">Sesi 1 / 10</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `What time is it?`, pId: () => `Jam berapa sekarang?`, aEn: () => `It's 10 o'clock.`, aId: () => `Sekarang jam 10 tepat.` },
+  { pEn: () => `What time do you wake up?`, pId: () => `Jam berapa kamu bangun?`, aEn: () => `I wake up at 7 AM.`, aId: () => `Aku bangun jam 7 pagi.` },
+  { pEn: () => `What time do you go to bed?`, pId: () => `Jam berapa kamu tidur?`, aEn: () => `I go to bed at 11 PM.`, aId: () => `Aku tidur jam 11 malam.` },
+  { pEn: () => `What time is it in your country?`, pId: () => `Jam berapa di negaramu?`, aEn: () => `It's 3:30 PM.`, aId: () => `Sekarang jam 3:30 sore.` },
+  { pEn: () => `What time do you have breakfast?`, pId: () => `Jam berapa kamu sarapan?`, aEn: () => `At 8 AM.`, aId: () => `Jam 8 pagi.` },
+  { pEn: () => `What time do you have lunch?`, pId: () => `Jam berapa kamu makan siang?`, aEn: () => `I have lunch at 12 PM.`, aId: () => `Aku makan siang jam 12 siang.` },
+  { pEn: () => `What time do you have dinner?`, pId: () => `Jam berapa kamu makan malam?`, aEn: () => `At 7 PM.`, aId: () => `Jam 7 malam.` },
+  { pEn: () => `What time does school start?`, pId: () => `Jam berapa sekolah dimulai?`, aEn: () => `School starts at 8 AM.`, aId: () => `Sekolah mulai jam 8 pagi.` },
+  { pEn: () => `What time does school end?`, pId: () => `Jam berapa sekolah selesai?`, aEn: () => `It ends at 2 PM.`, aId: () => `Selesai jam 2 siang.` },
+  { pEn: () => `What time do you take a shower?`, pId: () => `Jam berapa kamu mandi?`, aEn: () => `I shower at 6:30 AM.`, aId: () => `Aku mandi jam 6:30 pagi.` },
+  { pEn: () => `What time is half past three?`, pId: () => `Jam berapa setengah 4?`, aEn: () => `It's 3:30.`, aId: () => `Jam 3:30.` },
+  { pEn: () => `What time is quarter past four?`, pId: () => `Jam berapa lewat seperempat jam 4?`, aEn: () => `It's 4:15.`, aId: () => `Jam 4:15.` },
+  { pEn: () => `What time is quarter to five?`, pId: () => `Jam berapa kurang seperempat jam 5?`, aEn: () => `It's 4:45.`, aId: () => `Jam 4:45.` },
+  { pEn: () => `What time is ten past six?`, pId: () => `Jam berapa lewat 10 menit jam 6?`, aEn: () => `It's 6:10.`, aId: () => `Jam 6:10.` },
+  { pEn: () => `What time is twenty to seven?`, pId: () => `Jam berapa kurang 20 menit jam 7?`, aEn: () => `It's 6:40.`, aId: () => `Jam 6:40.` },
+  { pEn: () => `What time is noon?`, pId: () => `Jam berapa tengah hari?`, aEn: () => `Noon is 12 PM.`, aId: () => `Tengah hari jam 12 siang.` },
+  { pEn: () => `What time is midnight?`, pId: () => `Jam berapa tengah malam?`, aEn: () => `Midnight is 12 AM.`, aId: () => `Tengah malam jam 12 malam.` },
+  { pEn: () => `What time do you brush your teeth?`, pId: () => `Jam berapa kamu sikat gigi?`, aEn: () => `At 7 AM and 10 PM.`, aId: () => `Jam 7 pagi dan 10 malam.` },
+  { pEn: () => `What time does your favorite show start?`, pId: () => `Jam berapa acara favoritmu mulai?`, aEn: () => `It starts at 8 PM.`, aId: () => `Mulai jam 8 malam.` },
+  { pEn: () => `What time do you usually wake up on weekends?`, pId: () => `Jam berapa kamu biasanya bangun di akhir pekan?`, aEn: () => `At 9 AM.`, aId: () => `Jam 9 pagi.` },
+  { pEn: () => `What time is it in London now?`, pId: () => `Jam berapa di London sekarang?`, aEn: () => `It's 5 PM there.`, aId: () => `Jam 5 sore di sana.` },
+  { pEn: () => `What time is it in Tokyo?`, pId: () => `Jam berapa di Tokyo?`, aEn: () => `It's 2 AM in Tokyo.`, aId: () => `Jam 2 pagi di Tokyo.` },
+  { pEn: () => `What time is sunset?`, pId: () => `Jam berapa matahari terbenam?`, aEn: () => `Sunset is around 6 PM.`, aId: () => `Matahari terbenam sekitar jam 6 sore.` },
+  { pEn: () => `What time is sunrise?`, pId: () => `Jam berapa matahari terbit?`, aEn: () => `Sunrise is at 6 AM.`, aId: () => `Matahari terbit jam 6 pagi.` },
+  { pEn: () => `What time do you start working?`, pId: () => `Jam berapa kamu mulai bekerja?`, aEn: () => `I start at 9 AM.`, aId: () => `Aku mulai jam 9 pagi.` },
+  { pEn: () => `What time do you finish work?`, pId: () => `Jam berapa kamu selesai bekerja?`, aEn: () => `I finish at 5 PM.`, aId: () => `Aku selesai jam 5 sore.` },
+  { pEn: () => `What time do you exercise?`, pId: () => `Jam berapa kamu olahraga?`, aEn: () => `I exercise at 6 PM.`, aId: () => `Aku olahraga jam 6 sore.` },
+  { pEn: () => `What time does the store close?`, pId: () => `Jam berapa toko tutup?`, aEn: () => `It closes at 9 PM.`, aId: () => `Tutup jam 9 malam.` },
+  { pEn: () => `What time does the store open?`, pId: () => `Jam berapa toko buka?`, aEn: () => `It opens at 8 AM.`, aId: () => `Buka jam 8 pagi.` },
+  { pEn: () => `What time do you usually eat snacks?`, pId: () => `Jam berapa kamu biasanya makan camilan?`, aEn: () => `At 4 PM.`, aId: () => `Jam 4 sore.` },
+  { pEn: () => `What time is your appointment?`, pId: () => `Jam berapa janjimu?`, aEn: () => `At 2:30 PM.`, aId: () => `Jam 2:30 sore.` },
+  { pEn: () => `What time do you pick up your kids?`, pId: () => `Jam berapa kamu menjemput anakmu?`, aEn: () => `At 3 PM.`, aId: () => `Jam 3 sore.` },
+  { pEn: () => `What time do you feed your pet?`, pId: () => `Jam berapa kamu memberi makan hewanmu?`, aEn: () => `At 7 AM and 6 PM.`, aId: () => `Jam 7 pagi dan 6 sore.` },
+  { pEn: () => `What time is it right now in 24-hour format?`, pId: () => `Jam berapa sekarang dalam format 24 jam?`, aEn: () => `It's 15:30.`, aId: () => `Sekarang 15:30.` },
+  { pEn: () => `What time is 17:00?`, pId: () => `Jam berapa 17:00?`, aEn: () => `That's 5 PM.`, aId: () => `Itu jam 5 sore.` },
+  { pEn: () => `What time is 00:00?`, pId: () => `Jam berapa 00:00?`, aEn: () => `That's midnight.`, aId: () => `Itu tengah malam.` },
+  { pEn: () => `What time is 06:00?`, pId: () => `Jam berapa 06:00?`, aEn: () => `That's 6 AM.`, aId: () => `Itu jam 6 pagi.` },
+  { pEn: () => `What time is 13:00?`, pId: () => `Jam berapa 13:00?`, aEn: () => `That's 1 PM.`, aId: () => `Itu jam 1 siang.` },
+  { pEn: () => `What time do you get home?`, pId: () => `Jam berapa kamu sampai rumah?`, aEn: () => `I get home at 6 PM.`, aId: () => `Aku sampai rumah jam 6 sore.` },
+  { pEn: () => `What time do you leave for school?`, pId: () => `Jam berapa kamu berangkat ke sekolah?`, aEn: () => `I leave at 7:15 AM.`, aId: () => `Aku berangkat jam 7:15 pagi.` },
+  { pEn: () => `What time does your dad come home?`, pId: () => `Jam berapa ayahmu pulang?`, aEn: () => `He comes home at 8 PM.`, aId: () => `Dia pulang jam 8 malam.` },
+  { pEn: () => `What time do you check your phone?`, pId: () => `Jam berapa kamu cek HP?`, aEn: () => `First thing at 7 AM.`, aId: () => `Pertama kali jam 7 pagi.` },
+  { pEn: () => `What time do you drink coffee?`, pId: () => `Jam berapa kamu minum kopi?`, aEn: () => `At 8:30 AM.`, aId: () => `Jam 8:30 pagi.` },
+  { pEn: () => `What time do you meditate?`, pId: () => `Jam berapa kamu meditasi?`, aEn: () => `I meditate at 6 AM.`, aId: () => `Aku meditasi jam 6 pagi.` },
+  { pEn: () => `What time is your class?`, pId: () => `Jam berapa kelasmu?`, aEn: () => `My class is at 10 AM.`, aId: () => `Kelasku jam 10 pagi.` },
+  { pEn: () => `What time does the movie start?`, pId: () => `Jam berapa filmnya mulai?`, aEn: () => `It starts at 7:30 PM.`, aId: () => `Mulai jam 7:30 malam.` },
+  { pEn: () => `What time do you call your mom?`, pId: () => `Jam berapa kamu telepon ibumu?`, aEn: () => `I call her at 7 PM.`, aId: () => `Aku telepon dia jam 7 malam.` },
+  { pEn: () => `What time does the bus come?`, pId: () => `Jam berapa busnya datang?`, aEn: () => `The bus comes at 8:20 AM.`, aId: () => `Bus datang jam 8:20 pagi.` },
+  { pEn: () => `What time does the train leave?`, pId: () => `Jam berapa keretanya berangkat?`, aEn: () => `It leaves at 5:45 PM.`, aId: () => `Berangkat jam 5:45 sore.` },
+  { pEn: () => `What time do you do your homework?`, pId: () => `Jam berapa kamu mengerjakan PR?`, aEn: () => `At 4 PM.`, aId: () => `Jam 4 sore.` },
+  { pEn: () => `What time do you watch YouTube?`, pId: () => `Jam berapa kamu nonton YouTube?`, aEn: () => `I watch at 9 PM.`, aId: () => `Aku nonton jam 9 malam.` },
+  { pEn: () => `What time do you play games?`, pId: () => `Jam berapa kamu main game?`, aEn: () => `At 8 PM.`, aId: () => `Jam 8 malam.` },
+  { pEn: () => `What time do you meet your friends?`, pId: () => `Jam berapa kamu bertemu temanmu?`, aEn: () => `At 3 PM on Saturdays.`, aId: () => `Jam 3 sore hari Sabtu.` },
+  { pEn: () => `What time is the party?`, pId: () => `Jam berapa pestanya?`, aEn: () => `The party starts at 9 PM.`, aId: () => `Pesta mulai jam 9 malam.` },
+  { pEn: () => `What time do you usually go out?`, pId: () => `Jam berapa kamu biasanya keluar?`, aEn: () => `At 7 PM.`, aId: () => `Jam 7 malam.` },
+  { pEn: () => `What time does the library close?`, pId: () => `Jam berapa perpustakaan tutup?`, aEn: () => `It closes at 8 PM.`, aId: () => `Tutup jam 8 malam.` },
+  { pEn: () => `What time do you read books?`, pId: () => `Jam berapa kamu membaca buku?`, aEn: () => `I read at 10 PM.`, aId: () => `Aku membaca jam 10 malam.` },
+  { pEn: () => `What time do you listen to music?`, pId: () => `Jam berapa kamu mendengarkan musik?`, aEn: () => `All the time, but mostly at 8 AM.`, aId: () => `Sepanjang waktu, tapi paling sering jam 8 pagi.` },
+  { pEn: () => `What time is your bedtime?`, pId: () => `Jam berapa waktu tidurmu?`, aEn: () => `My bedtime is 11 PM.`, aId: () => `Waktu tidurku jam 11 malam.` },
+  { pEn: () => `What time do you set your alarm?`, pId: () => `Jam berapa kamu memasang alarm?`, aEn: () => `I set it for 6:30 AM.`, aId: () => `Aku pasang jam 6:30 pagi.` },
+  { pEn: () => `What time is five past seven?`, pId: () => `Jam berapa lewat 5 menit jam 7?`, aEn: () => `It's 7:05.`, aId: () => `Jam 7:05.` },
+  { pEn: () => `What time is ten to three?`, pId: () => `Jam berapa kurang 10 menit jam 3?`, aEn: () => `It's 2:50.`, aId: () => `Jam 2:50.` },
+  { pEn: () => `What time is twenty past eight?`, pId: () => `Jam berapa lewat 20 menit jam 8?`, aEn: () => `It's 8:20.`, aId: () => `Jam 8:20.` },
+  { pEn: () => `What time is twenty-five to six?`, pId: () => `Jam berapa kurang 25 menit jam 6?`, aEn: () => `It's 5:35.`, aId: () => `Jam 5:35.` },
+  { pEn: () => `What time is half past eleven?`, pId: () => `Jam berapa setengah 12?`, aEn: () => `It's 11:30.`, aId: () => `Jam 11:30.` },
+  { pEn: () => `What time is quarter past one?`, pId: () => `Jam berapa lewat seperempat jam 1?`, aEn: () => `It's 1:15.`, aId: () => `Jam 1:15.` },
+  { pEn: () => `What time is quarter to nine?`, pId: () => `Jam berapa kurang seperempat jam 9?`, aEn: () => `It's 8:45.`, aId: () => `Jam 8:45.` },
+  { pEn: () => `What time do you wake up on holiday?`, pId: () => `Jam berapa kamu bangun saat liburan?`, aEn: () => `At 10 AM.`, aId: () => `Jam 10 pagi.` },
+  { pEn: () => `What time is your flight?`, pId: () => `Jam berapa penerbanganmu?`, aEn: () => `My flight is at 6 AM.`, aId: () => `Penerbanganku jam 6 pagi.` },
+  { pEn: () => `What time do you check emails?`, pId: () => `Jam berapa kamu cek email?`, aEn: () => `At 9 AM.`, aId: () => `Jam 9 pagi.` },
+  { pEn: () => `What time do you cook?`, pId: () => `Jam berapa kamu memasak?`, aEn: () => `I cook at 6 PM.`, aId: () => `Aku masak jam 6 sore.` },
+  { pEn: () => `What time do you clean your room?`, pId: () => `Jam berapa kamu membersihkan kamar?`, aEn: () => `At 10 AM on Sundays.`, aId: () => `Jam 10 pagi hari Minggu.` },
+  { pEn: () => `What time do you water the plants?`, pId: () => `Jam berapa kamu menyiram tanaman?`, aEn: () => `At 7 AM.`, aId: () => `Jam 7 pagi.` },
+  { pEn: () => `What time do you take medicine?`, pId: () => `Jam berapa kamu minum obat?`, aEn: () => `At 8 AM and 8 PM.`, aId: () => `Jam 8 pagi dan 8 malam.` },
+  { pEn: () => `What time is your online meeting?`, pId: () => `Jam berapa rapat onlinemu?`, aEn: () => `At 2 PM.`, aId: () => `Jam 2 siang.` },
+  { pEn: () => `What time do you charge your phone?`, pId: () => `Jam berapa kamu mengecas HP?`, aEn: () => `I charge it at night, 10 PM.`, aId: () => `Aku cas malam hari, jam 10 malam.` },
+  { pEn: () => `What time is golden hour for photos?`, pId: () => `Jam berapa jam emas untuk foto?`, aEn: () => `Around 5 PM to 6 PM.`, aId: () => `Sekitar jam 5 sore sampai 6 sore.` },
+  { pEn: () => `What time does the gym open?`, pId: () => `Jam berapa gym buka?`, aEn: () => `It opens at 6 AM.`, aId: () => `Buka jam 6 pagi.` },
+  { pEn: () => `What time does the gym close?`, pId: () => `Jam berapa gym tutup?`, aEn: () => `It closes at 10 PM.`, aId: () => `Tutup jam 10 malam.` },
+  { pEn: () => `What time do you usually feel tired?`, pId: () => `Jam berapa kamu biasanya merasa lelah?`, aEn: () => `At 3 PM.`, aId: () => `Jam 3 sore.` },
+  { pEn: () => `What time do you feel most productive?`, pId: () => `Jam berapa kamu merasa paling produktif?`, aEn: () => `In the morning at 9 AM.`, aId: () => `Di pagi hari jam 9.` },
+  { pEn: () => `What time is the deadline?`, pId: () => `Jam berapa tenggat waktunya?`, aEn: () => `The deadline is at 11:59 PM.`, aId: () => `Tenggatnya jam 11:59 malam.` },
+  { pEn: () => `What time do you wish it was?`, pId: () => `Jam berapa kamu berharap sekarang?`, aEn: () => `I wish it was 5 PM.`, aId: () => `Aku berharap jam 5 sore.` },
+  { pEn: () => `What time does your heart usually wake up?`, pId: () => `Jam berapa biasanya jantungmu 'bangun'?`, aEn: () => `As soon as my alarm rings at 7 AM.`, aId: () => `Begitu alarmku bunyi jam 7 pagi.` },
+  { pEn: () => `What time is your favorite time of day?`, pId: () => `Jam berapa waktu favoritmu dalam sehari?`, aEn: () => `My favorite is 8 PM.`, aId: () => `Favoritku jam 8 malam.` },
+  { pEn: () => `What time do you miss someone?`, pId: () => `Jam berapa kamu merindukan seseorang?`, aEn: () => `At night, around 10 PM.`, aId: () => `Di malam hari, sekitar jam 10 malam.` },
+  { pEn: () => `What time does your favorite cafe open?`, pId: () => `Jam berapa kafe favoritmu buka?`, aEn: () => `It opens at 8 AM.`, aId: () => `Buka jam 8 pagi.` },
+  { pEn: () => `What time do you post on social media?`, pId: () => `Jam berapa kamu posting di media sosial?`, aEn: () => `I usually post at 7 PM.`, aId: () => `Aku biasanya posting jam 7 malam.` },
+  { pEn: () => `What time is the rush hour?`, pId: () => `Jam berapa jam sibuk?`, aEn: () => `Rush hour is 7-9 AM and 5-7 PM.`, aId: () => `Jam sibuk adalah 7-9 pagi dan 5-7 sore.` },
+  { pEn: () => `What time do you schedule your calls?`, pId: () => `Jam berapa kamu menjadwalkan teleponan?`, aEn: () => `At 11 AM.`, aId: () => `Jam 11 siang.` },
+  { pEn: () => `What time is your curfew?`, pId: () => `Jam berapa jam malammu?`, aEn: () => `My curfew is at 10 PM.`, aId: () => `Jam malaku jam 10 malam.` },
+  { pEn: () => `What time do you turn off the lights?`, pId: () => `Jam berapa kamu mematikan lampu?`, aEn: () => `At 10:30 PM.`, aId: () => `Jam 10:30 malam.` },
+  { pEn: () => `What time is the happiest hour?`, pId: () => `Jam berapa jam paling bahagia?`, aEn: () => `Happy hour is 5 PM after work.`, aId: () => `Jam bahagia adalah jam 5 sore setelah kerja.` },
+  { pEn: () => `What time do you think it is?`, pId: () => `Kamu pikir jam berapa sekarang?`, aEn: () => `I think it's around 4 PM.`, aId: () => `Aku pikir sekitar jam 4 sore.` },
+  { pEn: () => `What time is dinner ready?`, pId: () => `Jam berapa makan malam siap?`, aEn: () => `Dinner is ready at 7:30 PM.`, aId: () => `Makan malam siap jam 7:30.` },
+  { pEn: () => `What time is your doctor's appointment?`, pId: () => `Jam berapa janji dengan doktermu?`, aEn: () => `It's at 9:15 AM.`, aId: () => `Jam 9:15 pagi.` },
+  { pEn: () => `What time do you usually nap?`, pId: () => `Jam berapa kamu biasanya tidur siang?`, aEn: () => `I nap at 1 PM.`, aId: () => `Aku tidur siang jam 1 siang.` },
+  { pEn: () => `What time does the sun set in your city?`, pId: () => `Jam berapa matahari terbenam di kotamu?`, aEn: () => `Around 6:15 PM.`, aId: () => `Sekitar jam 6:15 sore.` }
+];
+  // ===[AKHIR TANDA] ===
+
+  let current = 0;
+  let voices =[];
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
+
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
+
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
+</body>
+</html>
