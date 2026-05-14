@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aktif Bertanya - Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #5154d8;
+            --pink-accent: #ff1a75;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
+        .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+        .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
+
+        .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
+        .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
+        
+        .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
+        #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
+        #btn-reveal.hidden { display: none; }
+
+        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
+        .answer-area.visible { display: block; }
+        .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
+        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
+
+        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; }
+        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="app-title">Aktif Bertanya</h1>
+        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya.</p>
+    </header>
+
+    <div id="screen-settings" class="screen active">
+        <div class="card">
+            <h3>⚙️ Pengaturan</h3>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Volume: <span id="val-volume">240</span></label>
+                <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
+            </div>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Timer Jeda (Max 120s): <span id="val-timer">10</span>s</label>
+                <input type="range" id="input-timer" min="5" max="120" step="1" value="10" style="width:100%">
+            </div>
+            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
+        </div>
+    </div>
+
+    <div id="screen-exercise" class="screen">
+        <div class="card">
+            <div class="task-label">Tugas kamu: terjemahkan dan ucapkan dalam B Inggris</div>
+            <div class="btn-progress" id="progress-badge">SOAL 1</div>
+            <div id="timer-display" class="timer-pill">10</div>
+            <div class="challenge-box" id="text-indo">--</div>
+            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
+
+            <div id="answer-area" class="answer-area">
+                <div class="english-text" id="text-en">--</div>
+                <div class="phonetic" id="text-phonetic">--</div>
+                <div class="edu-box"><strong id="text-explanation">--</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="navTo('settings')">Seting</button>
+        <button class="nav-item" onclick="changeQuestion(-1)">Prev</button>
+        <button class="nav-item" onclick="changeQuestion(1)">Next</button>
+    </div>
+
+    <script>
+        const database =[
+  { indo: "Makan", en: "Eat", phonetic: "It", explanation: "Kata kerja dasar untuk aktivitas makan." },
+  { indo: "Minum", en: "Drink", phonetic: "Dringk", explanation: "Kata kerja dasar untuk aktivitas minum." },
+  { indo: "Tidur", en: "Sleep", phonetic: "Slip", explanation: "Digunakan untuk aktivitas tidur." },
+  { indo: "Bangun", en: "Wake up", phonetic: "Weik ap", explanation: "Digunakan saat bangun tidur." },
+  { indo: "Pergi", en: "Go", phonetic: "Go", explanation: "Kata kerja umum untuk pergi." },
+  { indo: "Datang", en: "Come", phonetic: "Kam", explanation: "Digunakan saat datang ke suatu tempat." },
+  { indo: "Duduk", en: "Sit", phonetic: "Sit", explanation: "Digunakan untuk posisi duduk." },
+  { indo: "Berdiri", en: "Stand", phonetic: "Stend", explanation: "Digunakan untuk posisi berdiri." },
+  { indo: "Berjalan", en: "Walk", phonetic: "Wok", explanation: "Digunakan saat berjalan kaki." },
+  { indo: "Berlari", en: "Run", phonetic: "Ran", explanation: "Digunakan untuk aktivitas berlari." },
+
+  { indo: "Melihat", en: "See", phonetic: "Si", explanation: "Digunakan untuk melihat sesuatu." },
+  { indo: "Menonton", en: "Watch", phonetic: "Woc", explanation: "Digunakan untuk menonton TV atau film." },
+  { indo: "Mendengar", en: "Hear", phonetic: "Hir", explanation: "Digunakan saat mendengar suara." },
+  { indo: "Mendengarkan", en: "Listen", phonetic: "Lisn", explanation: "Digunakan saat fokus mendengar." },
+  { indo: "Berbicara", en: "Speak", phonetic: "Spik", explanation: "Digunakan saat berbicara." },
+  { indo: "Mengatakan", en: "Say", phonetic: "Sei", explanation: "Digunakan untuk mengatakan sesuatu." },
+  { indo: "Bertanya", en: "Ask", phonetic: "Ask", explanation: "Digunakan saat mengajukan pertanyaan." },
+  { indo: "Menjawab", en: "Answer", phonetic: "Enser", explanation: "Digunakan saat memberi jawaban." },
+  { indo: "Membaca", en: "Read", phonetic: "Rid", explanation: "Digunakan saat membaca." },
+  { indo: "Menulis", en: "Write", phonetic: "Rait", explanation: "Digunakan saat menulis." },
+
+  { indo: "Belajar", en: "Study", phonetic: "Stadi", explanation: "Digunakan untuk aktivitas belajar." },
+  { indo: "Mengajar", en: "Teach", phonetic: "Tich", explanation: "Digunakan saat mengajar." },
+  { indo: "Bermain", en: "Play", phonetic: "Plei", explanation: "Digunakan untuk bermain." },
+  { indo: "Bekerja", en: "Work", phonetic: "Werk", explanation: "Digunakan untuk aktivitas kerja." },
+  { indo: "Membantu", en: "Help", phonetic: "Help", explanation: "Digunakan saat membantu orang lain." },
+  { indo: "Menggunakan", en: "Use", phonetic: "Yuz", explanation: "Digunakan saat memakai sesuatu." },
+  { indo: "Membuka", en: "Open", phonetic: "O-pen", explanation: "Digunakan untuk membuka benda." },
+  { indo: "Menutup", en: "Close", phonetic: "Kloz", explanation: "Digunakan untuk menutup benda." },
+  { indo: "Memulai", en: "Start", phonetic: "Start", explanation: "Digunakan untuk memulai aktivitas." },
+  { indo: "Berhenti", en: "Stop", phonetic: "Stap", explanation: "Digunakan untuk menghentikan aktivitas." },
+
+  { indo: "Membeli", en: "Buy", phonetic: "Bai", explanation: "Digunakan saat membeli sesuatu." },
+  { indo: "Menjual", en: "Sell", phonetic: "Sel", explanation: "Digunakan saat menjual barang." },
+  { indo: "Membayar", en: "Pay", phonetic: "Pei", explanation: "Digunakan saat membayar." },
+  { indo: "Memberi", en: "Give", phonetic: "Giv", explanation: "Digunakan saat memberi sesuatu." },
+  { indo: "Mengambil", en: "Take", phonetic: "Teik", explanation: "Digunakan saat mengambil benda." },
+  { indo: "Membawa", en: "Bring", phonetic: "Bring", explanation: "Digunakan saat membawa sesuatu." },
+  { indo: "Mengirim", en: "Send", phonetic: "Send", explanation: "Digunakan saat mengirim pesan/barang." },
+  { indo: "Menerima", en: "Receive", phonetic: "Ri-siv", explanation: "Digunakan saat menerima sesuatu." },
+  { indo: "Menyimpan", en: "Keep", phonetic: "Kip", explanation: "Digunakan untuk menyimpan." },
+  { indo: "Mencari", en: "Look for", phonetic: "Luk for", explanation: "Digunakan saat mencari sesuatu." },
+
+  { indo: "Menemukan", en: "Find", phonetic: "Faind", explanation: "Digunakan saat menemukan sesuatu." },
+  { indo: "Memilih", en: "Choose", phonetic: "Chuz", explanation: "Digunakan saat memilih." },
+  { indo: "Mencoba", en: "Try", phonetic: "Trai", explanation: "Digunakan saat mencoba sesuatu." },
+  { indo: "Mengingat", en: "Remember", phonetic: "Ri-member", explanation: "Digunakan saat mengingat." },
+  { indo: "Melupakan", en: "Forget", phonetic: "For-get", explanation: "Digunakan saat lupa." },
+  { indo: "Menyukai", en: "Like", phonetic: "Laik", explanation: "Digunakan untuk menyatakan suka." },
+  { indo: "Mencintai", en: "Love", phonetic: "Lav", explanation: "Digunakan untuk rasa cinta/sangat suka." },
+  { indo: "Membenci", en: "Hate", phonetic: "Heit", explanation: "Digunakan untuk rasa tidak suka." },
+  { indo: "Membutuhkan", en: "Need", phonetic: "Nid", explanation: "Digunakan saat membutuhkan sesuatu." },
+  { indo: "Menginginkan", en: "Want", phonetic: "Want", explanation: "Digunakan saat menginginkan sesuatu." },
+
+  { indo: "Memiliki", en: "Have", phonetic: "Hav", explanation: "Digunakan untuk kepemilikan." },
+  { indo: "Menjadi", en: "Become", phonetic: "Bi-kam", explanation: "Digunakan untuk perubahan menjadi." },
+  { indo: "Hidup", en: "Live", phonetic: "Liv", explanation: "Digunakan untuk tempat tinggal/hidup." },
+  { indo: "Mati", en: "Die", phonetic: "Dai", explanation: "Digunakan untuk kematian." },
+  { indo: "Tertawa", en: "Laugh", phonetic: "Laf", explanation: "Digunakan saat tertawa." },
+  { indo: "Menangis", en: "Cry", phonetic: "Krai", explanation: "Digunakan saat menangis." },
+  { indo: "Tersenyum", en: "Smile", phonetic: "Smail", explanation: "Digunakan saat tersenyum." },
+  { indo: "Berpikir", en: "Think", phonetic: "Thingk", explanation: "Digunakan saat berpikir." },
+  { indo: "Mengetahui", en: "Know", phonetic: "No", explanation: "Digunakan saat mengetahui sesuatu." },
+  { indo: "Mengerti", en: "Understand", phonetic: "Ander-stend", explanation: "Digunakan saat memahami." },
+
+  { indo: "Merasa", en: "Feel", phonetic: "Fil", explanation: "Digunakan untuk perasaan." },
+  { indo: "Percaya", en: "Believe", phonetic: "Bi-liv", explanation: "Digunakan saat percaya." },
+  { indo: "Mengikuti", en: "Follow", phonetic: "Folo", explanation: "Digunakan saat mengikuti." },
+  { indo: "Menunggu", en: "Wait", phonetic: "Weit", explanation: "Digunakan saat menunggu." },
+  { indo: "Memanggil", en: "Call", phonetic: "Kol", explanation: "Digunakan untuk menelepon/memanggil." },
+  { indo: "Bertemu", en: "Meet", phonetic: "Mit", explanation: "Digunakan saat bertemu." },
+  { indo: "Mengunjungi", en: "Visit", phonetic: "Vizit", explanation: "Digunakan saat berkunjung." },
+  { indo: "Tinggal", en: "Stay", phonetic: "Stei", explanation: "Digunakan saat tinggal sementara." },
+  { indo: "Masuk", en: "Enter", phonetic: "Enter", explanation: "Digunakan saat masuk." },
+  { indo: "Keluar", en: "Leave", phonetic: "Liv", explanation: "Digunakan saat pergi keluar." },
+
+  { indo: "Membuka pintu", en: "Unlock", phonetic: "An-lok", explanation: "Digunakan untuk membuka kunci." },
+  { indo: "Mengunci", en: "Lock", phonetic: "Lok", explanation: "Digunakan untuk mengunci." },
+  { indo: "Mencuci", en: "Wash", phonetic: "Wosh", explanation: "Digunakan saat mencuci." },
+  { indo: "Membersihkan", en: "Clean", phonetic: "Klin", explanation: "Digunakan saat membersihkan." },
+  { indo: "Memasak", en: "Cook", phonetic: "Kuk", explanation: "Digunakan saat memasak." },
+  { indo: "Memotong", en: "Cut", phonetic: "Kat", explanation: "Digunakan saat memotong." },
+  { indo: "Membuat", en: "Make", phonetic: "Meik", explanation: "Digunakan saat membuat sesuatu." },
+  { indo: "Membangun", en: "Build", phonetic: "Bild", explanation: "Digunakan saat membangun." },
+  { indo: "Memperbaiki", en: "Fix", phonetic: "Fiks", explanation: "Digunakan saat memperbaiki." },
+  { indo: "Mengganti", en: "Change", phonetic: "Cheinj", explanation: "Digunakan saat mengganti sesuatu." },
+
+  { indo: "Memindahkan", en: "Move", phonetic: "Muv", explanation: "Digunakan saat memindahkan." },
+  { indo: "Membuka aplikasi", en: "Launch", phonetic: "Lonch", explanation: "Digunakan saat membuka aplikasi/program." },
+  { indo: "Menekan", en: "Press", phonetic: "Pres", explanation: "Digunakan saat menekan tombol." },
+  { indo: "Menyentuh", en: "Touch", phonetic: "Tac", explanation: "Digunakan saat menyentuh." },
+  { indo: "Mendorong", en: "Push", phonetic: "Push", explanation: "Digunakan saat mendorong." },
+  { indo: "Menarik", en: "Pull", phonetic: "Pul", explanation: "Digunakan saat menarik." },
+  { indo: "Melempar", en: "Throw", phonetic: "Tro", explanation: "Digunakan saat melempar." },
+  { indo: "Menangkap", en: "Catch", phonetic: "Kech", explanation: "Digunakan saat menangkap." },
+  { indo: "Membuka mata", en: "Open your eyes", phonetic: "O-pen yor aiz", explanation: "Digunakan untuk instruksi sederhana." },
+  { indo: "Menutup mata", en: "Close your eyes", phonetic: "Kloz yor aiz", explanation: "Digunakan untuk instruksi sederhana." },
+
+  { indo: "Belanja", en: "Shop", phonetic: "Shop", explanation: "Digunakan saat berbelanja." },
+  { indo: "Berkendara", en: "Drive", phonetic: "Draiv", explanation: "Digunakan saat menyetir." },
+  { indo: "Naik", en: "Ride", phonetic: "Raid", explanation: "Digunakan untuk naik kendaraan." },
+  { indo: "Terbang", en: "Fly", phonetic: "Flai", explanation: "Digunakan untuk terbang." },
+  { indo: "Berenang", en: "Swim", phonetic: "Swim", explanation: "Digunakan untuk berenang." },
+  { indo: "Menari", en: "Dance", phonetic: "Dens", explanation: "Digunakan untuk menari." },
+  { indo: "Bernyanyi", en: "Sing", phonetic: "Sing", explanation: "Digunakan untuk bernyanyi." },
+  { indo: "Menggambar", en: "Draw", phonetic: "Dro", explanation: "Digunakan saat menggambar." },
+  { indo: "Melukis", en: "Paint", phonetic: "Peint", explanation: "Digunakan saat melukis." },
+  { indo: "Memotret", en: "Take pictures", phonetic: "Teik pikcers", explanation: "Digunakan saat mengambil foto." },
+
+  { indo: "Mengirim pesan", en: "Text", phonetic: "Tekst", explanation: "Digunakan saat chat/pesan." },
+  { indo: "Menelepon", en: "Phone", phonetic: "Fon", explanation: "Digunakan saat menelepon." },
+  { indo: "Mengunduh", en: "Download", phonetic: "Daunlod", explanation: "Digunakan saat download file." },
+  { indo: "Mengunggah", en: "Upload", phonetic: "Ap-lod", explanation: "Digunakan saat upload file." },
+  { indo: "Bermain game", en: "Game", phonetic: "Geim", explanation: "Digunakan saat bermain game." },
+  { indo: "Menonton TV", en: "Watch TV", phonetic: "Woc tivi", explanation: "Digunakan saat menonton televisi." },
+  { indo: "Berdoa", en: "Pray", phonetic: "Prei", explanation: "Digunakan saat berdoa." },
+  { indo: "Beristirahat", en: "Rest", phonetic: "Rest", explanation: "Digunakan saat istirahat." },
+  { indo: "Liburan", en: "Travel", phonetic: "Trevel", explanation: "Digunakan saat bepergian/liburan." },
+  { indo: "Berlatih", en: "Practice", phonetic: "Praktis", explanation: "Digunakan saat latihan." }
+];
+
+        let currentIndex = 0;
+        let timerInterval;
+        let timeLeft = 10;
+        const synth = window.speechSynthesis;
+
+        // Update display slider
+        document.getElementById('input-timer').addEventListener('input', function() {
+            document.getElementById('val-timer').innerText = this.value;
+        });
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            if (screenId === 'exercise') startChallenge();
+        }
+
+        function startChallenge() {
+            clearInterval(timerInterval);
+            synth.cancel();
+            
+            const data = database[currentIndex];
+            timeLeft = parseInt(document.getElementById('input-timer').value);
+            
+            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
+            document.getElementById('timer-display').innerText = timeLeft;
+            document.getElementById('text-indo').innerText = data.indo;
+            document.getElementById('answer-area').classList.remove('visible');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+
+            speak(data.indo, 'id-ID');
+
+            // Jalankan Timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    revealAnswer();
+                }
+            }, 1000);
+        }
+
+        function revealAnswer() {
+            clearInterval(timerInterval);
+            const data = database[currentIndex];
+            document.getElementById('text-en').innerText = data.en;
+            document.getElementById('text-phonetic').innerText = data.phonetic;
+            document.getElementById('text-explanation').innerText = data.explanation;
+            document.getElementById('answer-area').classList.add('visible');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            speak(data.en, 'en-US');
+        }
+
+        function speak(text, lang) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang;
+            utter.volume = document.getElementById('input-volume').value / 300;
+            synth.speak(utter);
+        }
+
+        function changeQuestion(dir) {
+            currentIndex = (currentIndex + dir + database.length) % database.length;
+            startChallenge();
+        }
+    </script>
+</body>
+</html>
