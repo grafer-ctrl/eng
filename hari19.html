@@ -1,204 +1,209 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aktif Bertanya - Training</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #5154d8;
-            --pink-accent: #ff1a75;
-            --bg-light: #f1f5f9;
-            --text-dark: #0f172a;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
 
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
 
-        header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
-        .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .app-container { width: 100%; max-width: 500px; }
 
-        .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
-        .screen.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
 
-        .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
-
-        .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-        .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
-        .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
-        
-        .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
-        #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
-        #btn-reveal.hidden { display: none; }
-
-        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
-        .answer-area.visible { display: block; }
-        .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
-        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
-        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
-
-        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; }
-        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
-    </style>
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1 class="app-title">Aktif Bertanya</h1>
-        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya.</p>
-    </header>
-
-    <div id="screen-settings" class="screen active">
-        <div class="card">
-            <h3>⚙️ Pengaturan</h3>
-            <div style="text-align: left; margin: 20px 0;">
-                <label>Volume: <span id="val-volume">240</span></label>
-                <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
-            </div>
-            <div style="text-align: left; margin: 20px 0;">
-                <label>Timer Jeda (Max 120s): <span id="val-timer">10</span>s</label>
-                <input type="range" id="input-timer" min="5" max="120" step="1" value="10" style="width:100%">
-            </div>
-            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
         </div>
-    </div>
-
-    <div id="screen-exercise" class="screen">
-        <div class="card">
-            <div class="task-label">Tugas kamu: terjemahkan dan ucapkan dalam B Inggris</div>
-            <div class="btn-progress" id="progress-badge">SOAL 1</div>
-            <div id="timer-display" class="timer-pill">10</div>
-            <div class="challenge-box" id="text-indo">--</div>
-            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
-
-            <div id="answer-area" class="answer-area">
-                <div class="english-text" id="text-en">--</div>
-                <div class="phonetic" id="text-phonetic">--</div>
-                <div class="edu-box"><strong id="text-explanation">--</strong></div>
-            </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
         </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
     </div>
+  </div>
 
-    <div class="bottom-nav">
-        <button class="nav-item" onclick="navTo('settings')">Seting</button>
-        <button class="nav-item" onclick="changeQuestion(-1)">Prev</button>
-        <button class="nav-item" onclick="changeQuestion(1)">Next</button>
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 100</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        const database =const hobbyMusicSeries = [
-  { pEn: () => `What do you usually do for fun?`, pId: () => `Kamu biasanya ngapain buat seru-seruan?`, aEn: () => `I usually watch movies.`, aId: () => `Aku biasanya nonton film.` },
-  { pEn: () => `What's your hobby?`, pId: () => `Apa hobimu?`, aEn: () => `I like gaming.`, aId: () => `Aku suka main game.` },
-  { pEn: () => `Do you play games often?`, pId: () => `Kamu sering main game?`, aEn: () => `Yeah, almost every day.`, aId: () => `Ya, hampir tiap hari.` },
-  { pEn: () => `What games do you play?`, pId: () => `Game apa yang kamu mainkan?`, aEn: () => `Mostly mobile games.`, aId: () => `Kebanyakan game mobile.` },
-  { pEn: () => `Do you like listening to music?`, pId: () => `Kamu suka dengerin musik?`, aEn: () => `Yes, all the time.`, aId: () => `Ya, terus-terusan.` },
-  { pEn: () => `What kind of music do you like?`, pId: () => `Kamu suka musik jenis apa?`, aEn: () => `I like pop music.`, aId: () => `Aku suka musik pop.` },
-  { pEn: () => `Who's your favorite singer?`, pId: () => `Siapa penyanyi favoritmu?`, aEn: () => `Taylor Swift.`, aId: () => `Taylor Swift.` },
-  { pEn: () => `Do you like K-pop?`, pId: () => `Kamu suka K-pop?`, aEn: () => `Yeah, a little.`, aId: () => `Ya, sedikit.` },
-  { pEn: () => `What's your favorite song right now?`, pId: () => `Lagu favoritmu sekarang apa?`, aEn: () => `I really like that new song.`, aId: () => `Aku suka lagu baru itu.` },
-  { pEn: () => `Do you watch movies often?`, pId: () => `Kamu sering nonton film?`, aEn: () => `Yes, every weekend.`, aId: () => `Ya, tiap akhir pekan.` },
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `What do you usually do for fun?`, pId: () => `Biasanya kamu ngapain buat seru-seruan?`, aEn: () => `Mostly gaming and listening to music.`, aId: () => `Kebanyakan main game dan denger musik.` },
 
-  { pEn: () => `What's your favorite movie?`, pId: () => `Film favoritmu apa?`, aEn: () => `Interstellar.`, aId: () => `Interstellar.` },
-  { pEn: () => `Do you like horror movies?`, pId: () => `Kamu suka film horor?`, aEn: () => `Not really haha.`, aId: () => `Tidak terlalu haha.` },
-  { pEn: () => `Do you watch Netflix?`, pId: () => `Kamu nonton Netflix?`, aEn: () => `Yeah, almost every day.`, aId: () => `Ya, hampir tiap hari.` },
-  { pEn: () => `What's your favorite series?`, pId: () => `Series favoritmu apa?`, aEn: () => `Stranger Things.`, aId: () => `Stranger Things.` },
-  { pEn: () => `Have you watched Stranger Things?`, pId: () => `Kamu sudah nonton Stranger Things?`, aEn: () => `Yes, it's amazing.`, aId: () => `Ya, keren banget.` },
-  { pEn: () => `Do you prefer movies or series?`, pId: () => `Kamu lebih suka film atau series?`, aEn: () => `Series because they're longer.`, aId: () => `Series karena lebih panjang.` },
-  { pEn: () => `What genre do you like most?`, pId: () => `Genre favoritmu apa?`, aEn: () => `Comedy and romance.`, aId: () => `Komedi dan romance.` },
-  { pEn: () => `Do you like anime?`, pId: () => `Kamu suka anime?`, aEn: () => `Yes, a lot.`, aId: () => `Ya, banget.` },
-  { pEn: () => `What's your favorite anime?`, pId: () => `Anime favoritmu apa?`, aEn: () => `Attack on Titan.`, aId: () => `Attack on Titan.` },
-  { pEn: () => `Do you watch YouTube a lot?`, pId: () => `Kamu sering nonton YouTube?`, aEn: () => `Yeah, every day.`, aId: () => `Ya, tiap hari.` },
+  { pEn: () => `What's your current favorite song?`, pId: () => `Lagu favoritmu sekarang apa?`, aEn: () => `I'm obsessed with this one song lately.`, aId: () => `Aku lagi obsessed sama satu lagu akhir-akhir ini.` },
 
-  { pEn: () => `What YouTubers do you watch?`, pId: () => `YouTuber apa yang kamu tonton?`, aEn: () => `Mostly gaming channels.`, aId: () => `Kebanyakan channel game.` },
-  { pEn: () => `Do you listen to music while studying?`, pId: () => `Kamu dengerin musik saat belajar?`, aEn: () => `Yes, it helps me focus.`, aId: () => `Ya, bikin fokus.` },
-  { pEn: () => `Do you play any instruments?`, pId: () => `Kamu main alat musik?`, aEn: () => `A little guitar.`, aId: () => `Sedikit gitar.` },
-  { pEn: () => `Can you sing?`, pId: () => `Kamu bisa nyanyi?`, aEn: () => `Not really haha.`, aId: () => `Tidak terlalu haha.` },
-  { pEn: () => `What do you do when you're bored?`, pId: () => `Kamu ngapain kalau bosan?`, aEn: () => `I watch TikTok.`, aId: () => `Aku nonton TikTok.` },
-  { pEn: () => `Do you like photography?`, pId: () => `Kamu suka fotografi?`, aEn: () => `Yeah, it's fun.`, aId: () => `Ya, seru.` },
-  { pEn: () => `Do you enjoy drawing?`, pId: () => `Kamu suka menggambar?`, aEn: () => `Sometimes.`, aId: () => `Kadang.` },
-  { pEn: () => `What's your favorite band?`, pId: () => `Band favoritmu apa?`, aEn: () => `Coldplay.`, aId: () => `Coldplay.` },
-  { pEn: () => `Do you like sad songs?`, pId: () => `Kamu suka lagu sedih?`, aEn: () => `Yeah, at night haha.`, aId: () => `Ya, kalau malam haha.` },
-  { pEn: () => `Do you use Spotify?`, pId: () => `Kamu pakai Spotify?`, aEn: () => `Yes, every day.`, aId: () => `Ya, tiap hari.` },
+  { pEn: () => `Do you binge-watch series too?`, pId: () => `Kamu suka marathon series juga?`, aEn: () => `Yeah, especially on weekends.`, aId: () => `Iya, apalagi pas weekend.` },
 
-  { pEn: () => `What's your Spotify playlist like?`, pId: () => `Playlist Spotify kamu isinya apa?`, aEn: () => `Mostly chill songs.`, aId: () => `Kebanyakan lagu santai.` },
-  { pEn: () => `Do you prefer English songs or local songs?`, pId: () => `Kamu lebih suka lagu Inggris atau lagu lokal?`, aEn: () => `English songs mostly.`, aId: () => `Kebanyakan lagu Inggris.` },
-  { pEn: () => `Have you been to a concert?`, pId: () => `Kamu pernah ke konser?`, aEn: () => `Not yet sadly.`, aId: () => `Belum sayangnya.` },
-  { pEn: () => `What's the last movie you watched?`, pId: () => `Film terakhir yang kamu tonton apa?`, aEn: () => `A horror movie.`, aId: () => `Film horor.` },
-  { pEn: () => `Do you cry when watching sad movies?`, pId: () => `Kamu nangis kalau nonton film sedih?`, aEn: () => `Sometimes haha.`, aId: () => `Kadang haha.` },
-  { pEn: () => `What's your comfort movie?`, pId: () => `Film ternyaman buatmu apa?`, aEn: () => `Harry Potter.`, aId: () => `Harry Potter.` },
-  { pEn: () => `Do you binge-watch series?`, pId: () => `Kamu suka marathon series?`, aEn: () => `Yes, all night sometimes.`, aId: () => `Ya, kadang semalaman.` },
-  { pEn: () => `Which series character do you like most?`, pId: () => `Karakter series favoritmu siapa?`, aEn: () => `Wednesday Addams.`, aId: () => `Wednesday Addams.` },
-  { pEn: () => `Do you like action movies?`, pId: () => `Kamu suka film action?`, aEn: () => `Yes, they're exciting.`, aId: () => `Ya, seru.` },
-  { pEn: () => `Do you watch movies alone or with friends?`, pId: () => `Kamu nonton film sendiri atau sama teman?`, aEn: () => `Usually alone.`, aId: () => `Biasanya sendiri.` }
+  { pEn: () => `What hobby would you never get bored of?`, pId: () => `Hobi apa yang gak bakal bikin kamu bosan?`, aEn: () => `Probably listening to music honestly.`, aId: () => `Mungkin denger musik jujur aja.` },
+
+  { pEn: () => `What's a movie you can rewatch forever?`, pId: () => `Film apa yang bisa kamu tonton berulang kali?`, aEn: () => `Interstellar, never gets old.`, aId: () => `Interstellar, gak pernah bosen.` },
+
+  { pEn: () => `What kind of music matches your vibe?`, pId: () => `Musik apa yang paling cocok sama vibes kamu?`, aEn: () => `Probably chill and sad songs lol.`, aId: () => `Mungkin lagu chill dan sedih wkwk.` },
+
+  { pEn: () => `Have you watched any good series lately?`, pId: () => `Belakangan ini nonton series bagus gak?`, aEn: () => `Yeah, and now I'm emotionally attached 😭`, aId: () => `Iya, dan sekarang jadi emotional attachment 😭` },
+
+  { pEn: () => `Do you prefer movies or series?`, pId: () => `Kamu lebih suka film atau series?`, aEn: () => `Series, because the story feels deeper.`, aId: () => `Series, karena ceritanya lebih dalem.` },
+
+  { pEn: () => `What's your most random hobby?`, pId: () => `Hobi paling random kamu apa?`, aEn: () => `Scrolling memes for hours 😭`, aId: () => `Scroll meme berjam-jam 😭` },
+
+  { pEn: () => `If you could live inside a movie or series, which one would it be?`, pId: () => `Kalau bisa hidup di dunia film atau series, pilih yang mana?`, aEn: () => `Probably Harry Potter honestly.`, aId: () => `Mungkin Harry Potter jujur aja.` }
 ];
+  // ===[AKHIR TANDA] ===
 
-        let currentIndex = 0;
-        let timerInterval;
-        let timeLeft = 10;
-        const synth = window.speechSynthesis;
+  let current = 0;
+  let voices =[];
 
-        // Update display slider
-        document.getElementById('input-timer').addEventListener('input', function() {
-            document.getElementById('val-timer').innerText = this.value;
-        });
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
 
-        function navTo(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${screenId}`).classList.add('active');
-            if (screenId === 'exercise') startChallenge();
-        }
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
 
-        function startChallenge() {
-            clearInterval(timerInterval);
-            synth.cancel();
-            
-            const data = database[currentIndex];
-            timeLeft = parseInt(document.getElementById('input-timer').value);
-            
-            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
-            document.getElementById('timer-display').innerText = timeLeft;
-            document.getElementById('text-indo').innerText = data.indo;
-            document.getElementById('answer-area').classList.remove('visible');
-            document.getElementById('btn-reveal').classList.remove('hidden');
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
 
-            speak(data.indo, 'id-ID');
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
 
-            // Jalankan Timer
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer-display').innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    revealAnswer();
-                }
-            }, 1000);
-        }
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
 
-        function revealAnswer() {
-            clearInterval(timerInterval);
-            const data = database[currentIndex];
-            document.getElementById('text-en').innerText = data.en;
-            document.getElementById('text-phonetic').innerText = data.phonetic;
-            document.getElementById('text-explanation').innerText = data.explanation;
-            document.getElementById('answer-area').classList.add('visible');
-            document.getElementById('btn-reveal').classList.add('hidden');
-            speak(data.en, 'en-US');
-        }
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
 
-        function speak(text, lang) {
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = lang;
-            utter.volume = document.getElementById('input-volume').value / 300;
-            synth.speak(utter);
-        }
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
 
-        function changeQuestion(dir) {
-            currentIndex = (currentIndex + dir + database.length) % database.length;
-            startChallenge();
-        }
-    </script>
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
 </body>
 </html>
