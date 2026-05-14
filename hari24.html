@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aktif Bertanya - Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #5154d8;
+            --pink-accent: #ff1a75;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
+        .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+        .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
+
+        .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
+        .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
+        
+        .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
+        #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
+        #btn-reveal.hidden { display: none; }
+
+        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
+        .answer-area.visible { display: block; }
+        .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
+        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
+
+        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; }
+        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="app-title">Aktif Bertanya</h1>
+        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya.</p>
+    </header>
+
+    <div id="screen-settings" class="screen active">
+        <div class="card">
+            <h3>⚙️ Pengaturan</h3>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Volume: <span id="val-volume">240</span></label>
+                <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
+            </div>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Timer Jeda (Max 120s): <span id="val-timer">10</span>s</label>
+                <input type="range" id="input-timer" min="5" max="120" step="1" value="10" style="width:100%">
+            </div>
+            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
+        </div>
+    </div>
+
+    <div id="screen-exercise" class="screen">
+        <div class="card">
+            <div class="task-label">Tugas kamu: terjemahkan dan ucapkan dalam B Inggris</div>
+            <div class="btn-progress" id="progress-badge">SOAL 1</div>
+            <div id="timer-display" class="timer-pill">10</div>
+            <div class="challenge-box" id="text-indo">--</div>
+            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
+
+            <div id="answer-area" class="answer-area">
+                <div class="english-text" id="text-en">--</div>
+                <div class="phonetic" id="text-phonetic">--</div>
+                <div class="edu-box"><strong id="text-explanation">--</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="navTo('settings')">Seting</button>
+        <button class="nav-item" onclick="changeQuestion(-1)">Prev</button>
+        <button class="nav-item" onclick="changeQuestion(1)">Next</button>
+    </div>
+
+    <script>
+        const database =[
+  { indo: "Saya suka musik pop.", en: "I like pop music.", phonetic: "Ai laik pop myuzik.", explanation: "Cara bilang suka musik." },
+  { indo: "Saya suka bermain game.", en: "I like playing games.", phonetic: "Ai laik plei-ing geims.", explanation: "Cara bilang suka game." },
+  { indo: "Saya suka menonton anime.", en: "I like watching anime.", phonetic: "Ai laik wocing anime.", explanation: "Cara bilang suka anime." },
+  { indo: "Saya suka film action.", en: "I like action movies.", phonetic: "Ai laik ekshen muvis.", explanation: "Cara bilang suka film." },
+  { indo: "Saya suka kopi.", en: "I like coffee.", phonetic: "Ai laik kofi.", explanation: "Cara bilang suka minuman." },
+  { indo: "Saya suka teh manis.", en: "I like sweet tea.", phonetic: "Ai laik swit ti.", explanation: "Cara bilang suka minuman." },
+  { indo: "Saya suka makanan pedas.", en: "I like spicy food.", phonetic: "Ai laik spaisi fud.", explanation: "Cara bilang suka makanan." },
+  { indo: "Saya suka kucing.", en: "I like cats.", phonetic: "Ai laik kets.", explanation: "Cara bilang suka hewan." },
+  { indo: "Saya suka anjing.", en: "I like dogs.", phonetic: "Ai laik dogs.", explanation: "Cara bilang suka hewan." },
+  { indo: "Saya suka hujan.", en: "I like rain.", phonetic: "Ai laik rein.", explanation: "Cara bilang suka cuaca." },
+
+  { indo: "Saya suka malam hari.", en: "I like the night.", phonetic: "Ai laik de nait.", explanation: "Cara bilang suka waktu tertentu." },
+  { indo: "Saya suka bangun pagi.", en: "I like waking up early.", phonetic: "Ai laik weiking ap erli.", explanation: "Cara bilang suka rutinitas." },
+  { indo: "Saya suka traveling.", en: "I like traveling.", phonetic: "Ai laik treveling.", explanation: "Cara bilang suka jalan-jalan." },
+  { indo: "Saya suka pantai.", en: "I like beaches.", phonetic: "Ai laik bi-ches.", explanation: "Cara bilang suka tempat." },
+  { indo: "Saya suka gunung.", en: "I like mountains.", phonetic: "Ai laik mauntens.", explanation: "Cara bilang suka alam." },
+  { indo: "Saya suka bermain basket.", en: "I like basketball.", phonetic: "Ai laik basketbol.", explanation: "Cara bilang suka olahraga." },
+  { indo: "Saya suka sepak bola.", en: "I like football.", phonetic: "Ai laik futbol.", explanation: "Cara bilang suka olahraga." },
+  { indo: "Saya suka berenang.", en: "I like swimming.", phonetic: "Ai laik swiming.", explanation: "Cara bilang suka olahraga." },
+  { indo: "Saya suka menari.", en: "I like dancing.", phonetic: "Ai laik dancing.", explanation: "Cara bilang suka aktivitas." },
+  { indo: "Saya suka bernyanyi.", en: "I like singing.", phonetic: "Ai laik singing.", explanation: "Cara bilang suka musik." },
+
+  { indo: "Saya suka menggambar.", en: "I like drawing.", phonetic: "Ai laik dro-ing.", explanation: "Cara bilang suka seni." },
+  { indo: "Saya suka fotografi.", en: "I like photography.", phonetic: "Ai laik fotografi.", explanation: "Cara bilang suka hobi." },
+  { indo: "Saya suka belajar bahasa Inggris.", en: "I like learning English.", phonetic: "Ai laik lerning ingglish.", explanation: "Cara bilang suka belajar." },
+  { indo: "Saya suka membaca buku.", en: "I like reading books.", phonetic: "Ai laik ri-ding buks.", explanation: "Cara bilang suka membaca." },
+  { indo: "Saya suka mendengarkan musik.", en: "I like listening to music.", phonetic: "Ai laik lisn-ing tu myuzik.", explanation: "Cara bilang suka musik." },
+  { indo: "Saya suka video call.", en: "I like video calls.", phonetic: "Ai laik vidio kols.", explanation: "Cara bilang suka komunikasi online." },
+  { indo: "Saya suka ngobrol dengan orang baru.", en: "I like talking to new people.", phonetic: "Ai laik toking tu nyu pipel.", explanation: "Cocok untuk OmeTV." },
+  { indo: "Saya suka orang yang lucu.", en: "I like funny people.", phonetic: "Ai laik fani pipel.", explanation: "Cara bilang tipe orang favorit." },
+  { indo: "Saya suka orang ramah.", en: "I like friendly people.", phonetic: "Ai laik frendli pipel.", explanation: "Cara bilang suka kepribadian." },
+  { indo: "Saya suka suara kamu.", en: "I like your voice.", phonetic: "Ai laik yor vois.", explanation: "Pujian ringan di OmeTV." },
+
+  { indo: "Saya suka senyuman kamu.", en: "I like your smile.", phonetic: "Ai laik yor smail.", explanation: "Pujian santai." },
+  { indo: "Saya suka rambut kamu.", en: "I like your hair.", phonetic: "Ai laik yor her.", explanation: "Pujian penampilan." },
+  { indo: "Saya suka hoodie kamu.", en: "I like your hoodie.", phonetic: "Ai laik yor hudi.", explanation: "Pujian outfit." },
+  { indo: "Saya suka style kamu.", en: "I like your style.", phonetic: "Ai laik yor stail.", explanation: "Pujian fashion." },
+  { indo: "Saya suka energi kamu.", en: "I like your energy.", phonetic: "Ai laik yor energi.", explanation: "Pujian vibe seseorang." },
+  { indo: "Saya suka game horror.", en: "I like horror games.", phonetic: "Ai laik horor geims.", explanation: "Cara bilang genre favorit." },
+  { indo: "Saya suka game online.", en: "I like online games.", phonetic: "Ai laik online geims.", explanation: "Cara bilang suka game." },
+  { indo: "Saya suka Mobile Legends.", en: "I like Mobile Legends.", phonetic: "Ai laik mobile legends.", explanation: "Cara bilang game favorit." },
+  { indo: "Saya suka PUBG.", en: "I like PUBG.", phonetic: "Ai laik pubji.", explanation: "Cara bilang game favorit." },
+  { indo: "Saya suka Minecraft.", en: "I like Minecraft.", phonetic: "Ai laik minecraft.", explanation: "Cara bilang game favorit." },
+
+  { indo: "Saya tidak suka bangun pagi.", en: "I don't like waking up early.", phonetic: "Ai dont laik weiking ap erli.", explanation: "Cara bilang tidak suka." },
+  { indo: "Saya tidak suka makanan pahit.", en: "I don't like bitter food.", phonetic: "Ai dont laik biter fud.", explanation: "Cara bilang tidak suka makanan." },
+  { indo: "Saya tidak suka hujan deras.", en: "I don't like heavy rain.", phonetic: "Ai dont laik hevi rein.", explanation: "Cara bilang tidak suka cuaca." },
+  { indo: "Saya tidak suka film horror.", en: "I don't like horror movies.", phonetic: "Ai dont laik horor muvis.", explanation: "Cara bilang tidak suka genre." },
+  { indo: "Saya tidak suka orang kasar.", en: "I don't like rude people.", phonetic: "Ai dont laik rud pipel.", explanation: "Cara bilang tidak suka sifat." },
+  { indo: "Saya tidak suka menunggu lama.", en: "I don't like waiting too long.", phonetic: "Ai dont laik weiting tu long.", explanation: "Cara bilang tidak suka situasi." },
+  { indo: "Saya tidak suka panas.", en: "I don't like hot weather.", phonetic: "Ai dont laik hot weder.", explanation: "Cara bilang tidak suka cuaca." },
+  { indo: "Saya tidak suka kopi pahit.", en: "I don't like bitter coffee.", phonetic: "Ai dont laik biter kofi.", explanation: "Cara bilang tidak suka minuman." },
+  { indo: "Saya tidak suka begadang.", en: "I don't like staying up late.", phonetic: "Ai dont laik stei-ing ap leit.", explanation: "Cara bilang tidak suka kebiasaan." },
+  { indo: "Saya tidak suka drama.", en: "I don't like drama.", phonetic: "Ai dont laik drama.", explanation: "Cara bilang tidak suka situasi." },
+
+  { indo: "Saya sangat suka musik.", en: "I really like music.", phonetic: "Ai rili laik myuzik.", explanation: "Cara bilang sangat suka." },
+  { indo: "Saya sangat suka anime.", en: "I really like anime.", phonetic: "Ai rili laik anime.", explanation: "Penekanan rasa suka." },
+  { indo: "Saya sangat suka game.", en: "I really like games.", phonetic: "Ai rili laik geims.", explanation: "Penekanan rasa suka." },
+  { indo: "Saya sangat suka traveling.", en: "I really like traveling.", phonetic: "Ai rili laik treveling.", explanation: "Penekanan rasa suka." },
+  { indo: "Saya sangat suka kucing.", en: "I really like cats.", phonetic: "Ai rili laik kets.", explanation: "Penekanan rasa suka." },
+  { indo: "Saya sangat suka makanan Jepang.", en: "I really like Japanese food.", phonetic: "Ai rili laik japanis fud.", explanation: "Penekanan rasa suka." },
+  { indo: "Saya suka vibe kamu.", en: "I like your vibe.", phonetic: "Ai laik yor vaib.", explanation: "Kalimat populer di OmeTV." },
+  { indo: "Saya suka cara kamu bicara.", en: "I like the way you talk.", phonetic: "Ai laik de wei yu tok.", explanation: "Pujian cara bicara." },
+  { indo: "Saya suka mata kamu.", en: "I like your eyes.", phonetic: "Ai laik yor aiz.", explanation: "Pujian penampilan." },
+  { indo: "Saya suka tawa kamu.", en: "I like your laugh.", phonetic: "Ai laik yor laf.", explanation: "Pujian santai." },
+
+  { indo: "Saya suka orang jujur.", en: "I like honest people.", phonetic: "Ai laik onest pipel.", explanation: "Cara bilang sifat favorit." },
+  { indo: "Saya suka orang baik.", en: "I like kind people.", phonetic: "Ai laik kaind pipel.", explanation: "Cara bilang sifat favorit." },
+  { indo: "Saya suka orang percaya diri.", en: "I like confident people.", phonetic: "Ai laik konfi-dent pipel.", explanation: "Cara bilang tipe orang." },
+  { indo: "Saya suka ngobrol santai.", en: "I like chill conversations.", phonetic: "Ai laik chil conversations.", explanation: "Kalimat untuk OmeTV." },
+  { indo: "Saya suka bercanda.", en: "I like joking around.", phonetic: "Ai laik joking around.", explanation: "Cara bilang suka bercanda." },
+  { indo: "Saya suka orang yang humoris.", en: "I like humorous people.", phonetic: "Ai laik hyumorus pipel.", explanation: "Cara bilang suka humor." },
+  { indo: "Saya tidak suka toxic people.", en: "I don't like toxic people.", phonetic: "Ai dont laik toksik pipel.", explanation: "Kalimat populer online." },
+  { indo: "Saya tidak suka kebohongan.", en: "I don't like lies.", phonetic: "Ai dont laik lais.", explanation: "Cara bilang tidak suka kebohongan." },
+  { indo: "Saya tidak suka suara keras.", en: "I don't like loud noises.", phonetic: "Ai dont laik laud noizes.", explanation: "Cara bilang tidak suka suara." },
+  { indo: "Saya tidak suka makanan dingin.", en: "I don't like cold food.", phonetic: "Ai dont laik kold fud.", explanation: "Cara bilang tidak suka makanan." },
+
+  { indo: "Saya suka jalan malam.", en: "I like night walks.", phonetic: "Ai laik nait woks.", explanation: "Cara bilang aktivitas favorit." },
+  { indo: "Saya suka tidur lama.", en: "I like sleeping a lot.", phonetic: "Ai laik sliping e lot.", explanation: "Cara bilang kebiasaan favorit." },
+  { indo: "Saya suka mie instan.", en: "I like instant noodles.", phonetic: "Ai laik instant nudels.", explanation: "Cara bilang makanan favorit." },
+  { indo: "Saya suka pizza.", en: "I like pizza.", phonetic: "Ai laik pitsa.", explanation: "Cara bilang makanan favorit." },
+  { indo: "Saya suka burger.", en: "I like burgers.", phonetic: "Ai laik burgers.", explanation: "Cara bilang makanan favorit." },
+  { indo: "Saya suka es krim.", en: "I like ice cream.", phonetic: "Ai laik ais krim.", explanation: "Cara bilang makanan favorit." },
+  { indo: "Saya suka TikTok.", en: "I like TikTok.", phonetic: "Ai laik tiktok.", explanation: "Cara bilang aplikasi favorit." },
+  { indo: "Saya suka Instagram.", en: "I like Instagram.", phonetic: "Ai laik instagram.", explanation: "Cara bilang aplikasi favorit." },
+  { indo: "Saya suka Spotify.", en: "I like Spotify.", phonetic: "Ai laik spotify.", explanation: "Cara bilang aplikasi musik." },
+  { indo: "Saya suka Netflix.", en: "I like Netflix.", phonetic: "Ai laik netflix.", explanation: "Cara bilang platform favorit." },
+
+  { indo: "Saya tidak suka internet lambat.", en: "I don't like slow internet.", phonetic: "Ai dont laik slo internet.", explanation: "Kalimat umum online." },
+  { indo: "Saya tidak suka scammer.", en: "I don't like scammers.", phonetic: "Ai dont laik اسکامرز.", explanation: "Cara bilang tidak suka penipu." },
+  { indo: "Saya tidak suka game pay to win.", en: "I don't like pay to win games.", phonetic: "Ai dont laik pei tu win geims.", explanation: "Kalimat gaming." },
+  { indo: "Saya tidak suka kalah.", en: "I don't like losing.", phonetic: "Ai dont laik luzing.", explanation: "Kalimat gaming umum." },
+  { indo: "Saya tidak suka makanan terlalu pedas.", en: "I don't like very spicy food.", phonetic: "Ai dont laik veri spaisi fud.", explanation: "Cara bilang tidak suka rasa." },
+  { indo: "Saya tidak suka cuaca dingin.", en: "I don't like cold weather.", phonetic: "Ai dont laik kold weder.", explanation: "Cara bilang tidak suka cuaca." },
+  { indo: "Saya suka belajar hal baru.", en: "I like learning new things.", phonetic: "Ai laik lerning nyu things.", explanation: "Cara bilang suka belajar." },
+  { indo: "Saya suka mendengarkan cerita orang.", en: "I like listening to people's stories.", phonetic: "Ai laik lisn-ing tu pipels stories.", explanation: "Kalimat ngobrol." },
+  { indo: "Saya suka ngobrol sampai malam.", en: "I like talking until late at night.", phonetic: "Ai laik toking until leit et nait.", explanation: "Kalimat santai OmeTV." },
+  { indo: "Saya suka teman yang loyal.", en: "I like loyal friends.", phonetic: "Ai laik loyal frends.", explanation: "Cara bilang tipe teman favorit." },
+
+  { indo: "Saya suka orang yang sopan.", en: "I like polite people.", phonetic: "Ai laik polite pipel.", explanation: "Cara bilang suka sifat." },
+  { indo: "Saya suka orang yang perhatian.", en: "I like caring people.", phonetic: "Ai laik kering pipel.", explanation: "Cara bilang suka sifat." },
+  { indo: "Saya tidak suka orang sombong.", en: "I don't like arrogant people.", phonetic: "Ai dont laik arogan pipel.", explanation: "Cara bilang tidak suka sifat." },
+  { indo: "Saya tidak suka dibohongi.", en: "I don't like being lied to.", phonetic: "Ai dont laik bi-ing laid tu.", explanation: "Kalimat perasaan." },
+  { indo: "Saya suka ngobrol tentang musik.", en: "I like talking about music.", phonetic: "Ai laik toking about myuzik.", explanation: "Topik OmeTV." },
+  { indo: "Saya suka ngobrol tentang game.", en: "I like talking about games.", phonetic: "Ai laik toking about geims.", explanation: "Topik OmeTV." },
+  { indo: "Saya suka orang yang chill.", en: "I like chill people.", phonetic: "Ai laik chil pipel.", explanation: "Kalimat santai." },
+  { indo: "Saya tidak suka suasana ribut.", en: "I don't like noisy places.", phonetic: "Ai dont laik noizi pleises.", explanation: "Cara bilang tidak suka tempat." },
+  { indo: "Saya suka mendengarkan suara hujan.", en: "I like listening to the rain.", phonetic: "Ai laik lisn-ing tu de rein.", explanation: "Cara bilang suka suasana." },
+  { indo: "Saya suka menghabiskan waktu sendiri.", en: "I like spending time alone.", phonetic: "Ai laik spending taim alon.", explanation: "Cara bilang sifat introvert." },
+
+  { indo: "Saya suka nongkrong dengan teman.", en: "I like hanging out with friends.", phonetic: "Ai laik hanging aut with frends.", explanation: "Kalimat pergaulan." },
+  { indo: "Saya suka orang yang easygoing.", en: "I like easygoing people.", phonetic: "Ai laik izi-going pipel.", explanation: "Cara bilang tipe orang favorit." },
+  { indo: "Saya tidak suka orang terlalu serius.", en: "I don't like overly serious people.", phonetic: "Ai dont laik ov-erli sirius pipel.", explanation: "Cara bilang preferensi." },
+  { indo: "Saya suka bercanda sepanjang waktu.", en: "I like joking all the time.", phonetic: "Ai laik joking ol de taim.", explanation: "Kalimat santai." },
+  { indo: "Saya suka mendengarkan lo-fi music.", en: "I like listening to lo-fi music.", phonetic: "Ai laik lisn-ing tu lo-fai myuzik.", explanation: "Topik musik populer." },
+  { indo: "Saya tidak suka toxic games.", en: "I don't like toxic games.", phonetic: "Ai dont laik toksik geims.", explanation: "Kalimat gaming." },
+  { indo: "Saya suka game santai.", en: "I like relaxing games.", phonetic: "Ai laik rilaksing geims.", explanation: "Cara bilang genre game." },
+  { indo: "Saya suka ngobrol random.", en: "I like random conversations.", phonetic: "Ai laik random conversations.", explanation: "Kalimat khas OmeTV." },
+  { indo: "Saya suka membuat teman baru.", en: "I like making new friends.", phonetic: "Ai laik meiking nyu frends.", explanation: "Kalimat pembuka OmeTV." },
+  { indo: "Saya suka berbicara dengan kamu.", en: "I like talking with you.", phonetic: "Ai laik toking with yu.", explanation: "Kalimat manis santai." }
+];
+
+        let currentIndex = 0;
+        let timerInterval;
+        let timeLeft = 10;
+        const synth = window.speechSynthesis;
+
+        // Update display slider
+        document.getElementById('input-timer').addEventListener('input', function() {
+            document.getElementById('val-timer').innerText = this.value;
+        });
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            if (screenId === 'exercise') startChallenge();
+        }
+
+        function startChallenge() {
+            clearInterval(timerInterval);
+            synth.cancel();
+            
+            const data = database[currentIndex];
+            timeLeft = parseInt(document.getElementById('input-timer').value);
+            
+            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
+            document.getElementById('timer-display').innerText = timeLeft;
+            document.getElementById('text-indo').innerText = data.indo;
+            document.getElementById('answer-area').classList.remove('visible');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+
+            speak(data.indo, 'id-ID');
+
+            // Jalankan Timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    revealAnswer();
+                }
+            }, 1000);
+        }
+
+        function revealAnswer() {
+            clearInterval(timerInterval);
+            const data = database[currentIndex];
+            document.getElementById('text-en').innerText = data.en;
+            document.getElementById('text-phonetic').innerText = data.phonetic;
+            document.getElementById('text-explanation').innerText = data.explanation;
+            document.getElementById('answer-area').classList.add('visible');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            speak(data.en, 'en-US');
+        }
+
+        function speak(text, lang) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang;
+            utter.volume = document.getElementById('input-volume').value / 300;
+            synth.speak(utter);
+        }
+
+        function changeQuestion(dir) {
+            currentIndex = (currentIndex + dir + database.length) % database.length;
+            startChallenge();
+        }
+    </script>
+</body>
+</html>
