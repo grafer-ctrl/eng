@@ -1,215 +1,397 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aktif Bertanya - Training</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #5154d8;
-            --pink-accent: #ff1a75;
-            --bg-light: #f1f5f9;
-            --text-dark: #0f172a;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional English Conversation</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 24px;
+    }
 
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
 
-        header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
-        .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .app-container { width: 100%; max-width: 500px; }
 
-        .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
-        .screen.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .card, .chat-window {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
 
-        .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
-
-        .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-        .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
-        .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
-        
-        .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
-        #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
-        #btn-reveal.hidden { display: none; }
-
-        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
-        .answer-area.visible { display: block; }
-        .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
-        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
-        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
-
-        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; }
-        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
-    </style>
+    .card-header { padding: 24px; border-bottom: 1px solid var(--border); }
+    .card-body { padding: 24px; }
+    
+    /* Control Groups */
+    .control-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    
+    button { padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button.primary { background: var(--primary); color: white; width: 100%; }
+    button.primary:hover { background: var(--primary-hover); }
+    button.outline { background: #f1f5f9; color: var(--text-main); }
+    
+    .info-box { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; margin-top: 15px; text-align: center; line-height: 1.4; }
+    
+    .bubbles-area { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-height: 250px; }
+    .bubble-text { max-width: 85%; padding: 14px 20px; border-radius: 20px; font-size: 1rem; }
+    .bubble-them { background: #f1f5f9; border-bottom-left-radius: 4px; align-self: flex-start; }
+    .bubble-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+    
+    .translation { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .speaker-btn { background: #e2e8f0; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    
+    .nav-bottom { padding: 20px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .slide { display: none; }
+    .active-slide { display: block; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1 class="app-title">Aktif Bertanya</h1>
-        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya.</p>
-    </header>
-
-    <div id="screen-settings" class="screen active">
-        <div class="card">
-            <h3>⚙️ Pengaturan</h3>
-            <div style="text-align: left; margin: 20px 0;">
-                <label>Volume: <span id="val-volume">240</span></label>
-                <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
-            </div>
-            <div style="text-align: left; margin: 20px 0;">
-                <label>Timer Jeda (Max 120s): <span id="val-timer">10</span>s</label>
-                <input type="range" id="input-timer" min="5" max="120" step="1" value="10" style="width:100%">
-            </div>
-            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
+<div class="app-container">
+  <div id="slideSetup" class="slide active-slide">
+    <div class="card">
+      <div class="card-header">
+        <h2>3 bulan bisa bicara B Inggris</h2>
+        <p>Atur kecepatan dan volume suara Anda.</p>
+      </div>
+      <div class="card-body">
+        <div class="control-group">
+          <label>Kecepatan Suara</label>
+          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1">
         </div>
-    </div>
-
-    <div id="screen-exercise" class="screen">
-        <div class="card">
-            <div class="task-label">Tugas kamu: terjemahkan dan ucapkan dalam B Inggris</div>
-            <div class="btn-progress" id="progress-badge">SOAL 1</div>
-            <div id="timer-display" class="timer-pill">10</div>
-            <div class="challenge-box" id="text-indo">--</div>
-            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
-
-            <div id="answer-area" class="answer-area">
-                <div class="english-text" id="text-en">--</div>
-                <div class="phonetic" id="text-phonetic">--</div>
-                <div class="edu-box"><strong id="text-explanation">--</strong></div>
-            </div>
+        <div class="control-group">
+          <label>Volume Suara (Max 300%)</label>
+          <input type="range" id="volumeRange" min="0.1" max="3" step="0.1" value="1">
         </div>
+        
+        <div class="info-box">
+          Jawablah dengan B inggris, bicara bahasa inggris gak harus nunggu sempurna.
+        </div>
+        
+        <button class="primary" style="margin-top: 20px;" id="startBtn">Mulai Latihan</button>
+      </div>
     </div>
+  </div>
 
-    <div class="bottom-nav">
-        <button class="nav-item" onclick="navTo('settings')">Seting</button>
-        <button class="nav-item" onclick="changeQuestion(-1)">Prev</button>
-        <button class="nav-item" onclick="changeQuestion(1)">Next</button>
+  <div id="slideChat" class="slide">
+    <div class="chat-window">
+      <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 100</p></div>
+        <button class="outline" onclick="location.reload()">Exit</button>
+      </div>
+
+      <div class="bubbles-area">
+        <div class="bubble-them">
+          <div class="bubble-text" id="partnerMsg">...</div>
+        </div>
+        <div class="translation">
+          <button class="speaker-btn" id="speakPartner">🔊</button>
+          <span id="partnerTrans">...</span>
+        </div>
+
+        <div class="bubble-me">
+          <div class="bubble-text" id="userMsg">❓ ❓ ❓</div>
+        </div>
+        <div class="translation" style="justify-content: flex-end;">
+          <span id="userTrans" style="font-style: italic;"></span>
+        </div>
+      </div>
+
+      <div class="nav-bottom">
+        <button id="prevBtn" class="outline">Prev</button>
+        <button id="revealBtn" class="outline">Lihat Jawaban</button>
+        <button id="nextBtn" class="primary" style="width: auto;">Next</button>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        const database =const gamingTalk = [
-  { pEn: () => `Do you play games?`, pId: () => `Kamu main game?`, aEn: () => `Yeah, every day.`, aId: () => `Ya, tiap hari.` },
-  { pEn: () => `What's your favorite game?`, pId: () => `Game favoritmu apa?`, aEn: () => `Valorant.`, aId: () => `Valorant.` },
-  { pEn: () => `What games are you playing these days?`, pId: () => `Sekarang kamu lagi main game apa?`, aEn: () => `Mostly Mobile Legends.`, aId: () => `Kebanyakan Mobile Legends.` },
-  { pEn: () => `Do you play on PC or mobile?`, pId: () => `Kamu main di PC atau mobile?`, aEn: () => `Mostly PC.`, aId: () => `Kebanyakan PC.` },
-  { pEn: () => `Are you good at games?`, pId: () => `Kamu jago game?`, aEn: () => `Not really haha.`, aId: () => `Tidak juga haha.` },
-  { pEn: () => `Do you play ranked?`, pId: () => `Kamu main ranked?`, aEn: () => `Yeah, sometimes.`, aId: () => `Ya, kadang.` },
-  { pEn: () => `What's your rank?`, pId: () => `Rank kamu apa?`, aEn: () => `Diamond.`, aId: () => `Diamond.` },
-  { pEn: () => `Who's your favorite character?`, pId: () => `Karakter favoritmu siapa?`, aEn: () => `Jett.`, aId: () => `Jett.` },
-  { pEn: () => `Do you like FPS games?`, pId: () => `Kamu suka game FPS?`, aEn: () => `Yes, a lot.`, aId: () => `Ya, banget.` },
-  { pEn: () => `Do you play horror games?`, pId: () => `Kamu main game horor?`, aEn: () => `Sometimes with friends.`, aId: () => `Kadang sama teman.` },
+<script>
+  // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
+  const DIALOGS =[
+  { pEn: () => `What games are you playing these days?`, pId: () => `Game apa yang lagi sering kamu mainin sekarang?`, aEn: () => `Mostly Valorant and Mobile Legends.`, aId: () => `Kebanyakan Valorant dan Mobile Legends.` },
 
-  { pEn: () => `Do you rage when losing?`, pId: () => `Kamu emosi kalau kalah?`, aEn: () => `Haha sometimes.`, aId: () => `Haha kadang.` },
-  { pEn: () => `What's the hardest game you've played?`, pId: () => `Game tersulit yang pernah kamu mainkan apa?`, aEn: () => `Dark Souls.`, aId: () => `Dark Souls.` },
-  { pEn: () => `Do you play games every night?`, pId: () => `Kamu main game tiap malam?`, aEn: () => `Almost every night.`, aId: () => `Hampir tiap malam.` },
-  { pEn: () => `Do you use Discord?`, pId: () => `Kamu pakai Discord?`, aEn: () => `Yeah, always.`, aId: () => `Ya, selalu.` },
-  { pEn: () => `Who do you usually play with?`, pId: () => `Biasanya kamu main sama siapa?`, aEn: () => `My friends.`, aId: () => `Teman-temanku.` },
-  { pEn: () => `Do you like multiplayer games?`, pId: () => `Kamu suka game multiplayer?`, aEn: () => `Yes, they're fun.`, aId: () => `Ya, seru.` },
-  { pEn: () => `Do you play solo or team?`, pId: () => `Kamu main solo atau tim?`, aEn: () => `Mostly solo.`, aId: () => `Kebanyakan solo.` },
-  { pEn: () => `What's your main game right now?`, pId: () => `Game utama kamu sekarang apa?`, aEn: () => `Valorant currently.`, aId: () => `Valorant sekarang.` },
-  { pEn: () => `Do you watch gaming streams?`, pId: () => `Kamu nonton streaming game?`, aEn: () => `Yes, on Twitch.`, aId: () => `Ya, di Twitch.` },
-  { pEn: () => `Who's your favorite streamer?`, pId: () => `Streamer favoritmu siapa?`, aEn: () => `Tarik.`, aId: () => `Tarik.` },
+  { pEn: () => `You look like a hardcore gamer ngl.`, pId: () => `Kamu keliatan gamer hardcore jujur aja.`, aEn: () => `Haha maybe a little.`, aId: () => `Haha mungkin sedikit.` },
 
-  { pEn: () => `Do you like open-world games?`, pId: () => `Kamu suka game open-world?`, aEn: () => `Yes, especially GTA.`, aId: () => `Ya, terutama GTA.` },
-  { pEn: () => `Have you played Minecraft?`, pId: () => `Kamu pernah main Minecraft?`, aEn: () => `Of course haha.`, aId: () => `Tentu haha.` },
-  { pEn: () => `What's your favorite mobile game?`, pId: () => `Game mobile favoritmu apa?`, aEn: () => `PUBG Mobile.`, aId: () => `PUBG Mobile.` },
-  { pEn: () => `Do you play Roblox?`, pId: () => `Kamu main Roblox?`, aEn: () => `Sometimes.`, aId: () => `Kadang.` },
-  { pEn: () => `What's your favorite gaming memory?`, pId: () => `Kenangan gaming favoritmu apa?`, aEn: () => `Winning with friends.`, aId: () => `Menang bareng teman.` },
-  { pEn: () => `Do you use voice chat?`, pId: () => `Kamu pakai voice chat?`, aEn: () => `Yeah, always.`, aId: () => `Ya, selalu.` },
-  { pEn: () => `Do toxic players annoy you?`, pId: () => `Player toxic bikin kesal?`, aEn: () => `Very annoying haha.`, aId: () => `Nyebelin banget haha.` },
-  { pEn: () => `Do you spend money on games?`, pId: () => `Kamu sering keluar uang buat game?`, aEn: () => `Sadly yes.`, aId: () => `Sayangnya iya.` },
-  { pEn: () => `What's your favorite game skin?`, pId: () => `Skin favoritmu apa?`, aEn: () => `Prime Vandal.`, aId: () => `Prime Vandal.` },
-  { pEn: () => `Do you like story games?`, pId: () => `Kamu suka game cerita?`, aEn: () => `Yes, they're amazing.`, aId: () => `Ya, keren banget.` },
+  { pEn: () => `Do you rage when you lose?`, pId: () => `Kamu ngamuk kalau kalah?`, aEn: () => `Only a little bit 😭`, aId: () => `Cuma dikit 😭` },
 
-  { pEn: () => `Have you played GTA V?`, pId: () => `Kamu pernah main GTA V?`, aEn: () => `Yes, many times.`, aId: () => `Ya, sering.` },
-  { pEn: () => `Do you like survival games?`, pId: () => `Kamu suka game survival?`, aEn: () => `Yeah, they're intense.`, aId: () => `Ya, menegangkan.` },
-  { pEn: () => `Do you prefer online or offline games?`, pId: () => `Kamu lebih suka game online atau offline?`, aEn: () => `Online games.`, aId: () => `Game online.` },
-  { pEn: () => `Do you play console games?`, pId: () => `Kamu main game console?`, aEn: () => `A little.`, aId: () => `Sedikit.` },
-  { pEn: () => `PlayStation or Xbox?`, pId: () => `PlayStation atau Xbox?`, aEn: () => `PlayStation definitely.`, aId: () => `Jelas PlayStation.` },
-  { pEn: () => `Do you like racing games?`, pId: () => `Kamu suka game balapan?`, aEn: () => `Yes, especially Need for Speed.`, aId: () => `Ya, terutama Need for Speed.` },
-  { pEn: () => `What's your dream gaming setup?`, pId: () => `Setup gaming impianmu apa?`, aEn: () => `A powerful RGB PC.`, aId: () => `PC RGB yang kuat.` },
-  { pEn: () => `Do you use a gaming keyboard?`, pId: () => `Kamu pakai keyboard gaming?`, aEn: () => `Yes, mechanical keyboard.`, aId: () => `Ya, keyboard mekanik.` },
-  { pEn: () => `How many hours do you game?`, pId: () => `Berapa jam kamu main game?`, aEn: () => `Too many honestly.`, aId: () => `Terlalu banyak jujur.` },
-  { pEn: () => `Do you play with music on?`, pId: () => `Kamu main sambil denger musik?`, aEn: () => `Sometimes yes.`, aId: () => `Kadang iya.` },
+  { pEn: () => `Wanna play together sometime?`, pId: () => `Mau main bareng kapan-kapan?`, aEn: () => `Sure, why not?`, aId: () => `Boleh, kenapa enggak?` },
 
-  { pEn: () => `What's your favorite game soundtrack?`, pId: () => `Soundtrack game favoritmu apa?`, aEn: () => `Minecraft soundtrack.`, aId: () => `Soundtrack Minecraft.` },
-  { pEn: () => `Do you get scared in horror games?`, pId: () => `Kamu takut saat main game horor?`, aEn: () => `Absolutely haha.`, aId: () => `Banget haha.` },
-  { pEn: () => `What's the funniest thing in games?`, pId: () => `Hal terlucu di game apa?`, aEn: () => `My teammates failing.`, aId: () => `Temanku gagal terus.` },
-  { pEn: () => `Do you like competitive games?`, pId: () => `Kamu suka game kompetitif?`, aEn: () => `Yes, very much.`, aId: () => `Ya, banget.` },
-  { pEn: () => `Have you ever broken something because of games?`, pId: () => `Kamu pernah merusak barang gara-gara game?`, aEn: () => `Luckily no haha.`, aId: () => `Untungnya tidak haha.` },
-  { pEn: () => `Do your friends play games too?`, pId: () => `Teman-temanmu juga main game?`, aEn: () => `Yes, all of them.`, aId: () => `Ya, semuanya.` },
-  { pEn: () => `What's your favorite game map?`, pId: () => `Map favoritmu apa?`, aEn: () => `Dust 2.`, aId: () => `Dust 2.` },
-  { pEn: () => `Do you camp or rush in games?`, pId: () => `Kamu suka diam atau rush di game?`, aEn: () => `Mostly rush haha.`, aId: () => `Biasanya rush haha.` },
-  { pEn: () => `Do you prefer sniper or rifle?`, pId: () => `Kamu lebih suka sniper atau rifle?`, aEn: () => `Sniper.`, aId: () => `Sniper.` },
-  { pEn: () => `Do you play games to relax?`, pId: () => `Kamu main game buat santai?`, aEn: () => `Yes, definitely.`, aId: () => `Ya, tentu.` }
+  { pEn: () => `What's your main game rn?`, pId: () => `Game utama kamu sekarang apa?`, aEn: () => `Definitely Valorant.`, aId: () => `Pasti Valorant.` },
+
+  { pEn: () => `Are you competitive or chill in games?`, pId: () => `Kamu tipe kompetitif atau santai kalau main game?`, aEn: () => `Competitive but trying to stay calm lol.`, aId: () => `Kompetitif tapi berusaha santai wkwk.` },
+
+  { pEn: () => `What's your rank?`, pId: () => `Rank kamu apa?`, aEn: () => `Not that high honestly.`, aId: () => `Gak tinggi-tinggi amat jujur.` },
+
+  { pEn: () => `Do you play on PC or phone?`, pId: () => `Kamu main di PC atau HP?`, aEn: () => `Mostly on PC.`, aId: () => `Kebanyakan di PC.` },
+
+  { pEn: () => `What's your favorite multiplayer game?`, pId: () => `Game multiplayer favoritmu apa?`, aEn: () => `Probably Minecraft with friends.`, aId: () => `Mungkin Minecraft sama teman.` },
+
+  { pEn: () => `You got gamer setup vibes.`, pId: () => `Kamu vibes-nya punya setup gamer banget.`, aEn: () => `I wish 😭`, aId: () => `Andai aja 😭` },
+
+  { pEn: () => `Do you use voice chat a lot?`, pId: () => `Kamu sering pakai voice chat?`, aEn: () => `Only with close friends.`, aId: () => `Cuma sama teman dekat.` },
+
+  { pEn: () => `Who's your favorite game character?`, pId: () => `Karakter game favoritmu siapa?`, aEn: () => `Ghost from COD honestly.`, aId: () => `Ghost dari COD jujur aja.` },
+
+  { pEn: () => `Do you carry your team or get carried?`, pId: () => `Kamu yang carry tim atau di-carry?`, aEn: () => `Depends on the day 😭`, aId: () => `Tergantung harinya 😭` },
+
+  { pEn: () => `What's the most toxic game you've played?`, pId: () => `Game paling toxic yang pernah kamu mainin apa?`, aEn: () => `Valorant for sure.`, aId: () => `Valorant pastinya.` },
+
+  { pEn: () => `Do you play late at night too?`, pId: () => `Kamu juga main sampai larut malam?`, aEn: () => `Almost every night.`, aId: () => `Hampir tiap malam.` },
+
+  { pEn: () => `What's your favorite chill game?`, pId: () => `Game santai favoritmu apa?`, aEn: () => `Minecraft or Stardew Valley.`, aId: () => `Minecraft atau Stardew Valley.` },
+
+  { pEn: () => `Do you scream during horror games?`, pId: () => `Kamu teriak pas main game horror?`, aEn: () => `Every single time 😭`, aId: () => `Setiap saat 😭` },
+
+  { pEn: () => `What's your dream gaming setup?`, pId: () => `Setup gaming impianmu apa?`, aEn: () => `Dual monitor and RGB everywhere.`, aId: () => `Dual monitor dan RGB di mana-mana.` },
+
+  { pEn: () => `You seem like you'd be cracked at FPS games.`, pId: () => `Kamu keliatan jago game FPS banget.`, aEn: () => `Nah I miss my shots 😭`, aId: () => `Enggak aku sering miss 😭` },
+
+  { pEn: () => `Do you solo queue or play with friends?`, pId: () => `Kamu solo atau main bareng teman?`, aEn: () => `Playing with friends is more fun.`, aId: () => `Main sama teman lebih seru.` },
+
+  { pEn: () => `What's your biggest gaming rage moment?`, pId: () => `Momen paling rage pas gaming apa?`, aEn: () => `Losing rank because of AFK teammates.`, aId: () => `Turun rank gara-gara tim AFK.` },
+
+  { pEn: () => `Do you watch gaming streamers?`, pId: () => `Kamu nonton streamer game?`, aEn: () => `Yeah all the time.`, aId: () => `Iya terus-terusan.` },
+
+  { pEn: () => `Who's your favorite streamer?`, pId: () => `Streamer favoritmu siapa?`, aEn: () => `Tarik or TenZ probably.`, aId: () => `Mungkin Tarik atau TenZ.` },
+
+  { pEn: () => `Do you tilt easily in ranked games?`, pId: () => `Kamu gampang emosi pas ranked?`, aEn: () => `Sadly yes 😭`, aId: () => `Sayangnya iya 😭` },
+
+  { pEn: () => `What's your comfort game?`, pId: () => `Comfort game kamu apa?`, aEn: () => `Minecraft honestly.`, aId: () => `Minecraft jujur aja.` },
+
+  { pEn: () => `Do you prefer sweaty games or chill games?`, pId: () => `Kamu lebih suka game serius atau santai?`, aEn: () => `Depends on my mood.`, aId: () => `Tergantung mood.` },
+
+  { pEn: () => `You got esports player vibes lol.`, pId: () => `Kamu vibes-nya kayak pemain esports wkwk.`, aEn: () => `Haha imagine.`, aId: () => `Haha bayangin aja.` },
+
+  { pEn: () => `What's your favorite game soundtrack?`, pId: () => `Soundtrack game favoritmu apa?`, aEn: () => `Minecraft soundtrack hits different.`, aId: () => `Soundtrack Minecraft beda banget vibes-nya.` },
+
+  { pEn: () => `Do you spend money on skins?`, pId: () => `Kamu sering beli skin?`, aEn: () => `Way too much honestly.`, aId: () => `Kebanyakan jujur aja.` },
+
+  { pEn: () => `What's your rarest skin?`, pId: () => `Skin paling langka kamu apa?`, aEn: () => `Probably one from an old event.`, aId: () => `Mungkin yang dari event lama.` },
+
+  { pEn: () => `Do you play better at night?`, pId: () => `Kamu main lebih bagus pas malam?`, aEn: () => `Yeah somehow 😭`, aId: () => `Iya entah kenapa 😭` },
+
+  { pEn: () => `What's your funniest gaming moment?`, pId: () => `Momen gaming terlucu kamu apa?`, aEn: () => `Accidentally killing my teammate 😭`, aId: () => `Gak sengaja ngebunuh temen 😭` },
+
+  { pEn: () => `Do you use Discord while gaming?`, pId: () => `Kamu pakai Discord pas gaming?`, aEn: () => `Always.`, aId: () => `Selalu.` },
+
+  { pEn: () => `What game do you never get bored of?`, pId: () => `Game apa yang gak pernah bikin bosan?`, aEn: () => `Minecraft honestly.`, aId: () => `Minecraft jujur aja.` },
+
+  { pEn: () => `You seem like the funny teammate.`, pId: () => `Kamu keliatan kayak teman tim yang lucu.`, aEn: () => `I just troll a lot 😭`, aId: () => `Aku cuma sering ngetroll 😭` },
+
+  { pEn: () => `Do you like open world games?`, pId: () => `Kamu suka game open world?`, aEn: () => `Yeah I love exploring.`, aId: () => `Iya suka eksplorasi.` },
+
+  { pEn: () => `What's your favorite mobile game?`, pId: () => `Game mobile favoritmu apa?`, aEn: () => `Mobile Legends probably.`, aId: () => `Mungkin Mobile Legends.` },
+
+  { pEn: () => `Do you have gaming friends online?`, pId: () => `Kamu punya teman gaming online?`, aEn: () => `Yeah and they're chaotic 😭`, aId: () => `Iya dan mereka chaos 😭` },
+
+  { pEn: () => `What's your KD ratio?`, pId: () => `KD ratio kamu berapa?`, aEn: () => `Let's not talk about it 😭`, aId: () => `Jangan bahas itu 😭` },
+
+  { pEn: () => `Do you camp or rush?`, pId: () => `Kamu tipe camper atau rush?`, aEn: () => `Rush and pray honestly.`, aId: () => `Rush dan berdoa jujur aja.` },
+
+  { pEn: () => `Have you ever broken something because of a game?`, pId: () => `Pernah rusakin sesuatu gara-gara game?`, aEn: () => `Almost my keyboard 😭`, aId: () => `Hampir keyboard 😭` },
+
+  { pEn: () => `Do you play horror co-op games?`, pId: () => `Kamu main game horror co-op?`, aEn: () => `Yeah but I panic too much.`, aId: () => `Iya tapi gampang panik.` },
+
+  { pEn: () => `What's your favorite duo game?`, pId: () => `Game duo favoritmu apa?`, aEn: () => `It Takes Two honestly.`, aId: () => `It Takes Two jujur aja.` },
+
+  { pEn: () => `You sound like a clutch player.`, pId: () => `Kamu keliatan kayak pemain clutch.`, aEn: () => `Only in lucky moments 😭`, aId: () => `Cuma pas hoki 😭` },
+
+  { pEn: () => `What's your worst gaming habit?`, pId: () => `Kebiasaan gaming terburukmu apa?`, aEn: () => `Sleeping too late because of games.`, aId: () => `Tidur terlalu malam gara-gara game.` },
+
+  { pEn: () => `Do you use keyboard and mouse or controller?`, pId: () => `Kamu pakai keyboard mouse atau controller?`, aEn: () => `Keyboard and mouse.`, aId: () => `Keyboard dan mouse.` },
+
+  { pEn: () => `What's the scariest game you've played?`, pId: () => `Game paling seram yang pernah kamu mainin apa?`, aEn: () => `Outlast 😭`, aId: () => `Outlast 😭` },
+
+  { pEn: () => `Do you play for fun or for rank?`, pId: () => `Kamu main buat fun atau rank?`, aEn: () => `A bit of both.`, aId: () => `Dua-duanya.` },
+
+  { pEn: () => `What's your dream team in games?`, pId: () => `Tim impianmu di game kayak gimana?`, aEn: () => `Non-toxic teammates 😭`, aId: () => `Teman tim yang gak toxic 😭` },
+
+  { pEn: () => `Do you listen to music while gaming?`, pId: () => `Kamu denger musik sambil main game?`, aEn: () => `Yeah it helps me focus.`, aId: () => `Iya bikin fokus.` },
+
+  { pEn: () => `You definitely look like a night gamer.`, pId: () => `Kamu keliatan gamer malam banget.`, aEn: () => `True honestly.`, aId: () => `Bener banget.` },
+
+  { pEn: () => `What's your favorite game map?`, pId: () => `Map game favoritmu apa?`, aEn: () => `Ascent in Valorant.`, aId: () => `Ascent di Valorant.` },
+
+  { pEn: () => `Do you ever play story games?`, pId: () => `Kamu pernah main game story?`, aEn: () => `Yeah and I cry sometimes 😭`, aId: () => `Iya dan kadang nangis 😭` },
+
+  { pEn: () => `What's your favorite gaming snack?`, pId: () => `Snack favorit pas gaming apa?`, aEn: () => `Chips and soda.`, aId: () => `Keripik dan soda.` },
+
+  { pEn: () => `Have you ever stayed up till sunrise gaming?`, pId: () => `Pernah main game sampai matahari terbit?`, aEn: () => `Way too many times 😭`, aId: () => `Sering banget 😭` },
+
+  { pEn: () => `Do you play survival games?`, pId: () => `Kamu main game survival?`, aEn: () => `Yeah they're stressful but fun.`, aId: () => `Iya stres tapi seru.` },
+
+  { pEn: () => `What's your favorite gaming memory?`, pId: () => `Kenangan gaming favoritmu apa?`, aEn: () => `Laughing with friends at 3 AM.`, aId: () => `Ketawa sama teman jam 3 pagi.` },
+
+  { pEn: () => `Do you use gamer slang a lot?`, pId: () => `Kamu sering pakai bahasa gamer?`, aEn: () => `Bro I say "GG" in real life 😭`, aId: () => `Bro aku bilang "GG" di kehidupan nyata 😭` },
+
+  { pEn: () => `What's your lucky game skin?`, pId: () => `Skin keberuntunganmu apa?`, aEn: () => `The one that somehow gives aim 😭`, aId: () => `Yang entah kenapa bikin aim bagus 😭` },
+
+  { pEn: () => `Do you ever troll your friends in games?`, pId: () => `Kamu suka ngetroll teman pas game?`, aEn: () => `All the time 😭`, aId: () => `Sering banget 😭` },
+
+  { pEn: () => `What's your favorite gaming genre?`, pId: () => `Genre game favoritmu apa?`, aEn: () => `FPS and open world games.`, aId: () => `FPS dan open world.` },
+
+  { pEn: () => `Do you get scared in ranked matches?`, pId: () => `Kamu takut pas ranked match?`, aEn: () => `Every time 😭`, aId: () => `Setiap kali 😭` },
+
+  { pEn: () => `What's your gaming nickname?`, pId: () => `Nickname gaming kamu apa?`, aEn: () => `It's kinda cringe honestly 😭`, aId: () => `Agak cringe jujur 😭` },
+
+  { pEn: () => `Do you like co-op games more than solo games?`, pId: () => `Kamu lebih suka game co-op daripada solo?`, aEn: () => `Yeah games are more fun together.`, aId: () => `Iya lebih seru bareng.` },
+
+  { pEn: () => `What's your favorite game weapon?`, pId: () => `Senjata favoritmu di game apa?`, aEn: () => `Vandal in Valorant.`, aId: () => `Vandal di Valorant.` },
+
+  { pEn: () => `Do you have fast reflexes or nah?`, pId: () => `Refleks kamu cepat atau enggak?`, aEn: () => `Only when I'm locked in 😭`, aId: () => `Cuma pas fokus 😭` },
+
+  { pEn: () => `What's the saddest game ending you've seen?`, pId: () => `Ending game paling sedih yang pernah kamu lihat apa?`, aEn: () => `RDR2 honestly 😭`, aId: () => `RDR2 jujur 😭` },
+
+  { pEn: () => `Do you like grinding in games?`, pId: () => `Kamu suka grinding di game?`, aEn: () => `Yeah but it gets tiring.`, aId: () => `Iya tapi capek juga.` },
+
+  { pEn: () => `What's your favorite battle royale game?`, pId: () => `Battle royale favoritmu apa?`, aEn: () => `PUBG probably.`, aId: () => `PUBG mungkin.` },
+
+  { pEn: () => `Do you scream at your monitor sometimes?`, pId: () => `Kamu suka teriak ke monitor kadang?`, aEn: () => `More than I should 😭`, aId: () => `Lebih sering dari yang seharusnya 😭` },
+
+  { pEn: () => `What's your favorite gaming duo combo?`, pId: () => `Combo duo favoritmu di game apa?`, aEn: () => `Me and my carry friend 😭`, aId: () => `Aku dan teman carry-ku 😭` },
+
+  { pEn: () => `Do you watch esports tournaments?`, pId: () => `Kamu nonton turnamen esports?`, aEn: () => `Yeah especially finals.`, aId: () => `Iya apalagi final.` },
+
+  { pEn: () => `What's your dream esports team?`, pId: () => `Tim esports impianmu apa?`, aEn: () => `PRX honestly.`, aId: () => `PRX jujur aja.` },
+
+  { pEn: () => `Do you ever blame lag for losing?`, pId: () => `Kamu suka nyalahin lag kalau kalah?`, aEn: () => `Every gamer does 😭`, aId: () => `Semua gamer gitu 😭` },
+
+  { pEn: () => `What's your favorite thing about gaming?`, pId: () => `Hal favorit tentang gaming apa?`, aEn: () => `Escaping reality for a bit.`, aId: () => `Kabur sebentar dari realita.` },
+
+  { pEn: () => `Do you play games to relax?`, pId: () => `Kamu main game buat relaksasi?`, aEn: () => `Sometimes it stresses me more 😭`, aId: () => `Kadang malah bikin stres 😭` },
+
+  { pEn: () => `What's your favorite game update ever?`, pId: () => `Update game favoritmu apa?`, aEn: () => `The one that fixed everything lol.`, aId: () => `Yang benerin semuanya wkwk.` },
+
+  { pEn: () => `Do you have gamer posture rn?`, pId: () => `Kamu lagi posisi duduk gamer sekarang?`, aEn: () => `Goblin posture honestly 😭`, aId: () => `Posisi goblin jujur 😭` },
+
+  { pEn: () => `What's your favorite game voice line?`, pId: () => `Voice line game favoritmu apa?`, aEn: () => `"Fire in the hole!" 😭`, aId: () => `"Fire in the hole!" 😭` },
+
+  { pEn: () => `Do you prefer ranked or casual matches?`, pId: () => `Kamu lebih suka ranked atau casual?`, aEn: () => `Casual for peace honestly.`, aId: () => `Casual demi ketenangan.` },
+
+  { pEn: () => `What's your funniest teammate experience?`, pId: () => `Pengalaman terlucu sama teman tim apa?`, aEn: () => `We lost because we laughed too much 😭`, aId: () => `Kalah gara-gara kebanyakan ketawa 😭` },
+
+  { pEn: () => `Do you ever accidentally throw games?`, pId: () => `Kamu pernah gak sengaja nge-throw game?`, aEn: () => `More times than I'd admit 😭`, aId: () => `Lebih sering dari yang mau aku akui 😭` },
+
+  { pEn: () => `What's your favorite gaming phrase?`, pId: () => `Kalimat gaming favoritmu apa?`, aEn: () => `"One more game." 😭`, aId: () => `"Satu game lagi." 😭` },
+
+  { pEn: () => `Do you like custom games with friends?`, pId: () => `Kamu suka custom game sama teman?`, aEn: () => `Yeah they're chaotic.`, aId: () => `Iya chaos banget.` },
+
+  { pEn: () => `What's your favorite game mechanic?`, pId: () => `Mekanik game favoritmu apa?`, aEn: () => `Movement mechanics honestly.`, aId: () => `Movement mechanic jujur aja.` },
+
+  { pEn: () => `Do you get nervous in clutch moments?`, pId: () => `Kamu gugup pas clutch moment?`, aEn: () => `My hands shake 😭`, aId: () => `Tanganku gemeter 😭` },
+
+  { pEn: () => `What's your favorite game quote?`, pId: () => `Quote game favoritmu apa?`, aEn: () => `"We all make choices."`, aId: () => `"Kita semua membuat pilihan."` },
+
+  { pEn: () => `Do you prefer realistic or cartoon games?`, pId: () => `Kamu lebih suka game realistis atau kartun?`, aEn: () => `Depends on the mood honestly.`, aId: () => `Tergantung mood jujur aja.` },
+
+  { pEn: () => `What's your favorite gaming emote?`, pId: () => `Emote gaming favoritmu apa?`, aEn: () => `Any toxic dance emote 😭`, aId: () => `Emote dance toxic 😭` },
+
+  { pEn: () => `Do you ever forget to eat while gaming?`, pId: () => `Kamu pernah lupa makan gara-gara gaming?`, aEn: () => `Way too often 😭`, aId: () => `Sering banget 😭` },
+
+  { pEn: () => `What's your favorite game mode?`, pId: () => `Mode game favoritmu apa?`, aEn: () => `Search and destroy honestly.`, aId: () => `Search and destroy jujur aja.` },
+
+  { pEn: () => `Do you use RGB lights while gaming?`, pId: () => `Kamu pakai lampu RGB pas gaming?`, aEn: () => `RGB makes me play better 😭`, aId: () => `RGB bikin main lebih jago 😭` },
+
+  { pEn: () => `What's your favorite game to play with friends?`, pId: () => `Game favorit buat main bareng teman apa?`, aEn: () => `Lethal Company recently.`, aId: () => `Lethal Company akhir-akhir ini.` },
+
+  { pEn: () => `Do you ever accidentally scream in VC?`, pId: () => `Kamu pernah gak sengaja teriak di VC?`, aEn: () => `Too many times 😭`, aId: () => `Sering banget 😭` },
+
+  { pEn: () => `What's your favorite gaming memory from childhood?`, pId: () => `Kenangan gaming masa kecil favoritmu apa?`, aEn: () => `Playing PS2 with cousins.`, aId: () => `Main PS2 sama sepupu.` },
+
+  { pEn: () => `Do you like speedrunning games?`, pId: () => `Kamu suka speedrun game?`, aEn: () => `I suck at it honestly 😭`, aId: () => `Aku jelek banget soal itu 😭` },
+
+  { pEn: () => `What's your favorite gaming meme?`, pId: () => `Meme gaming favoritmu apa?`, aEn: () => `"Lag." 😭`, aId: () => `"Lag." 😭` },
+
+  { pEn: () => `Do you think gaming helps with stress?`, pId: () => `Menurutmu gaming membantu mengurangi stres?`, aEn: () => `Sometimes yes, sometimes no 😭`, aId: () => `Kadang iya kadang enggak 😭` },
+
+  { pEn: () => `What's your favorite gaming achievement?`, pId: () => `Pencapaian gaming favoritmu apa?`, aEn: () => `Finally reaching a high rank.`, aId: () => `Akhirnya mencapai rank tinggi.` },
+
+  { pEn: () => `Do you ever play games just for the story?`, pId: () => `Kamu pernah main game cuma buat ceritanya?`, aEn: () => `Yeah story games hit different.`, aId: () => `Iya game story beda banget vibes-nya.` },
+
+  { pEn: () => `What's your favorite game lobby music?`, pId: () => `Musik lobby game favoritmu apa?`, aEn: () => `Old Fortnite lobby music 😭`, aId: () => `Musik lobby Fortnite lama 😭` },
+
+  { pEn: () => `Do you get attached to game characters?`, pId: () => `Kamu gampang attach sama karakter game?`, aEn: () => `Way too attached honestly 😭`, aId: () => `Terlalu attach jujur 😭` },
+
+  { pEn: () => `What's your favorite game ending ever?`, pId: () => `Ending game favoritmu apa?`, aEn: () => `Detroit Become Human honestly.`, aId: () => `Detroit Become Human jujur aja.` },
+
+  { pEn: () => `Do you think we'd be good gaming teammates?`, pId: () => `Menurutmu kita bakal jadi tim gaming yang bagus?`, aEn: () => `As long as we don't throw 😭`, aId: () => `Asal gak nge-throw 😭` }
 ];
+  // ===[AKHIR TANDA] ===
 
-        let currentIndex = 0;
-        let timerInterval;
-        let timeLeft = 10;
-        const synth = window.speechSynthesis;
+  let current = 0;
+  let voices =[];
 
-        // Update display slider
-        document.getElementById('input-timer').addEventListener('input', function() {
-            document.getElementById('val-timer').innerText = this.value;
-        });
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
 
-        function navTo(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${screenId}`).classList.add('active');
-            if (screenId === 'exercise') startChallenge();
-        }
+  function speak(text, isPartner = true) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    const voice = voices.find(v => v.lang.includes('en-US')) || voices[0];
+    if (voice) utter.voice = voice;
+    
+    // Ambil nilai dari slider
+    utter.rate = parseFloat(document.getElementById('rateRange').value);
+    utter.volume = parseFloat(document.getElementById('volumeRange').value);
+    
+    utter.pitch = isPartner ? 1.0 : 1.2;
+    window.speechSynthesis.speak(utter);
+  }
 
-        function startChallenge() {
-            clearInterval(timerInterval);
-            synth.cancel();
-            
-            const data = database[currentIndex];
-            timeLeft = parseInt(document.getElementById('input-timer').value);
-            
-            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
-            document.getElementById('timer-display').innerText = timeLeft;
-            document.getElementById('text-indo').innerText = data.indo;
-            document.getElementById('answer-area').classList.remove('visible');
-            document.getElementById('btn-reveal').classList.remove('hidden');
+  function update() {
+    const d = DIALOGS[current];
+    document.getElementById('partnerMsg').textContent = d.pEn();
+    document.getElementById('partnerTrans').textContent = d.pId();
+    document.getElementById('userMsg').textContent = "❓ ❓ ❓";
+    document.getElementById('userTrans').textContent = "";
+    document.getElementById('sessionCounter').textContent = `Sesi ${current + 1} / ${DIALOGS.length}`;
+  }
 
-            speak(data.indo, 'id-ID');
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('slideSetup').classList.remove('active-slide');
+    document.getElementById('slideChat').classList.add('active-slide');
+    update();
+    setTimeout(() => speak(DIALOGS[current].pEn()), 500);
+  });
 
-            // Jalankan Timer
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer-display').innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    revealAnswer();
-                }
-            }, 1000);
-        }
+  document.getElementById('speakPartner').addEventListener('click', () => speak(DIALOGS[current].pEn()));
 
-        function revealAnswer() {
-            clearInterval(timerInterval);
-            const data = database[currentIndex];
-            document.getElementById('text-en').innerText = data.en;
-            document.getElementById('text-phonetic').innerText = data.phonetic;
-            document.getElementById('text-explanation').innerText = data.explanation;
-            document.getElementById('answer-area').classList.add('visible');
-            document.getElementById('btn-reveal').classList.add('hidden');
-            speak(data.en, 'en-US');
-        }
+  document.getElementById('revealBtn').addEventListener('click', () => {
+    const d = DIALOGS[current];
+    document.getElementById('userMsg').textContent = d.aEn();
+    document.getElementById('userTrans').textContent = d.aId();
+    speak(d.aEn(), false);
+  });
 
-        function speak(text, lang) {
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = lang;
-            utter.volume = document.getElementById('input-volume').value / 300;
-            synth.speak(utter);
-        }
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(current < DIALOGS.length - 1) { current++; update(); speak(DIALOGS[current].pEn()); }
+  });
 
-        function changeQuestion(dir) {
-            currentIndex = (currentIndex + dir + database.length) % database.length;
-            startChallenge();
-        }
-    </script>
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(current > 0) { current--; update(); speak(DIALOGS[current].pEn()); }
+  });
+</script>
 </body>
 </html>
