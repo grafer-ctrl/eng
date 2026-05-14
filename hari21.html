@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aktif Bertanya - Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #5154d8;
+            --pink-accent: #ff1a75;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        header { padding: 20px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .app-title { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; margin: 0; }
+        .app-desc { font-size: 0.8rem; color: #64748b; margin-top: 5px; max-width: 400px; margin-left: auto; margin-right: auto; }
+
+        .screen { display: none; padding: 20px; height: calc(100vh - 160px); overflow-y: auto; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.07); margin-bottom: 20px; text-align: center; }
+
+        .task-label { color: var(--pink-accent); font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        .btn-progress { background: #eef2ff; color: var(--primary-blue); padding: 6px 15px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
+        .timer-pill { background: var(--pink-accent); color: white; padding: 8px 30px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.5rem; margin-bottom: 10px; }
+        
+        .challenge-box { font-size: 1.3rem; font-weight: 600; margin: 20px 0; min-height: 50px; }
+        #btn-reveal { background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; }
+        #btn-reveal.hidden { display: none; }
+
+        .answer-area { display: none; text-align: left; border-top: 2px dashed #e2e8f0; padding-top: 20px; margin-top: 20px; }
+        .answer-area.visible { display: block; }
+        .english-text { color: var(--primary-blue); font-size: 1.3rem; font-weight: 700; text-align: center; margin-bottom: 5px; }
+        .phonetic { color: #64748b; font-style: italic; text-align: center; margin-bottom: 15px; }
+        .edu-box { background: #f8fafc; padding: 15px; border-radius: 20px; border-left: 5px solid var(--pink-accent); font-size: 0.85rem; }
+
+        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1000; }
+        .nav-item { border: none; background: none; color: #94a3b8; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="app-title">Aktif Bertanya</h1>
+        <p class="app-desc">Pelatihan ini menghilangkan mindset lama: kebanyakan orang Indonesia lebih senang menjawab daripada bertanya.</p>
+    </header>
+
+    <div id="screen-settings" class="screen active">
+        <div class="card">
+            <h3>⚙️ Pengaturan</h3>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Volume: <span id="val-volume">240</span></label>
+                <input type="range" id="input-volume" min="0" max="300" step="1" value="240" style="width:100%">
+            </div>
+            <div style="text-align: left; margin: 20px 0;">
+                <label>Timer Jeda (Max 120s): <span id="val-timer">10</span>s</label>
+                <input type="range" id="input-timer" min="5" max="120" step="1" value="10" style="width:100%">
+            </div>
+            <button onclick="navTo('exercise')" style="width: 100%; background: var(--primary-blue); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: bold; cursor: pointer;">MULAI LATIHAN</button>
+        </div>
+    </div>
+
+    <div id="screen-exercise" class="screen">
+        <div class="card">
+            <div class="task-label">Tugas kamu: terjemahkan dan ucapkan dalam B Inggris</div>
+            <div class="btn-progress" id="progress-badge">SOAL 1</div>
+            <div id="timer-display" class="timer-pill">10</div>
+            <div class="challenge-box" id="text-indo">--</div>
+            <button id="btn-reveal" onclick="revealAnswer()">LIHAT JAWABAN</button>
+
+            <div id="answer-area" class="answer-area">
+                <div class="english-text" id="text-en">--</div>
+                <div class="phonetic" id="text-phonetic">--</div>
+                <div class="edu-box"><strong id="text-explanation">--</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" onclick="navTo('settings')">Seting</button>
+        <button class="nav-item" onclick="changeQuestion(-1)">Prev</button>
+        <button class="nav-item" onclick="changeQuestion(1)">Next</button>
+    </div>
+
+    <script>
+        const database =const dailyActivities = [
+  { pEn: () => `What time did you wake up today?`, pId: () => `Jam berapa kamu bangun hari ini?`, aEn: () => `Around 7 AM.`, aId: () => `Sekitar jam 7 pagi.` },
+  { pEn: () => `Did you sleep well?`, pId: () => `Kamu tidur nyenyak?`, aEn: () => `Yeah, pretty well.`, aId: () => `Ya, lumayan nyenyak.` },
+  { pEn: () => `What do you usually do in the morning?`, pId: () => `Biasanya kamu ngapain pagi hari?`, aEn: () => `I drink coffee first.`, aId: () => `Aku minum kopi dulu.` },
+  { pEn: () => `Did you eat breakfast?`, pId: () => `Kamu sudah sarapan?`, aEn: () => `Yes, I had noodles.`, aId: () => `Ya, aku makan mie.` },
+  { pEn: () => `Are you busy today?`, pId: () => `Hari ini kamu sibuk?`, aEn: () => `Not really.`, aId: () => `Tidak terlalu.` },
+  { pEn: () => `What are you doing right now?`, pId: () => `Sekarang kamu lagi ngapain?`, aEn: () => `Just relaxing.`, aId: () => `Lagi santai.` },
+  { pEn: () => `Did you go outside today?`, pId: () => `Kamu keluar rumah hari ini?`, aEn: () => `Yeah, for a while.`, aId: () => `Ya, sebentar.` },
+  { pEn: () => `Do you study every day?`, pId: () => `Kamu belajar tiap hari?`, aEn: () => `Mostly yes.`, aId: () => `Kebanyakan iya.` },
+  { pEn: () => `Are you working today?`, pId: () => `Hari ini kamu kerja?`, aEn: () => `No, it's my day off.`, aId: () => `Tidak, ini hari liburku.` },
+  { pEn: () => `What do you usually do after school?`, pId: () => `Biasanya kamu ngapain setelah sekolah?`, aEn: () => `I play games.`, aId: () => `Aku main game.` },
+
+  { pEn: () => `Do you cook your own food?`, pId: () => `Kamu masak makanan sendiri?`, aEn: () => `Sometimes haha.`, aId: () => `Kadang haha.` },
+  { pEn: () => `What did you eat today?`, pId: () => `Hari ini kamu makan apa?`, aEn: () => `Fried rice.`, aId: () => `Nasi goreng.` },
+  { pEn: () => `Do you exercise often?`, pId: () => `Kamu sering olahraga?`, aEn: () => `Not really honestly.`, aId: () => `Tidak terlalu jujur.` },
+  { pEn: () => `Do you take naps?`, pId: () => `Kamu suka tidur siang?`, aEn: () => `Yes, sometimes.`, aId: () => `Ya, kadang.` },
+  { pEn: () => `What do you do before sleeping?`, pId: () => `Kamu ngapain sebelum tidur?`, aEn: () => `I watch videos.`, aId: () => `Aku nonton video.` },
+  { pEn: () => `Do you use your phone a lot?`, pId: () => `Kamu sering pakai HP?`, aEn: () => `Way too much haha.`, aId: () => `Terlalu sering haha.` },
+  { pEn: () => `How many hours do you sleep?`, pId: () => `Berapa jam kamu tidur?`, aEn: () => `Around 6 hours.`, aId: () => `Sekitar 6 jam.` },
+  { pEn: () => `Do you stay up late?`, pId: () => `Kamu sering begadang?`, aEn: () => `Yeah, almost every night.`, aId: () => `Ya, hampir tiap malam.` },
+  { pEn: () => `What time do you usually sleep?`, pId: () => `Biasanya kamu tidur jam berapa?`, aEn: () => `Around midnight.`, aId: () => `Sekitar tengah malam.` },
+  { pEn: () => `Do you clean your room often?`, pId: () => `Kamu sering bersihin kamar?`, aEn: () => `Not often haha.`, aId: () => `Tidak sering haha.` },
+
+  { pEn: () => `Do you help your parents at home?`, pId: () => `Kamu bantu orang tua di rumah?`, aEn: () => `Yes, sometimes.`, aId: () => `Ya, kadang.` },
+  { pEn: () => `Do you drink coffee every day?`, pId: () => `Kamu minum kopi tiap hari?`, aEn: () => `Yes, I need it haha.`, aId: () => `Ya, aku butuh haha.` },
+  { pEn: () => `What do you usually do on weekends?`, pId: () => `Biasanya kamu ngapain saat akhir pekan?`, aEn: () => `I stay home mostly.`, aId: () => `Kebanyakan di rumah.` },
+  { pEn: () => `Do you watch movies at night?`, pId: () => `Kamu nonton film malam hari?`, aEn: () => `Yes, often.`, aId: () => `Ya, sering.` },
+  { pEn: () => `How long do you use social media?`, pId: () => `Berapa lama kamu main media sosial?`, aEn: () => `Too long honestly.`, aId: () => `Terlalu lama jujur.` },
+  { pEn: () => `Do you go to bed early?`, pId: () => `Kamu tidur cepat?`, aEn: () => `Not really.`, aId: () => `Tidak juga.` },
+  { pEn: () => `What do you usually do after waking up?`, pId: () => `Biasanya kamu ngapain setelah bangun?`, aEn: () => `I check my phone.`, aId: () => `Aku cek HP.` },
+  { pEn: () => `Do you shower in the morning or at night?`, pId: () => `Kamu mandi pagi atau malam?`, aEn: () => `Usually at night.`, aId: () => `Biasanya malam.` },
+  { pEn: () => `Do you like staying at home?`, pId: () => `Kamu suka di rumah aja?`, aEn: () => `Yeah, it's peaceful.`, aId: () => `Ya, lebih tenang.` },
+  { pEn: () => `What apps do you open every day?`, pId: () => `Aplikasi apa yang kamu buka tiap hari?`, aEn: () => `TikTok and Instagram.`, aId: () => `TikTok dan Instagram.` },
+
+  { pEn: () => `Do you listen to music while working?`, pId: () => `Kamu dengerin musik saat kerja?`, aEn: () => `Yes, always.`, aId: () => `Ya, selalu.` },
+  { pEn: () => `Do you usually eat late?`, pId: () => `Kamu biasanya makan telat?`, aEn: () => `Yeah haha.`, aId: () => `Ya haha.` },
+  { pEn: () => `What do you do when you're bored?`, pId: () => `Kamu ngapain kalau bosan?`, aEn: () => `I scroll TikTok.`, aId: () => `Aku scroll TikTok.` },
+  { pEn: () => `Do you spend more time indoors or outdoors?`, pId: () => `Kamu lebih sering di dalam atau luar rumah?`, aEn: () => `Mostly indoors.`, aId: () => `Kebanyakan di dalam rumah.` },
+  { pEn: () => `Do you walk a lot every day?`, pId: () => `Kamu banyak jalan tiap hari?`, aEn: () => `Not really.`, aId: () => `Tidak terlalu.` },
+  { pEn: () => `Do you enjoy relaxing alone?`, pId: () => `Kamu suka santai sendirian?`, aEn: () => `Yes, very much.`, aId: () => `Ya, banget.` },
+  { pEn: () => `Do you usually eat at home?`, pId: () => `Kamu biasanya makan di rumah?`, aEn: () => `Yeah, mostly.`, aId: () => `Ya, kebanyakan.` },
+  { pEn: () => `How do you usually spend your evenings?`, pId: () => `Biasanya malam kamu habiskan buat apa?`, aEn: () => `Watching YouTube.`, aId: () => `Nonton YouTube.` },
+  { pEn: () => `Do you talk to your friends every day?`, pId: () => `Kamu ngobrol sama teman tiap hari?`, aEn: () => `Almost every day.`, aId: () => `Hampir tiap hari.` },
+  { pEn: () => `Do you usually wake up early?`, pId: () => `Kamu biasanya bangun pagi?`, aEn: () => `Not really haha.`, aId: () => `Tidak juga haha.` },
+
+  { pEn: () => `What do you usually do before noon?`, pId: () => `Biasanya sebelum siang kamu ngapain?`, aEn: () => `I study a little.`, aId: () => `Aku belajar sedikit.` },
+  { pEn: () => `Do you enjoy shopping?`, pId: () => `Kamu suka belanja?`, aEn: () => `Sometimes.`, aId: () => `Kadang.` },
+  { pEn: () => `Do you spend a lot of time online?`, pId: () => `Kamu banyak waktu online?`, aEn: () => `Yes, too much honestly.`, aId: () => `Ya, terlalu banyak jujur.` },
+  { pEn: () => `Do you use headphones often?`, pId: () => `Kamu sering pakai headset?`, aEn: () => `Every single day.`, aId: () => `Setiap hari.` },
+  { pEn: () => `What time do you usually eat dinner?`, pId: () => `Biasanya kamu makan malam jam berapa?`, aEn: () => `Around 8 PM.`, aId: () => `Sekitar jam 8 malam.` },
+  { pEn: () => `Do you like quiet places?`, pId: () => `Kamu suka tempat yang tenang?`, aEn: () => `Yes, very relaxing.`, aId: () => `Ya, menenangkan.` },
+  { pEn: () => `Do you spend more time studying or relaxing?`, pId: () => `Kamu lebih banyak belajar atau santai?`, aEn: () => `Relaxing honestly.`, aId: () => `Santai jujur.` },
+  { pEn: () => `Do you watch TikTok before sleeping?`, pId: () => `Kamu nonton TikTok sebelum tidur?`, aEn: () => `Yeah every night.`, aId: () => `Ya tiap malam.` },
+  { pEn: () => `Do you like staying up with friends online?`, pId: () => `Kamu suka begadang bareng teman online?`, aEn: () => `Yes haha.`, aId: () => `Ya haha.` },
+  { pEn: () => `Do you eat snacks while watching movies?`, pId: () => `Kamu ngemil saat nonton film?`, aEn: () => `Always.`, aId: () => `Selalu.` }
+];
+
+        let currentIndex = 0;
+        let timerInterval;
+        let timeLeft = 10;
+        const synth = window.speechSynthesis;
+
+        // Update display slider
+        document.getElementById('input-timer').addEventListener('input', function() {
+            document.getElementById('val-timer').innerText = this.value;
+        });
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            if (screenId === 'exercise') startChallenge();
+        }
+
+        function startChallenge() {
+            clearInterval(timerInterval);
+            synth.cancel();
+            
+            const data = database[currentIndex];
+            timeLeft = parseInt(document.getElementById('input-timer').value);
+            
+            document.getElementById('progress-badge').innerText = `SOAL ${currentIndex + 1}`;
+            document.getElementById('timer-display').innerText = timeLeft;
+            document.getElementById('text-indo').innerText = data.indo;
+            document.getElementById('answer-area').classList.remove('visible');
+            document.getElementById('btn-reveal').classList.remove('hidden');
+
+            speak(data.indo, 'id-ID');
+
+            // Jalankan Timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    revealAnswer();
+                }
+            }, 1000);
+        }
+
+        function revealAnswer() {
+            clearInterval(timerInterval);
+            const data = database[currentIndex];
+            document.getElementById('text-en').innerText = data.en;
+            document.getElementById('text-phonetic').innerText = data.phonetic;
+            document.getElementById('text-explanation').innerText = data.explanation;
+            document.getElementById('answer-area').classList.add('visible');
+            document.getElementById('btn-reveal').classList.add('hidden');
+            speak(data.en, 'en-US');
+        }
+
+        function speak(text, lang) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang;
+            utter.volume = document.getElementById('input-volume').value / 300;
+            synth.speak(utter);
+        }
+
+        function changeQuestion(dir) {
+            currentIndex = (currentIndex + dir + database.length) % database.length;
+            startChallenge();
+        }
+    </script>
+</body>
+</html>
