@@ -98,7 +98,7 @@
   <div id="slideChat" class="slide">
     <div class="chat-window">
       <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
-        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 10</p></div>
+        <div><h2 id="partnerName">Selesaikan</h2><p id="sessionCounter">Sesi 1 / 100</p></div>
         <button class="outline" onclick="location.reload()">Exit</button>
       </div>
 
@@ -130,356 +130,103 @@
 
 <script>
   // ===[MULAI TANDA] TAMBAHKAN PERCAKAPAN ANDA DI BAWAH INI ===
-  const DIALOGS =[
-  {
-    pEn: () => `Hi, can I talk to you?`,
-    pId: () => `Hai, bolehkah saya berbicara denganmu?`,
-    aEn: () => `Sure!`,
-    aId: () => `Tentu!`
-  },
+  const DIALOGS =const greetings = [
+  { pEn: () => `Hi!`, pId: () => `Hai!`, aEn: () => `Hello!`, aId: () => `Halo!` },
+  { pEn: () => `Good morning.`, pId: () => `Selamat pagi.`, aEn: () => `Good morning too!`, aId: () => `Selamat pagi juga!` },
+  { pEn: () => `Good afternoon.`, pId: () => `Selamat siang.`, aEn: () => `Good afternoon!`, aId: () => `Selamat siang!` },
+  { pEn: () => `Good evening.`, pId: () => `Selamat malam.`, aEn: () => `Good evening too!`, aId: () => `Selamat malam juga!` },
+  { pEn: () => `How are you?`, pId: () => `Apa kabar?`, aEn: () => `I'm fine, thanks.`, aId: () => `Aku baik, terima kasih.` },
+  { pEn: () => `Nice to meet you.`, pId: () => `Senang bertemu denganmu.`, aEn: () => `Nice to meet you too.`, aId: () => `Senang bertemu denganmu juga.` },
+  { pEn: () => `Where are you from?`, pId: () => `Dari mana kamu?`, aEn: () => `I'm from Indonesia.`, aId: () => `Aku dari Indonesia.` },
+  { pEn: () => `What is your name?`, pId: () => `Siapa namamu?`, aEn: () => `My name is Dias.`, aId: () => `Namaku Dias.` },
+  { pEn: () => `How old are you?`, pId: () => `Umurmu berapa?`, aEn: () => `I'm 20 years old.`, aId: () => `Aku 20 tahun.` },
+  { pEn: () => `Where do you live?`, pId: () => `Kamu tinggal di mana?`, aEn: () => `I live in Solo.`, aId: () => `Aku tinggal di Solo.` },
 
-  {
-    pEn: () => `Hello, how’s your day going?`,
-    pId: () => `Halo, bagaimana harimu?`,
-    aEn: () => `It’s going well.`,
-    aId: () => `Berjalan dengan baik.`
-  },
+  { pEn: () => `What are you doing?`, pId: () => `Kamu sedang apa?`, aEn: () => `I'm relaxing.`, aId: () => `Aku sedang santai.` },
+  { pEn: () => `Are you busy?`, pId: () => `Kamu sibuk?`, aEn: () => `Not really.`, aId: () => `Tidak terlalu.` },
+  { pEn: () => `Are you alone?`, pId: () => `Kamu sendirian?`, aEn: () => `Yes, I am.`, aId: () => `Ya, aku sendiri.` },
+  { pEn: () => `Do you like OmeTV?`, pId: () => `Kamu suka OmeTV?`, aEn: () => `Yeah, it's fun.`, aId: () => `Ya, seru.` },
+  { pEn: () => `Are you new here?`, pId: () => `Kamu baru di sini?`, aEn: () => `Yes, first time.`, aId: () => `Ya, pertama kali.` },
+  { pEn: () => `You are very friendly.`, pId: () => `Kamu ramah sekali.`, aEn: () => `Thank you so much!`, aId: () => `Terima kasih banyak!` },
+  { pEn: () => `I like your smile.`, pId: () => `Aku suka senyummu.`, aEn: () => `Aww thank you.`, aId: () => `Aww makasih.` },
+  { pEn: () => `You are funny.`, pId: () => `Kamu lucu.`, aEn: () => `Haha thanks!`, aId: () => `Haha makasih!` },
+  { pEn: () => `You are cool.`, pId: () => `Kamu keren.`, aEn: () => `You're cool too.`, aId: () => `Kamu juga keren.` },
+  { pEn: () => `I enjoy talking to you.`, pId: () => `Aku senang ngobrol denganmu.`, aEn: () => `Me too!`, aId: () => `Aku juga!` },
 
-  {
-    pEn: () => `Hey, you seem friendly.`,
-    pId: () => `Hei, kamu terlihat ramah.`,
-    aEn: () => `Thank you!`,
-    aId: () => `Terima kasih!`
-  },
+  { pEn: () => `Can you speak English?`, pId: () => `Kamu bisa bahasa Inggris?`, aEn: () => `A little bit.`, aId: () => `Sedikit.` },
+  { pEn: () => `Please speak slowly.`, pId: () => `Tolong bicara pelan.`, aEn: () => `Okay, no problem.`, aId: () => `Oke, tidak masalah.` },
+  { pEn: () => `I don't understand.`, pId: () => `Aku tidak mengerti.`, aEn: () => `It's okay.`, aId: () => `Tidak apa-apa.` },
+  { pEn: () => `Can you repeat?`, pId: () => `Bisa ulangi?`, aEn: () => `Sure!`, aId: () => `Tentu!` },
+  { pEn: () => `Your voice is unclear.`, pId: () => `Suaramu tidak jelas.`, aEn: () => `Sorry about that.`, aId: () => `Maaf soal itu.` },
+  { pEn: () => `Your camera is nice.`, pId: () => `Kameramu bagus.`, aEn: () => `Thank you!`, aId: () => `Terima kasih!` },
+  { pEn: () => `Your internet is good.`, pId: () => `Internetmu bagus.`, aEn: () => `Haha luckily yes.`, aId: () => `Haha untungnya iya.` },
+  { pEn: () => `Are you eating?`, pId: () => `Kamu sedang makan?`, aEn: () => `Yes, a little snack.`, aId: () => `Ya, lagi ngemil.` },
+  { pEn: () => `Are you studying?`, pId: () => `Kamu sedang belajar?`, aEn: () => `Yes, I am.`, aId: () => `Ya, aku sedang belajar.` },
+  { pEn: () => `Are you working?`, pId: () => `Kamu sedang bekerja?`, aEn: () => `Not right now.`, aId: () => `Tidak sekarang.` },
 
-  {
-    pEn: () => `Hi, what are you doing now?`,
-    pId: () => `Hai, kamu sedang apa sekarang?`,
-    aEn: () => `Just relaxing.`,
-    aId: () => `Hanya santai.`
-  },
+  { pEn: () => `Do you like games?`, pId: () => `Kamu suka game?`, aEn: () => `Yes, I love games.`, aId: () => `Ya, aku suka game.` },
+  { pEn: () => `What is your favorite game?`, pId: () => `Game favoritmu apa?`, aEn: () => `Minecraft.`, aId: () => `Minecraft.` },
+  { pEn: () => `Do you like music?`, pId: () => `Kamu suka musik?`, aEn: () => `Yes, a lot.`, aId: () => `Ya, suka banget.` },
+  { pEn: () => `What is your favorite music?`, pId: () => `Musik favoritmu apa?`, aEn: () => `Pop music.`, aId: () => `Musik pop.` },
+  { pEn: () => `Do you like movies?`, pId: () => `Kamu suka film?`, aEn: () => `Yes, I do.`, aId: () => `Ya, aku suka.` },
+  { pEn: () => `What is your favorite movie?`, pId: () => `Film favoritmu apa?`, aEn: () => `Avengers.`, aId: () => `Avengers.` },
+  { pEn: () => `Do you like sports?`, pId: () => `Kamu suka olahraga?`, aEn: () => `A little.`, aId: () => `Sedikit.` },
+  { pEn: () => `What is your favorite food?`, pId: () => `Makanan favoritmu apa?`, aEn: () => `Pizza.`, aId: () => `Pizza.` },
+  { pEn: () => `I like fried rice.`, pId: () => `Aku suka nasi goreng.`, aEn: () => `Me too!`, aId: () => `Aku juga!` },
+  { pEn: () => `Do you like coffee?`, pId: () => `Kamu suka kopi?`, aEn: () => `Yes, every day.`, aId: () => `Ya, setiap hari.` },
 
-  {
-    pEn: () => `Can I ask your name?`,
-    pId: () => `Bolehkah saya tahu namamu?`,
-    aEn: () => `My name is Nita.`,
-    aId: () => `Nama saya Nita.`
-  },
+  { pEn: () => `I like tea.`, pId: () => `Aku suka teh.`, aEn: () => `Tea is relaxing.`, aId: () => `Teh itu menenangkan.` },
+  { pEn: () => `The weather here is hot.`, pId: () => `Cuaca di sini panas.`, aEn: () => `Same here.`, aId: () => `Di sini juga.` },
+  { pEn: () => `It is night here now.`, pId: () => `Sekarang malam di sini.`, aEn: () => `It's daytime here.`, aId: () => `Di sini masih siang.` },
+  { pEn: () => `What time is it there?`, pId: () => `Jam berapa di sana?`, aEn: () => `It's 8 PM.`, aId: () => `Jam 8 malam.` },
+  { pEn: () => `You look happy.`, pId: () => `Kamu terlihat bahagia.`, aEn: () => `Yes, I am happy.`, aId: () => `Ya, aku bahagia.` },
+  { pEn: () => `Why are you laughing?`, pId: () => `Kenapa kamu tertawa?`, aEn: () => `Because you're funny.`, aId: () => `Karena kamu lucu.` },
+  { pEn: () => `I am shy.`, pId: () => `Aku malu.`, aEn: () => `Don't worry.`, aId: () => `Jangan khawatir.` },
+  { pEn: () => `Don't be shy.`, pId: () => `Jangan malu.`, aEn: () => `Okay, I'll try.`, aId: () => `Oke, aku coba.` },
+  { pEn: () => `Do you have a pet?`, pId: () => `Kamu punya hewan peliharaan?`, aEn: () => `Yes, a cat.`, aId: () => `Ya, kucing.` },
+  { pEn: () => `I have a cat.`, pId: () => `Aku punya kucing.`, aEn: () => `Cats are cute.`, aId: () => `Kucing lucu.` },
 
-  {
-    pEn: () => `You have a nice smile.`,
-    pId: () => `Senyummu bagus.`,
-    aEn: () => `That’s kind of you.`,
-    aId: () => `Baik sekali kamu.`
-  },
+  { pEn: () => `I have a dog.`, pId: () => `Aku punya anjing.`, aEn: () => `Dogs are loyal.`, aId: () => `Anjing setia.` },
+  { pEn: () => `What is your favorite color?`, pId: () => `Warna favoritmu apa?`, aEn: () => `Black.`, aId: () => `Hitam.` },
+  { pEn: () => `I like black color.`, pId: () => `Aku suka warna hitam.`, aEn: () => `Black looks cool.`, aId: () => `Hitam terlihat keren.` },
+  { pEn: () => `Do you like traveling?`, pId: () => `Kamu suka traveling?`, aEn: () => `Yes, very much.`, aId: () => `Ya, sangat suka.` },
+  { pEn: () => `What is your dream country?`, pId: () => `Negara impianmu apa?`, aEn: () => `Japan.`, aId: () => `Jepang.` },
+  { pEn: () => `I want to go to Japan.`, pId: () => `Aku ingin ke Jepang.`, aEn: () => `Japan is beautiful.`, aId: () => `Jepang indah.` },
+  { pEn: () => `I want to go to Korea.`, pId: () => `Aku ingin ke Korea.`, aEn: () => `Korea sounds fun.`, aId: () => `Korea terdengar seru.` },
+  { pEn: () => `You are very kind.`, pId: () => `Kamu sangat baik.`, aEn: () => `Thank you!`, aId: () => `Terima kasih!` },
+  { pEn: () => `Thank you.`, pId: () => `Terima kasih.`, aEn: () => `You're welcome.`, aId: () => `Sama-sama.` },
+  { pEn: () => `Sorry.`, pId: () => `Maaf.`, aEn: () => `It's okay.`, aId: () => `Tidak apa-apa.` },
 
-  {
-    pEn: () => `Are you having a good day?`,
-    pId: () => `Apakah harimu menyenangkan?`,
-    aEn: () => `Yes, pretty good.`,
-    aId: () => `Ya, cukup menyenangkan.`
-  },
+  { pEn: () => `I'm happy today.`, pId: () => `Aku senang hari ini.`, aEn: () => `That's good to hear.`, aId: () => `Senang mendengarnya.` },
+  { pEn: () => `Today is tiring.`, pId: () => `Hari ini melelahkan.`, aEn: () => `Get some rest.`, aId: () => `Istirahat ya.` },
+  { pEn: () => `You are very funny.`, pId: () => `Kamu lucu sekali.`, aEn: () => `Haha thank you.`, aId: () => `Haha makasih.` },
+  { pEn: () => `I like your energy.`, pId: () => `Aku suka energimu.`, aEn: () => `Aww thanks!`, aId: () => `Aww makasih!` },
+  { pEn: () => `You have a sweet smile.`, pId: () => `Kamu punya senyum manis.`, aEn: () => `You're sweet too.`, aId: () => `Kamu juga manis.` },
+  { pEn: () => `I like talking to new people.`, pId: () => `Aku suka ngobrol dengan orang baru.`, aEn: () => `Same here.`, aId: () => `Aku juga.` },
+  { pEn: () => `You are the first person from that country I met.`, pId: () => `Kamu orang pertama dari negara itu yang aku temui.`, aEn: () => `Really? That's cool.`, aId: () => `Benarkah? Keren.` },
+  { pEn: () => `I'm learning English.`, pId: () => `Aku belajar bahasa Inggris.`, aEn: () => `Your English is good.`, aId: () => `Bahasa Inggrismu bagus.` },
+  { pEn: () => `My English is bad.`, pId: () => `Bahasa Inggrisku buruk.`, aEn: () => `No, it's okay.`, aId: () => `Tidak, sudah bagus.` },
+  { pEn: () => `But I'm trying.`, pId: () => `Tapi aku mencoba.`, aEn: () => `That's important.`, aId: () => `Itu yang penting.` },
 
-  {
-    pEn: () => `Hi, where are you from?`,
-    pId: () => `Hai, kamu dari mana?`,
-    aEn: () => `I’m from Indonesia.`,
-    aId: () => `Saya dari Indonesia.`
-  },
+  { pEn: () => `Do you understand me?`, pId: () => `Kamu mengerti aku?`, aEn: () => `Yes, a little.`, aId: () => `Ya, sedikit.` },
+  { pEn: () => `I understand a little.`, pId: () => `Aku mengerti sedikit.`, aEn: () => `That's okay.`, aId: () => `Tidak apa-apa.` },
+  { pEn: () => `Do you like Indonesia?`, pId: () => `Kamu suka Indonesia?`, aEn: () => `Yes, I do.`, aId: () => `Ya, suka.` },
+  { pEn: () => `Indonesia is very beautiful.`, pId: () => `Indonesia sangat indah.`, aEn: () => `I want to visit someday.`, aId: () => `Aku ingin berkunjung suatu hari nanti.` },
+  { pEn: () => `I like your voice.`, pId: () => `Aku suka suaramu.`, aEn: () => `Thank you so much.`, aId: () => `Terima kasih banyak.` },
+  { pEn: () => `You have a nice accent.`, pId: () => `Kamu punya aksen bagus.`, aEn: () => `Really? Thanks!`, aId: () => `Benarkah? Makasih!` },
+  { pEn: () => `I am nervous.`, pId: () => `Aku gugup.`, aEn: () => `Relax, it's okay.`, aId: () => `Santai saja.` },
+  { pEn: () => `Just relax.`, pId: () => `Santai saja.`, aEn: () => `Okay, thank you.`, aId: () => `Oke, terima kasih.` },
+  { pEn: () => `Do you use OmeTV often?`, pId: () => `Kamu sering pakai OmeTV?`, aEn: () => `Sometimes.`, aId: () => `Kadang-kadang.` },
+  { pEn: () => `This is my first time.`, pId: () => `Ini pertama kaliku.`, aEn: () => `Welcome then!`, aId: () => `Selamat datang kalau begitu!` },
 
-  {
-    pEn: () => `I like your style.`,
-    pId: () => `Saya suka gayamu.`,
-    aEn: () => `Thank you so much.`,
-    aId: () => `Terima kasih banyak.`
-  },
-
-  {
-    pEn: () => `What do you usually do for fun?`,
-    pId: () => `Apa yang biasanya kamu lakukan untuk bersenang-senang?`,
-    aEn: () => `I watch movies.`,
-    aId: () => `Saya menonton film.`
-  },
-
-  {
-    pEn: () => `Do you like meeting new people?`,
-    pId: () => `Apakah kamu suka bertemu orang baru?`,
-    aEn: () => `Yes, I do.`,
-    aId: () => `Ya, saya suka.`
-  },
-
-  {
-    pEn: () => `You look very cheerful.`,
-    pId: () => `Kamu terlihat sangat ceria.`,
-    aEn: () => `Haha, thank you.`,
-    aId: () => `Haha, terima kasih.`
-  },
-
-  {
-    pEn: () => `What’s your favorite hobby?`,
-    pId: () => `Apa hobi favoritmu?`,
-    aEn: () => `Playing games.`,
-    aId: () => `Bermain game.`
-  },
-
-  {
-    pEn: () => `Do you enjoy chatting online?`,
-    pId: () => `Apakah kamu suka chatting online?`,
-    aEn: () => `Yes, it’s fun.`,
-    aId: () => `Ya, itu menyenangkan.`
-  },
-
-  {
-    pEn: () => `Hi, is this your first time here?`,
-    pId: () => `Hai, apakah ini pertama kalinya kamu di sini?`,
-    aEn: () => `Yes, it is.`,
-    aId: () => `Ya, benar.`
-  },
-
-  {
-    pEn: () => `What kind of music do you like?`,
-    pId: () => `Musik seperti apa yang kamu suka?`,
-    aEn: () => `I like pop music.`,
-    aId: () => `Saya suka musik pop.`
-  },
-
-  {
-    pEn: () => `You seem interesting.`,
-    pId: () => `Kamu terlihat menarik.`,
-    aEn: () => `Really? Thanks.`,
-    aId: () => `Benarkah? Terima kasih.`
-  },
-
-  {
-    pEn: () => `What do you usually do at night?`,
-    pId: () => `Apa yang biasanya kamu lakukan malam hari?`,
-    aEn: () => `I watch YouTube.`,
-    aId: () => `Saya menonton YouTube.`
-  },
-
-  {
-    pEn: () => `Do you like coffee or tea?`,
-    pId: () => `Apakah kamu suka kopi atau teh?`,
-    aEn: () => `I prefer tea.`,
-    aId: () => `Saya lebih suka teh.`
-  },
-
-  {
-    pEn: () => `Hi, you look very calm.`,
-    pId: () => `Hai, kamu terlihat sangat tenang.`,
-    aEn: () => `Thank you.`,
-    aId: () => `Terima kasih.`
-  },
-
-  {
-    pEn: () => `What are your hobbies?`,
-    pId: () => `Apa hobimu?`,
-    aEn: () => `Listening to music.`,
-    aId: () => `Mendengarkan musik.`
-  },
-
-  {
-    pEn: () => `Do you like watching Netflix?`,
-    pId: () => `Apakah kamu suka menonton Netflix?`,
-    aEn: () => `Yes, every weekend.`,
-    aId: () => `Ya, setiap akhir pekan.`
-  },
-
-  {
-    pEn: () => `Hi, what’s your favorite food?`,
-    pId: () => `Hai, apa makanan favoritmu?`,
-    aEn: () => `Fried chicken.`,
-    aId: () => `Ayam goreng.`
-  },
-
-  {
-    pEn: () => `You seem easy to talk to.`,
-    pId: () => `Kamu terlihat mudah diajak bicara.`,
-    aEn: () => `That’s nice to hear.`,
-    aId: () => `Senang mendengarnya.`
-  },
-
-  {
-    pEn: () => `What apps do you use the most?`,
-    pId: () => `Aplikasi apa yang paling sering kamu gunakan?`,
-    aEn: () => `TikTok and Instagram.`,
-    aId: () => `TikTok dan Instagram.`
-  },
-
-  {
-    pEn: () => `Do you like funny videos?`,
-    pId: () => `Apakah kamu suka video lucu?`,
-    aEn: () => `Yes, very much.`,
-    aId: () => `Ya, sangat suka.`
-  },
-
-  {
-    pEn: () => `Hi, how old are you?`,
-    pId: () => `Hai, berapa umurmu?`,
-    aEn: () => `I’m 19.`,
-    aId: () => `Saya 19 tahun.`
-  },
-
-  {
-    pEn: () => `You have a cool background.`,
-    pId: () => `Latar belakangmu keren.`,
-    aEn: () => `Thanks!`,
-    aId: () => `Terima kasih!`
-  },
-
-  {
-    pEn: () => `Do you like anime?`,
-    pId: () => `Apakah kamu suka anime?`,
-    aEn: () => `Yes, I do.`,
-    aId: () => `Ya, saya suka.`
-  },
-
-  {
-    pEn: () => `What anime do you watch?`,
-    pId: () => `Anime apa yang kamu tonton?`,
-    aEn: () => `One Piece.`,
-    aId: () => `One Piece.`
-  },
-
-  {
-    pEn: () => `Hi, are you busy right now?`,
-    pId: () => `Hai, apakah kamu sibuk sekarang?`,
-    aEn: () => `No, I’m free.`,
-    aId: () => `Tidak, saya senggang.`
-  },
-
-  {
-    pEn: () => `Do you enjoy learning English?`,
-    pId: () => `Apakah kamu menikmati belajar bahasa Inggris?`,
-    aEn: () => `Yes, a little.`,
-    aId: () => `Ya, sedikit.`
-  },
-
-  {
-    pEn: () => `You seem very kind.`,
-    pId: () => `Kamu terlihat sangat baik.`,
-    aEn: () => `Thank you so much.`,
-    aId: () => `Terima kasih banyak.`
-  },
-
-  {
-    pEn: () => `What do you usually do on weekends?`,
-    pId: () => `Apa yang biasanya kamu lakukan saat akhir pekan?`,
-    aEn: () => `I stay at home.`,
-    aId: () => `Saya tinggal di rumah.`
-  },
-
-  {
-    pEn: () => `Do you like traveling?`,
-    pId: () => `Apakah kamu suka traveling?`,
-    aEn: () => `Yes, I love it.`,
-    aId: () => `Ya, saya sangat suka.`
-  },
-
-  {
-    pEn: () => `What country do you want to visit?`,
-    pId: () => `Negara apa yang ingin kamu kunjungi?`,
-    aEn: () => `Japan.`,
-    aId: () => `Jepang.`
-  },
-
-  {
-    pEn: () => `Hi, do you like making new friends?`,
-    pId: () => `Hai, apakah kamu suka mencari teman baru?`,
-    aEn: () => `Yes, of course.`,
-    aId: () => `Ya, tentu saja.`
-  },
-
-  {
-    pEn: () => `What is your favorite color?`,
-    pId: () => `Apa warna favoritmu?`,
-    aEn: () => `Blue.`,
-    aId: () => `Biru.`
-  },
-
-  {
-    pEn: () => `You sound very friendly.`,
-    pId: () => `Kamu terdengar sangat ramah.`,
-    aEn: () => `Thank you.`,
-    aId: () => `Terima kasih.`
-  },
-
-  {
-    pEn: () => `Do you like rainy weather?`,
-    pId: () => `Apakah kamu suka cuaca hujan?`,
-    aEn: () => `Yes, it feels relaxing.`,
-    aId: () => `Ya, terasa menenangkan.`
-  },
-
-  {
-    pEn: () => `What do you usually do before sleeping?`,
-    pId: () => `Apa yang biasanya kamu lakukan sebelum tidur?`,
-    aEn: () => `I watch videos.`,
-    aId: () => `Saya menonton video.`
-  },
-
-  {
-    pEn: () => `Hi, can you speak English well?`,
-    pId: () => `Hai, bisakah kamu berbicara bahasa Inggris dengan baik?`,
-    aEn: () => `Not really, I’m learning.`,
-    aId: () => `Tidak terlalu, saya sedang belajar.`
-  },
-
-  {
-    pEn: () => `Do you like playing games?`,
-    pId: () => `Apakah kamu suka bermain game?`,
-    aEn: () => `Yes, every day.`,
-    aId: () => `Ya, setiap hari.`
-  },
-
-  {
-    pEn: () => `What game do you play the most?`,
-    pId: () => `Game apa yang paling sering kamu mainkan?`,
-    aEn: () => `Mobile Legends.`,
-    aId: () => `Mobile Legends.`
-  },
-
-  {
-    pEn: () => `You look very happy today.`,
-    pId: () => `Kamu terlihat sangat bahagia hari ini.`,
-    aEn: () => `Yes, I am.`,
-    aId: () => `Ya, saya memang bahagia.`
-  },
-
-  {
-    pEn: () => `Do you like talking with strangers online?`,
-    pId: () => `Apakah kamu suka berbicara dengan orang asing online?`,
-    aEn: () => `Sometimes.`,
-    aId: () => `Kadang-kadang.`
-  },
-
-  {
-    pEn: () => `What makes you smile?`,
-    pId: () => `Apa yang membuatmu tersenyum?`,
-    aEn: () => `Funny videos.`,
-    aId: () => `Video lucu.`
-  },
-
-  {
-    pEn: () => `Hi, what are you thinking about?`,
-    pId: () => `Hai, kamu sedang memikirkan apa?`,
-    aEn: () => `Nothing special.`,
-    aId: () => `Tidak ada yang spesial.`
-  },
-
-  {
-    pEn: () => `I think you are fun to talk to.`,
-    pId: () => `Saya rasa kamu menyenangkan diajak bicara.`,
-    aEn: () => `Thank you, you too.`,
-    aId: () => `Terima kasih, kamu juga.`
-  },
-
-  {
-    pEn: () => `It’s nice talking with you.`,
-    pId: () => `Senang berbicara denganmu.`,
-    aEn: () => `Nice talking with you too.`,
-    aId: () => `Senang berbicara denganmu juga.`
-  }
+  { pEn: () => `I'm bored at home.`, pId: () => `Aku bosan di rumah.`, aEn: () => `Same here honestly.`, aId: () => `Aku juga sebenarnya.` },
+  { pEn: () => `So I opened OmeTV.`, pId: () => `Jadi aku buka OmeTV.`, aEn: () => `Good idea.`, aId: () => `Ide bagus.` },
+  { pEn: () => `You are interesting.`, pId: () => `Kamu menyenangkan.`, aEn: () => `Thank you!`, aId: () => `Terima kasih!` },
+  { pEn: () => `Don't skip me.`, pId: () => `Jangan skip aku.`, aEn: () => `Haha okay.`, aId: () => `Haha oke.` },
+  { pEn: () => `Let's talk more.`, pId: () => `Ayo ngobrol lagi.`, aEn: () => `Sure!`, aId: () => `Tentu!` },
+  { pEn: () => `Have a nice day.`, pId: () => `Semoga harimu menyenangkan.`, aEn: () => `You too!`, aId: () => `Kamu juga!` },
+  { pEn: () => `See you again.`, pId: () => `Sampai jumpa lagi.`, aEn: () => `See you!`, aId: () => `Sampai jumpa!` },
+  { pEn: () => `Bye-bye!`, pId: () => `Dadah!`, aEn: () => `Bye!`, aId: () => `Dadah!` }
 ];
   // ===[AKHIR TANDA] ===
 
