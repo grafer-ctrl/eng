@@ -90,126 +90,66 @@
 
     <script>
         const database =[
-  { indo: "Siapa nama kamu?", en: "What is your name?", phonetic: "Wot iz yor neim?", explanation: "Latihan memperkenalkan nama." },
-  { indo: "Berapa umur kamu?", en: "How old are you?", phonetic: "Hau old ar yu?", explanation: "Latihan menanyakan umur." },
-  { indo: "Kamu berasal dari mana?", en: "Where are you from?", phonetic: "Wer ar yu from?", explanation: "Latihan menanyakan asal." },
-  { indo: "Di mana kamu tinggal?", en: "Where do you live?", phonetic: "Wer du yu liv?", explanation: "Latihan menanyakan tempat tinggal." },
-  { indo: "Apa pekerjaan kamu?", en: "What do you do?", phonetic: "Wot du yu du?", explanation: "Latihan menanyakan pekerjaan." },
-  { indo: "Kamu sekolah di mana?", en: "Where do you study?", phonetic: "Wer du yu sta-di?", explanation: "Latihan menanyakan tempat belajar." },
-  { indo: "Apa hobi kamu?", en: "What are your hobbies?", phonetic: "Wot ar yor hobis?", explanation: "Latihan menanyakan hobi." },
-  { indo: "Apa makanan favorit kamu?", en: "What is your favorite food?", phonetic: "Wot iz yor feivrit fud?", explanation: "Latihan menanyakan makanan favorit." },
-  { indo: "Apa minuman favorit kamu?", en: "What is your favorite drink?", phonetic: "Wot iz yor feivrit dringk?", explanation: "Latihan menanyakan minuman favorit." },
-  { indo: "Musik apa yang kamu suka?", en: "What music do you like?", phonetic: "Wot myu-zik du yu laik?", explanation: "Latihan menanyakan selera musik." },
-
-  { indo: "Film apa yang kamu suka?", en: "What movies do you like?", phonetic: "Wot mu-vis du yu laik?", explanation: "Latihan menanyakan film favorit." },
-  { indo: "Apakah kamu suka bermain game?", en: "Do you like playing games?", phonetic: "Du yu laik plei-ing geims?", explanation: "Latihan menanyakan hobi game." },
-  { indo: "Game apa yang sering kamu mainkan?", en: "What games do you play?", phonetic: "Wot geims du yu plei?", explanation: "Latihan menanyakan game favorit." },
-  { indo: "Kamu suka olahraga apa?", en: "What sports do you like?", phonetic: "Wot sports du yu laik?", explanation: "Latihan menanyakan olahraga favorit." },
-  { indo: "Apakah kamu suka sepak bola?", en: "Do you like football?", phonetic: "Du yu laik futbol?", explanation: "Latihan percakapan olahraga." },
-  { indo: "Kamu bangun jam berapa?", en: "What time do you wake up?", phonetic: "Wot taim du yu weik ap?", explanation: "Latihan rutinitas harian." },
-  { indo: "Kamu tidur jam berapa?", en: "What time do you sleep?", phonetic: "Wot taim du yu slip?", explanation: "Latihan rutinitas tidur." },
-  { indo: "Apa yang kamu lakukan setiap pagi?", en: "What do you do every morning?", phonetic: "Wot du yu du evri morning?", explanation: "Latihan kegiatan pagi." },
-  { indo: "Apakah kamu sarapan setiap hari?", en: "Do you eat breakfast every day?", phonetic: "Du yu it brekfast evri dei?", explanation: "Latihan kebiasaan harian." },
-  { indo: "Kamu bekerja setiap hari?", en: "Do you work every day?", phonetic: "Du yu werk evri dei?", explanation: "Latihan rutinitas kerja." },
-
-  { indo: "Kamu suka kopi atau teh?", en: "Do you like coffee or tea?", phonetic: "Du yu laik kofi or ti?", explanation: "Latihan pilihan sederhana." },
-  { indo: "Kamu punya saudara?", en: "Do you have siblings?", phonetic: "Du yu hev siblings?", explanation: "Latihan tentang keluarga." },
-  { indo: "Kamu tinggal dengan siapa?", en: "Who do you live with?", phonetic: "Hu du yu liv with?", explanation: "Latihan tentang keluarga." },
-  { indo: "Apakah kamu punya hewan peliharaan?", en: "Do you have pets?", phonetic: "Du yu hev pets?", explanation: "Latihan tentang peliharaan." },
-  { indo: "Apa warna favorit kamu?", en: "What is your favorite color?", phonetic: "Wot iz yor feivrit kolor?", explanation: "Latihan menanyakan warna favorit." },
-  { indo: "Apakah kamu suka memasak?", en: "Do you like cooking?", phonetic: "Du yu laik ku-king?", explanation: "Latihan tentang aktivitas rumah." },
-  { indo: "Kamu sering menonton YouTube?", en: "Do you watch YouTube often?", phonetic: "Du yu woc yutub ofen?", explanation: "Latihan kebiasaan menonton." },
-  { indo: "Siapa penyanyi favorit kamu?", en: "Who is your favorite singer?", phonetic: "Hu iz yor feivrit singer?", explanation: "Latihan menanyakan artis favorit." },
-  { indo: "Apakah kamu suka anime?", en: "Do you like anime?", phonetic: "Du yu laik anime?", explanation: "Latihan tentang hiburan." },
-  { indo: "Serial apa yang kamu tonton?", en: "What series do you watch?", phonetic: "Wot siris du yu woc?", explanation: "Latihan tentang series favorit." },
-
-  { indo: "Kamu biasanya pergi ke mana saat libur?", en: "Where do you usually go on weekends?", phonetic: "Wer du yu yu-zuali go on wikends?", explanation: "Latihan aktivitas akhir pekan." },
-  { indo: "Apakah kamu suka traveling?", en: "Do you like traveling?", phonetic: "Du yu laik treveling?", explanation: "Latihan tentang traveling." },
-  { indo: "Negara apa yang ingin kamu kunjungi?", en: "What country do you want to visit?", phonetic: "Wot kantri du yu want tu vizit?", explanation: "Latihan tentang impian traveling." },
-  { indo: "Apakah kamu suka pantai?", en: "Do you like beaches?", phonetic: "Du yu laik bi-ches?", explanation: "Latihan tentang tempat favorit." },
-  { indo: "Apakah kamu suka gunung?", en: "Do you like mountains?", phonetic: "Du yu laik mauntens?", explanation: "Latihan tentang alam." },
-  { indo: "Kamu sering olahraga?", en: "Do you exercise often?", phonetic: "Du yu eksersaiz ofen?", explanation: "Latihan kebiasaan sehat." },
-  { indo: "Apakah kamu pergi ke gym?", en: "Do you go to the gym?", phonetic: "Du yu go tu de jim?", explanation: "Latihan aktivitas olahraga." },
-  { indo: "Makanan pedas apa kamu suka?", en: "Do you like spicy food?", phonetic: "Du yu laik spaisi fud?", explanation: "Latihan preferensi makanan." },
-  { indo: "Kamu bisa memasak?", en: "Can you cook?", phonetic: "Ken yu kuk?", explanation: "Latihan kemampuan dasar." },
-  { indo: "Apakah kamu suka membaca buku?", en: "Do you like reading books?", phonetic: "Du yu laik ri-ding buks?", explanation: "Latihan tentang membaca." },
-
-  { indo: "Buku apa yang kamu baca?", en: "What books do you read?", phonetic: "Wot buks du yu rid?", explanation: "Latihan menanyakan bacaan." },
-  { indo: "Apakah kamu suka belajar bahasa Inggris?", en: "Do you like learning English?", phonetic: "Du yu laik lerning ingglish?", explanation: "Latihan tentang belajar bahasa." },
-  { indo: "Kamu menggunakan Instagram?", en: "Do you use Instagram?", phonetic: "Du yu yuz instagram?", explanation: "Latihan media sosial." },
-  { indo: "Kamu sering bermain TikTok?", en: "Do you use TikTok often?", phonetic: "Du yu yuz tiktok ofen?", explanation: "Latihan kebiasaan media sosial." },
-  { indo: "Kamu suka mendengarkan podcast?", en: "Do you listen to podcasts?", phonetic: "Du yu lisn tu podkes?", explanation: "Latihan tentang hiburan audio." },
-  { indo: "Apa aplikasi favorit kamu?", en: "What is your favorite app?", phonetic: "Wot iz yor feivrit एप?", explanation: "Latihan tentang aplikasi favorit." },
-  { indo: "Kamu menggunakan Android atau iPhone?", en: "Do you use Android or iPhone?", phonetic: "Du yu yuz android or aيفون?", explanation: "Latihan pilihan gadget." },
-  { indo: "Apakah kamu suka fotografi?", en: "Do you like photography?", phonetic: "Du yu laik fotografi?", explanation: "Latihan tentang hobi." },
-  { indo: "Kamu sering mengambil foto?", en: "Do you take photos often?", phonetic: "Du yu teik fotos ofen?", explanation: "Latihan aktivitas sehari-hari." },
-  { indo: "Apakah kamu suka hujan?", en: "Do you like rain?", phonetic: "Du yu laik rein?", explanation: "Latihan tentang cuaca." },
-
-  { indo: "Cuaca favorit kamu apa?", en: "What is your favorite weather?", phonetic: "Wot iz yor feivrit weder?", explanation: "Latihan tentang cuaca favorit." },
-  { indo: "Kamu suka kucing atau anjing?", en: "Do you like cats or dogs?", phonetic: "Du yu laik kets or dogs?", explanation: "Latihan pilihan hewan." },
-  { indo: "Kamu punya motor?", en: "Do you have a motorcycle?", phonetic: "Du yu hev e motor-saikel?", explanation: "Latihan kepemilikan benda." },
-  { indo: "Kamu bisa menyetir mobil?", en: "Can you drive a car?", phonetic: "Ken yu draiv e kar?", explanation: "Latihan kemampuan." },
-  { indo: "Kamu pergi kerja naik apa?", en: "How do you go to work?", phonetic: "Hau du yu go tu werk?", explanation: "Latihan transportasi." },
-  { indo: "Kamu suka belanja?", en: "Do you like shopping?", phonetic: "Du yu laik shoping?", explanation: "Latihan tentang belanja." },
-  { indo: "Apakah kamu suka pakaian hitam?", en: "Do you like black clothes?", phonetic: "Du yu laik blek kloz?", explanation: "Latihan preferensi pakaian." },
-  { indo: "Kamu memakai jam tangan?", en: "Do you wear a watch?", phonetic: "Du yu wer e woc?", explanation: "Latihan tentang benda sehari-hari." },
-  { indo: "Apakah kamu suka musik pop?", en: "Do you like pop music?", phonetic: "Du yu laik pop myuzik?", explanation: "Latihan genre musik." },
-  { indo: "Kamu suka musik rock?", en: "Do you like rock music?", phonetic: "Du yu laik rok myuzik?", explanation: "Latihan genre musik." },
-
-  { indo: "Kamu bermain alat musik?", en: "Do you play any instruments?", phonetic: "Du yu plei eni instruments?", explanation: "Latihan tentang musik." },
-  { indo: "Apakah kamu suka bernyanyi?", en: "Do you like singing?", phonetic: "Du yu laik singing?", explanation: "Latihan tentang hobi musik." },
-  { indo: "Kamu sering menggunakan WhatsApp?", en: "Do you use WhatsApp often?", phonetic: "Du yu yuz whatsapp ofen?", explanation: "Latihan media sosial." },
-  { indo: "Apakah kamu suka video call?", en: "Do you like video calls?", phonetic: "Du yu laik vidio kols?", explanation: "Latihan komunikasi." },
-  { indo: "Kamu sering begadang?", en: "Do you stay up late often?", phonetic: "Du yu stei ap leit ofen?", explanation: "Latihan kebiasaan malam." },
-  { indo: "Kamu mandi pagi?", en: "Do you take a shower in the morning?", phonetic: "Du yu teik e shower in de morning?", explanation: "Latihan rutinitas pagi." },
-  { indo: "Kamu suka es krim?", en: "Do you like ice cream?", phonetic: "Du yu laik ais krim?", explanation: "Latihan makanan favorit." },
-  { indo: "Apakah kamu minum kopi setiap hari?", en: "Do you drink coffee every day?", phonetic: "Du yu dringk kofi evri dei?", explanation: "Latihan kebiasaan minum." },
-  { indo: "Kamu suka teh manis?", en: "Do you like sweet tea?", phonetic: "Du yu laik swit ti?", explanation: "Latihan preferensi minuman." },
-  { indo: "Kamu memasak sendiri?", en: "Do you cook by yourself?", phonetic: "Du yu kuk bai yorself?", explanation: "Latihan kegiatan rumah." },
-
-  { indo: "Apakah kamu suka makanan Jepang?", en: "Do you like Japanese food?", phonetic: "Du yu laik japanis fud?", explanation: "Latihan jenis makanan." },
-  { indo: "Kamu suka makanan Korea?", en: "Do you like Korean food?", phonetic: "Du yu laik korean fud?", explanation: "Latihan jenis makanan." },
-  { indo: "Kamu suka mie?", en: "Do you like noodles?", phonetic: "Du yu laik nudels?", explanation: "Latihan makanan umum." },
-  { indo: "Apakah kamu bermain Mobile Legends?", en: "Do you play Mobile Legends?", phonetic: "Du yu plei mobile legends?", explanation: "Latihan tentang game populer." },
-  { indo: "Kamu bermain PUBG?", en: "Do you play PUBG?", phonetic: "Du yu plei pubji?", explanation: "Latihan game online." },
-  { indo: "Kamu suka game horror?", en: "Do you like horror games?", phonetic: "Du yu laik horor geims?", explanation: "Latihan genre game." },
-  { indo: "Apakah kamu suka film action?", en: "Do you like action movies?", phonetic: "Du yu laik ekshen muvis?", explanation: "Latihan genre film." },
-  { indo: "Kamu suka film komedi?", en: "Do you like comedy movies?", phonetic: "Du yu laik komedi muvis?", explanation: "Latihan genre film." },
-  { indo: "Kamu sering pergi ke kafe?", en: "Do you go to cafes often?", phonetic: "Du yu go tu kafes ofen?", explanation: "Latihan aktivitas santai." },
-  { indo: "Apakah kamu suka malam hari?", en: "Do you like the night?", phonetic: "Du yu laik de nait?", explanation: "Latihan preferensi waktu." },
-
-  { indo: "Kamu suka bangun pagi?", en: "Do you like waking up early?", phonetic: "Du yu laik weiking ap erli?", explanation: "Latihan kebiasaan." },
-  { indo: "Kamu suka memasang musik saat belajar?", en: "Do you listen to music while studying?", phonetic: "Du yu lisn tu myuzik wail stadi-ing?", explanation: "Latihan kebiasaan belajar." },
-  { indo: "Kamu bekerja dari rumah?", en: "Do you work from home?", phonetic: "Du yu werk from hom?", explanation: "Latihan pekerjaan." },
-  { indo: "Apakah kamu sering menggunakan laptop?", en: "Do you use a laptop often?", phonetic: "Du yu yuz e leptop ofen?", explanation: "Latihan teknologi." },
-  { indo: "Kamu suka bermain basket?", en: "Do you like basketball?", phonetic: "Du yu laik basketbol?", explanation: "Latihan olahraga." },
-  { indo: "Kamu suka berenang?", en: "Do you like swimming?", phonetic: "Du yu laik swiming?", explanation: "Latihan olahraga." },
-  { indo: "Kamu suka bersepeda?", en: "Do you like cycling?", phonetic: "Du yu laik saikling?", explanation: "Latihan olahraga." },
-  { indo: "Kamu sering mendengarkan Spotify?", en: "Do you listen to Spotify?", phonetic: "Du yu lisn tu spotify?", explanation: "Latihan aplikasi musik." },
-  { indo: "Apakah kamu suka menari?", en: "Do you like dancing?", phonetic: "Du yu laik dancing?", explanation: "Latihan hobi." },
-  { indo: "Kamu suka menggambar?", en: "Do you like drawing?", phonetic: "Du yu laik dro-ing?", explanation: "Latihan aktivitas kreatif." },
-
-  { indo: "Kamu menonton Netflix?", en: "Do you watch Netflix?", phonetic: "Du yu woc netflix?", explanation: "Latihan streaming." },
-  { indo: "Kamu suka film romantis?", en: "Do you like romantic movies?", phonetic: "Du yu laik romantik muvis?", explanation: "Latihan genre film." },
-  { indo: "Apakah kamu suka makanan manis?", en: "Do you like sweet food?", phonetic: "Du yu laik swit fud?", explanation: "Latihan preferensi makanan." },
-  { indo: "Kamu makan nasi setiap hari?", en: "Do you eat rice every day?", phonetic: "Du yu it rais evri dei?", explanation: "Latihan kebiasaan makan." },
-  { indo: "Kamu suka pedas?", en: "Do you like spicy food?", phonetic: "Du yu laik spaisi fud?", explanation: "Latihan preferensi rasa." },
-  { indo: "Kamu suka memasak mie?", en: "Do you cook noodles?", phonetic: "Du yu kuk nudels?", explanation: "Latihan aktivitas dapur." },
-  { indo: "Apakah kamu sering menggunakan Google?", en: "Do you use Google often?", phonetic: "Du yu yuz gugel ofen?", explanation: "Latihan teknologi." },
-  { indo: "Kamu suka belajar sendiri?", en: "Do you like studying alone?", phonetic: "Du yu laik stadi-ing alon?", explanation: "Latihan kebiasaan belajar." },
-  { indo: "Kamu suka bekerja dalam tim?", en: "Do you like working in a team?", phonetic: "Du yu laik working in e tim?", explanation: "Latihan pekerjaan dan sosial." },
-  { indo: "Kamu mudah bangun pagi?", en: "Do you wake up easily?", phonetic: "Du yu weik ap izili?", explanation: "Latihan kebiasaan tidur." },
-
-  { indo: "Apakah kamu sering jalan-jalan?", en: "Do you go out often?", phonetic: "Du yu go aut ofen?", explanation: "Latihan aktivitas luar rumah." },
-  { indo: "Kamu suka suasana ramai?", en: "Do you like crowded places?", phonetic: "Du yu laik krauded pleises?", explanation: "Latihan preferensi tempat." },
-  { indo: "Kamu suka tempat tenang?", en: "Do you like quiet places?", phonetic: "Du yu laik kwai-et pleises?", explanation: "Latihan preferensi tempat." },
-  { indo: "Kamu suka menonton pertandingan bola?", en: "Do you watch football matches?", phonetic: "Du yu woc futbal meches?", explanation: "Latihan olahraga." },
-  { indo: "Apakah kamu sering menggunakan headset?", en: "Do you use headphones often?", phonetic: "Du yu yuz hed-fons ofen?", explanation: "Latihan benda sehari-hari." },
-  { indo: "Kamu suka hujan atau panas?", en: "Do you like rain or sunny weather?", phonetic: "Du yu laik rein or sani weder?", explanation: "Latihan pilihan cuaca." },
-  { indo: "Kamu suka tinggal di kota?", en: "Do you like living in the city?", phonetic: "Du yu laik living in de siti?", explanation: "Latihan tempat tinggal." },
-  { indo: "Apakah kamu suka desa?", en: "Do you like villages?", phonetic: "Du yu laik vilajes?", explanation: "Latihan tempat favorit." },
-  { indo: "Kamu sering mendengarkan radio?", en: "Do you listen to the radio?", phonetic: "Du yu lisn tu de reidio?", explanation: "Latihan media hiburan." },
-  { indo: "Kamu suka belajar bahasa baru?", en: "Do you like learning new languages?", phonetic: "Du yu laik lerning nyu lengwidges?", explanation: "Latihan pendidikan." }
+  {
+  indo: "Saya minum kopi setiap pagi.",
+  en: "I drink coffee every morning.",
+  phonetic: "Ai dringk kofi evri morning.",
+  explanation: "Simple Present untuk kebiasaan harian. Subjek 'I' memakai V1 tanpa s/es karena bukan he/she/it, jadi menggunakan kata kerja dasar 'drink'. Formula: (+) S + V1 + O."
+},
+{
+  indo: "Dia bermain sepak bola setiap akhir pekan.",
+  en: "He plays football every weekend.",
+  phonetic: "Hi pleys futbal evri wikend.",
+  explanation: "Subjek 'He' termasuk he/she/it sehingga kata kerja harus ditambah s/es. Kata kerja 'play' menjadi 'plays'. Formula: (+) S + V1(s/es) + O."
+},
+{
+  indo: "Mereka belajar bahasa Inggris setiap malam.",
+  en: "They study English every night.",
+  phonetic: "Dey stadi ingglish evri nait.",
+  explanation: "Subjek 'They' memakai V1 biasa tanpa s/es karena bukan he/she/it. Kata kerja tetap 'study'. Formula: (+) S + V1 + O."
+},
+{
+  indo: "Dia tidak membaca buku setiap malam.",
+  en: "She does not read a book every night.",
+  phonetic: "Shi daz not rid e buk evri nait.",
+  explanation: "Kalimat negatif dengan subjek 'She' memakai 'does not'. Setelah 'does', kata kerja kembali ke bentuk dasar yaitu 'read' tanpa s/es. Formula: (-) S + does not + V1 + O."
+},
+{
+  indo: "Apakah kamu bermain game setiap hari?",
+  en: "Do you play games every day?",
+  phonetic: "Du yu pley geims evri dey?",
+  explanation: "Kalimat tanya dengan subjek 'You' memakai 'Do'. Setelah 'Do', kata kerja tetap bentuk dasar yaitu 'play'. Formula: (?) Do + S + V1 + O?"
+},
+{
+  indo: "Apakah dia pergi ke sekolah setiap pagi?",
+  en: "Does he go to school every morning?",
+  phonetic: "Daz hi gou tu skul evri morning?",
+  explanation: "Kalimat tanya dengan subjek 'He' memakai 'Does'. Setelah 'Does', kata kerja kembali ke bentuk dasar yaitu 'go' tanpa s/es. Formula: (?) Does + S + V1 + O?"
+},
+{
+  indo: "Kami menonton film setiap malam Minggu.",
+  en: "We watch movies every Saturday night.",
+  phonetic: "Wi woc muvies evri saterdei nait.",
+  explanation: "Subjek 'We' memakai V1 biasa tanpa s/es karena bukan he/she/it. Kata kerja tetap 'watch'. Formula: (+) S + V1 + O."
+},
+{
+  indo: "Dia mencuci mobil setiap minggu.",
+  en: "She washes the car every week.",
+  phonetic: "Shi woshez de kar evri wik.",
+  explanation: "Subjek 'She' termasuk he/she/it sehingga kata kerja memakai tambahan es. 'Wash' menjadi 'washes'. Formula: (+) S + V1(s/es) + O."
+},
+{
+  indo: "Mereka tidak bermain basket setiap sore.",
+  en: "They do not play basketball every afternoon.",
+  phonetic: "Dey du not pley basketbol evri afternun.",
+  explanation: "Kalimat negatif dengan subjek 'They' memakai 'do not'. Setelah 'do not', kata kerja tetap bentuk dasar yaitu 'play'. Formula: (-) S + do not + V1 + O."
+},
+{
+  indo: "Apakah dia minum teh setiap pagi?",
+  en: "Does she drink tea every morning?",
+  phonetic: "Daz shi dringk ti evri morning?",
+  explanation: "Kalimat tanya dengan subjek 'She' memakai 'Does'. Setelah 'Does', kata kerja kembali ke bentuk dasar yaitu 'drink'. Formula: (?) Does + S + V1 + O?"
+}
 ];
 
         let currentIndex = 0;
