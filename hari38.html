@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Past Future Tense</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    padding:20px;
+    color:#222;
+    line-height:1.6;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+h1{
+    text-align:center;
+    color:#2563eb;
+    margin-bottom:20px;
+}
+
+h2{
+    color:#1d4ed8;
+    margin-bottom:10px;
+}
+
+.highlight{
+    color:#2563eb;
+    font-weight:bold;
+}
+
+.rumus{
+    background:#eef4ff;
+    padding:20px;
+    border-radius:15px;
+    margin-top:15px;
+}
+
+.example{
+    background:#f9fafb;
+    border-left:5px solid #2563eb;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.box{
+    background:#2563eb;
+    color:white;
+    padding:20px;
+    border-radius:15px;
+}
+
+.memory{
+    background:#dcfce7;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+.score-box{
+    position:sticky;
+    top:10px;
+    background:#2563eb;
+    color:white;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    margin-bottom:20px;
+    z-index:10;
+}
+
+.quiz-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.question{
+    background:#f3f4f6;
+    padding:20px;
+    border-radius:15px;
+}
+
+.question p{
+    margin-bottom:15px;
+    font-weight:bold;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.result{
+    margin-top:10px;
+    font-weight:bold;
+}
+
+.finish{
+    margin-top:30px;
+    text-align:center;
+}
+
+.final-score{
+    margin-top:20px;
+    font-size:24px;
+    font-weight:bold;
+    color:#2563eb;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="score-box">
+    <h2>🎯 Score</h2>
+    <div id="score">0 / 50</div>
+</div>
+
+<div class="card">
+
+<h1>📖 PAST FUTURE TENSE</h1>
+
+<p>
+Digunakan untuk:
+<span class="highlight">
+rencana atau kejadian masa depan dari sudut pandang masa lalu.
+</span>
+</p>
+
+<div class="rumus">
+
+<h2>📐 Rumus</h2>
+
+<p><b>(+)</b> S + would + V1 + O</p>
+<p><b>(-)</b> S + would + not + V1 + O</p>
+<p><b>(?)</b> Would + S + V1 + O?</p>
+
+</div>
+
+<div class="example">
+
+<h2>📝 Contoh</h2>
+
+<p><b>(+)</b> He said he would come to the party.</p>
+<p>Dia bilang dia akan datang ke pesta.</p>
+
+<br>
+
+<p><b>(-)</b> He said he would not come to the party.</p>
+<p>Dia bilang dia tidak akan datang ke pesta.</p>
+
+<br>
+
+<p><b>(?)</b> Would he come to the party?</p>
+<p>Apakah dia akan datang ke pesta?</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🔥 Trik Cepat Hafal</h2>
+
+<div class="grid">
+
+<div class="box">
+<h3>1️⃣ Kata Kunci</h3>
+<p>
+said,
+promised,
+thought,
+told
+</p>
+</div>
+
+<div class="box">
+<h3>2️⃣ Selalu Pakai WOULD</h3>
+<p>
+Semua subject:
+<br><br>
+I/You/We/They/He/She → WOULD
+</p>
+</div>
+
+<div class="box">
+<h3>3️⃣ Setelah WOULD = V1</h3>
+<p>
+would go
+<br>
+would eat
+<br>
+would study
+</p>
+</div>
+
+</div>
+
+<div class="memory">
+
+<h2>🧠 Cara Cepat Paham</h2>
+
+<p>✅ Semua subject pakai WOULD</p>
+<p>✅ Setelah WOULD harus V1</p>
+<p>✅ Dipakai untuk masa depan dari sudut pandang masa lalu</p>
+<p>✅ Biasanya ada SAID atau TOLD</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎮 Quiz Interaktif 50 Soal</h2>
+
+<div class="quiz-container" id="quizContainer"></div>
+
+<div class="finish">
+
+<button onclick="showFinalScore()">
+Lihat Hasil
+</button>
+
+<div class="final-score" id="finalScore"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const quizData = [
+
+{q:"1. I ___ go to Bali next week.",a:"would",o:["would","did"]},
+{q:"2. She ___ study English later.",a:"would",o:["would","was"]},
+{q:"3. They ___ play football after school.",a:"would",o:["would","have"]},
+{q:"4. He ___ watch TV that night.",a:"would",o:["would","had"]},
+{q:"5. We ___ visit grandma the next day.",a:"would",o:["would","were"]},
+
+{q:"6. She would ___ English tomorrow.",a:"study",o:["studied","study"]},
+{q:"7. I would ___ you later.",a:"call",o:["called","call"]},
+{q:"8. They would ___ dinner at night.",a:"cook",o:["cook","cooked"]},
+{q:"9. He would ___ games after school.",a:"play",o:["played","play"]},
+{q:"10. We would ___ homework later.",a:"do",o:["did","do"]},
+
+{q:"11. ___ you come tomorrow?",a:"Would",o:["Would","Did"]},
+{q:"12. ___ she study tonight?",a:"Would",o:["Does","Would"]},
+{q:"13. ___ they play football later?",a:"Would",o:["Would","Are"]},
+{q:"14. ___ he eat lunch later?",a:"Would",o:["Did","Would"]},
+{q:"15. ___ we travel next year?",a:"Would",o:["Would","Do"]},
+
+{q:"16. I would not ___.",a:"go",o:["went","go"]},
+{q:"17. She would not ___ dinner.",a:"cook",o:["cooked","cook"]},
+{q:"18. They would not ___ tonight.",a:"study",o:["studied","study"]},
+{q:"19. He would not ___ football.",a:"play",o:["played","play"]},
+{q:"20. We would not ___ TV.",a:"watch",o:["watched","watch"]},
+
+{q:"21. My father would ___ coffee later.",a:"drink",o:["drank","drink"]},
+{q:"22. The teacher would ___ the lesson tomorrow.",a:"explain",o:["explained","explain"]},
+{q:"23. They would ___ basketball tomorrow.",a:"play",o:["played","play"]},
+{q:"24. She would ___ a new phone next month.",a:"buy",o:["bought","buy"]},
+{q:"25. I would ___ my homework tonight.",a:"finish",o:["finished","finish"]},
+
+{q:"26. We would ___ to Jakarta next week.",a:"go",o:["went","go"]},
+{q:"27. He would ___ breakfast later.",a:"eat",o:["ate","eat"]},
+{q:"28. They would ___ online games tonight.",a:"play",o:["played","play"]},
+{q:"29. She would ___ a song tomorrow.",a:"write",o:["wrote","write"]},
+{q:"30. I would ___ breakfast tomorrow morning.",a:"cook",o:["cooked","cook"]},
+
+{q:"31. ___ they arrive tomorrow?",a:"Would",o:["Would","Are"]},
+{q:"32. ___ she finish the test later?",a:"Would",o:["Does","Would"]},
+{q:"33. ___ we clean the room tomorrow?",a:"Would",o:["Would","Do"]},
+{q:"34. ___ he speak English later?",a:"Would",o:["Did","Would"]},
+{q:"35. ___ I make dinner tonight?",a:"Would",o:["Would","Am"]},
+
+{q:"36. She would ___ her homework tonight.",a:"finish",o:["finished","finish"]},
+{q:"37. They would ___ very fast tomorrow.",a:"run",o:["ran","run"]},
+{q:"38. I would ___ coding next year.",a:"learn",o:["learned","learn"]},
+{q:"39. He would ___ his room tomorrow.",a:"clean",o:["cleaned","clean"]},
+{q:"40. We would ___ YouTube videos later.",a:"watch",o:["watched","watch"]},
+
+{q:"41. My mother would ___ tea tonight.",a:"drink",o:["drank","drink"]},
+{q:"42. The baby would ___.",a:"sleep",o:["slept","sleep"]},
+{q:"43. They would ___ together tomorrow.",a:"work",o:["worked","work"]},
+{q:"44. She would ___ her phone later.",a:"use",o:["used","use"]},
+{q:"45. I would ___ all day tomorrow.",a:"work",o:["worked","work"]},
+
+{q:"46. We would ___ English tomorrow.",a:"study",o:["studied","study"]},
+{q:"47. He would ___ breakfast tomorrow.",a:"eat",o:["eaten","eat"]},
+{q:"48. They would ___ in the park later.",a:"walk",o:["walked","walk"]},
+{q:"49. She would ___ English tomorrow.",a:"speak",o:["spoke","speak"]},
+{q:"50. I would ___ to music tonight.",a:"listen",o:["listened","listen"]}
+
+];
+
+const quizContainer = document.getElementById("quizContainer");
+
+let score = 0;
+let answered = [];
+
+quizData.forEach((quiz,index)=>{
+
+const div = document.createElement("div");
+
+div.classList.add("question");
+
+div.innerHTML = `
+<p>${quiz.q}</p>
+
+<button onclick="checkAnswer(${index}, '${quiz.o[0]}')">
+${quiz.o[0]}
+</button>
+
+<button onclick="checkAnswer(${index}, '${quiz.o[1]}')">
+${quiz.o[1]}
+</button>
+
+<div class="result" id="result${index}"></div>
+`;
+
+quizContainer.appendChild(div);
+
+});
+
+function checkAnswer(index,selected){
+
+if(answered[index]) return;
+
+answered[index] = true;
+
+const result =
+document.getElementById(`result${index}`);
+
+if(selected === quizData[index].a){
+
+result.innerHTML = "✅ Benar!";
+result.style.color = "green";
+
+score++;
+
+}else{
+
+result.innerHTML =
+`❌ Salah! Jawaban benar: ${quizData[index].a}`;
+
+result.style.color = "red";
+
+}
+
+document.getElementById("score").innerHTML =
+`${score} / 50`;
+
+}
+
+function showFinalScore(){
+
+let text = "";
+
+if(score >= 45){
+
+text =
+"🔥 AMAZING! Kamu sangat paham Past Future!";
+
+}else if(score >= 35){
+
+text =
+"👏 Bagus! Pemahaman kamu sudah kuat.";
+
+}else if(score >= 25){
+
+text =
+"👍 Lumayan! Tinggal latihan lagi.";
+
+}else{
+
+text =
+"📚 Tetap semangat belajar lagi ya!";
+}
+
+document.getElementById("finalScore").innerHTML =
+`Skor Akhir: ${score}/50 <br><br>${text}`;
+
+}
+
+</script>
+
+</body>
+</html>
