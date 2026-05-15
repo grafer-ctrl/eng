@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Belajar Simple Present Interaktif</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.6;
+    padding:20px;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    margin-bottom:20px;
+    border-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+h1{
+    text-align:center;
+    color:#2563eb;
+    margin-bottom:20px;
+}
+
+h2{
+    color:#1d4ed8;
+    margin-bottom:10px;
+}
+
+h3{
+    margin-bottom:10px;
+}
+
+.rumus{
+    background:#eef4ff;
+    padding:20px;
+    border-radius:15px;
+    margin-top:15px;
+}
+
+.example{
+    background:#f9fafb;
+    border-left:5px solid #2563eb;
+    padding:20px;
+    margin-top:15px;
+    border-radius:10px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.box{
+    background:#2563eb;
+    color:white;
+    padding:20px;
+    border-radius:15px;
+}
+
+.highlight{
+    color:#2563eb;
+    font-weight:bold;
+}
+
+.memory{
+    background:#dcfce7;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+.quiz-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.question{
+    background:#f3f4f6;
+    padding:20px;
+    border-radius:15px;
+}
+
+.question p{
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#2563eb;
+    color:white;
+    font-size:15px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.result{
+    margin-top:10px;
+    font-weight:bold;
+}
+
+.score-box{
+    position:sticky;
+    top:10px;
+    background:#2563eb;
+    color:white;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.finish{
+    margin-top:30px;
+    text-align:center;
+}
+
+.finish button{
+    padding:15px 25px;
+    font-size:18px;
+}
+
+.final-score{
+    margin-top:20px;
+    font-size:25px;
+    font-weight:bold;
+    color:#2563eb;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="score-box">
+    <h2>🎯 Score</h2>
+    <div id="score">0 / 50</div>
+</div>
+
+<div class="card">
+
+<h1>📖 SIMPLE PRESENT TENSE</h1>
+
+<p>
+Digunakan untuk:
+<span class="highlight">
+kebiasaan, rutinitas, fakta umum, dan aktivitas sehari-hari.
+</span>
+</p>
+
+<div class="rumus">
+
+<h2>📐 Rumus</h2>
+
+<p><b>(+)</b> S + V1 (s/es) + O</p>
+<p><b>(-)</b> S + do/does + not + V1 + O</p>
+<p><b>(?)</b> Do/Does + S + V1 + O?</p>
+
+</div>
+
+<div class="example">
+
+<h2>📝 Contoh</h2>
+
+<p><b>(+)</b> She reads a book every night.</p>
+<p>Dia membaca buku setiap malam.</p>
+
+<br>
+
+<p><b>(-)</b> She does not read a book every night.</p>
+<p>Dia tidak membaca buku setiap malam.</p>
+
+<br>
+
+<p><b>(?)</b> Does she read a book every night?</p>
+<p>Apakah dia membaca buku setiap malam?</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🔥 Trik Cepat Hafal</h2>
+
+<div class="grid">
+
+<div class="box">
+<h3>1️⃣ Kata Kunci</h3>
+<p>
+always, usually, often, every day,
+sometimes, never
+</p>
+</div>
+
+<div class="box">
+<h3>2️⃣ He / She / It</h3>
+<p>
+Tambahkan s/es pada kata kerja.
+<br><br>
+read → reads
+go → goes
+</p>
+</div>
+
+<div class="box">
+<h3>3️⃣ Do / Does</h3>
+<p>
+I/You/We/They → DO
+<br><br>
+He/She/It → DOES
+</p>
+</div>
+
+</div>
+
+<div class="memory">
+
+<h2>🧠 Cara Super Cepat Paham</h2>
+
+<p>✅ Kalimat positif = langsung pakai kata kerja</p>
+<p>✅ He/She/It = verb tambah s/es</p>
+<p>✅ Negatif = do/does + not + V1</p>
+<p>✅ Pertanyaan = Do/Does di depan</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎮 Quiz Interaktif 50 Soal</h2>
+
+<div class="quiz-container" id="quizContainer"></div>
+
+<div class="finish">
+<button onclick="showFinalScore()">Lihat Hasil</button>
+
+<div class="final-score" id="finalScore"></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const quizData = [
+
+{
+q:"1. She ___ to school every day.",
+a:"goes",
+options:["go","goes"]
+},
+
+{
+q:"2. They ___ football every weekend.",
+a:"play",
+options:["plays","play"]
+},
+
+{
+q:"3. ___ he like coffee?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"4. I ___ English every night.",
+a:"study",
+options:["study","studies"]
+},
+
+{
+q:"5. We ___ TV after dinner.",
+a:"watch",
+options:["watches","watch"]
+},
+
+{
+q:"6. She ___ not eat meat.",
+a:"does",
+options:["do","does"]
+},
+
+{
+q:"7. ___ they work here?",
+a:"Do",
+options:["Does","Do"]
+},
+
+{
+q:"8. My father ___ a car.",
+a:"drives",
+options:["drive","drives"]
+},
+
+{
+q:"9. The cat ___ milk.",
+a:"likes",
+options:["like","likes"]
+},
+
+{
+q:"10. I ___ not sleep late.",
+a:"do",
+options:["do","does"]
+},
+
+{
+q:"11. He ___ basketball.",
+a:"plays",
+options:["play","plays"]
+},
+
+{
+q:"12. ___ she cook every day?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"13. We ___ in Indonesia.",
+a:"live",
+options:["lives","live"]
+},
+
+{
+q:"14. They ___ not study math.",
+a:"do",
+options:["does","do"]
+},
+
+{
+q:"15. My mom ___ tea every morning.",
+a:"drinks",
+options:["drink","drinks"]
+},
+
+{
+q:"16. ___ you understand?",
+a:"Do",
+options:["Do","Does"]
+},
+
+{
+q:"17. He ___ TV at night.",
+a:"watches",
+options:["watch","watches"]
+},
+
+{
+q:"18. She ___ her homework.",
+a:"does",
+options:["do","does"]
+},
+
+{
+q:"19. I ___ coffee every morning.",
+a:"drink",
+options:["drink","drinks"]
+},
+
+{
+q:"20. ___ they play games?",
+a:"Do",
+options:["Do","Does"]
+},
+
+{
+q:"21. The sun ___ in the east.",
+a:"rises",
+options:["rise","rises"]
+},
+
+{
+q:"22. We ___ English together.",
+a:"learn",
+options:["learns","learn"]
+},
+
+{
+q:"23. She ___ not like milk.",
+a:"does",
+options:["do","does"]
+},
+
+{
+q:"24. ___ he go to work?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"25. They ___ soccer every Sunday.",
+a:"play",
+options:["plays","play"]
+},
+
+{
+q:"26. My brother ___ online games.",
+a:"likes",
+options:["like","likes"]
+},
+
+{
+q:"27. I ___ my room every day.",
+a:"clean",
+options:["cleans","clean"]
+},
+
+{
+q:"28. ___ she read books?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"29. He ___ not drink soda.",
+a:"does",
+options:["do","does"]
+},
+
+{
+q:"30. We ___ breakfast at 7 AM.",
+a:"eat",
+options:["eats","eat"]
+},
+
+{
+q:"31. The teacher ___ English.",
+a:"teaches",
+options:["teach","teaches"]
+},
+
+{
+q:"32. ___ they live here?",
+a:"Do",
+options:["Do","Does"]
+},
+
+{
+q:"33. She ___ happy every day.",
+a:"feels",
+options:["feel","feels"]
+},
+
+{
+q:"34. I ___ not watch horror movies.",
+a:"do",
+options:["does","do"]
+},
+
+{
+q:"35. He ___ the guitar.",
+a:"plays",
+options:["play","plays"]
+},
+
+{
+q:"36. ___ your mother cook well?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"37. We ___ to music.",
+a:"listen",
+options:["listens","listen"]
+},
+
+{
+q:"38. She ___ her teeth every morning.",
+a:"brushes",
+options:["brush","brushes"]
+},
+
+{
+q:"39. They ___ not eat spicy food.",
+a:"do",
+options:["does","do"]
+},
+
+{
+q:"40. ___ he study English?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"41. I ___ to bed at 10 PM.",
+a:"go",
+options:["go","goes"]
+},
+
+{
+q:"42. My sister ___ dancing.",
+a:"likes",
+options:["like","likes"]
+},
+
+{
+q:"43. ___ we need money?",
+a:"Do",
+options:["Do","Does"]
+},
+
+{
+q:"44. The dog ___ loudly.",
+a:"barks",
+options:["bark","barks"]
+},
+
+{
+q:"45. She ___ not wake up early.",
+a:"does",
+options:["do","does"]
+},
+
+{
+q:"46. They ___ books every month.",
+a:"buy",
+options:["buys","buy"]
+},
+
+{
+q:"47. ___ he speak English?",
+a:"Does",
+options:["Do","Does"]
+},
+
+{
+q:"48. We ___ to school together.",
+a:"walk",
+options:["walks","walk"]
+},
+
+{
+q:"49. My father ___ coffee every morning.",
+a:"drinks",
+options:["drink","drinks"]
+},
+
+{
+q:"50. I ___ not play tennis.",
+a:"do",
+options:["does","do"]
+}
+
+];
+
+const quizContainer = document.getElementById("quizContainer");
+
+let score = 0;
+let answered = [];
+
+quizData.forEach((quiz,index)=>{
+
+const div = document.createElement("div");
+div.classList.add("question");
+
+div.innerHTML = `
+<p>${quiz.q}</p>
+
+<button onclick="checkAnswer(${index}, '${quiz.options[0]}')">
+${quiz.options[0]}
+</button>
+
+<button onclick="checkAnswer(${index}, '${quiz.options[1]}')">
+${quiz.options[1]}
+</button>
+
+<div class="result" id="result${index}"></div>
+`;
+
+quizContainer.appendChild(div);
+
+});
+
+function checkAnswer(index,selected){
+
+if(answered[index]) return;
+
+answered[index] = true;
+
+const result = document.getElementById(`result${index}`);
+
+if(selected === quizData[index].a){
+
+result.innerHTML = "✅ Benar!";
+result.style.color = "green";
+
+score++;
+
+}else{
+
+result.innerHTML =
+`❌ Salah! Jawaban benar: ${quizData[index].a}`;
+
+result.style.color = "red";
+
+}
+
+document.getElementById("score").innerHTML =
+`${score} / 50`;
+
+}
+
+function showFinalScore(){
+
+let text = "";
+
+if(score >= 45){
+
+text = "🔥 AMAZING! Kamu sangat paham Simple Present!";
+
+}else if(score >= 35){
+
+text = "👏 Bagus! Pemahaman kamu sudah kuat.";
+
+}else if(score >= 25){
+
+text = "👍 Lumayan! Tinggal latihan lagi.";
+
+}else{
+
+text = "📚 Tetap semangat belajar lagi ya!";
+}
+
+document.getElementById("finalScore").innerHTML =
+`Skor Akhir: ${score}/50 <br><br> ${text}`;
+
+}
+
+</script>
+
+</body>
+</html>
