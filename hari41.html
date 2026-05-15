@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1-Minute Speaking Challenge</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .container { background: var(--card); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 480px; box-shadow: var(--shadow); }
+    header { text-align: center; margin-bottom: 20px; }
+    h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; }
+    
+    .mode-selector { display: flex; gap: 8px; margin-bottom: 16px; }
+    .mode-btn { flex: 1; padding: 8px 0; background: transparent; border: 1px solid #334155; color: var(--text-muted); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+    .mode-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .mode-btn:hover { border-color: var(--accent); }
+
+    .topic-box { background: #0f172a; padding: 16px; border-radius: var(--radius); margin-bottom: 16px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px dashed #334155; position: relative; }
+    .topic-text { font-size: 1.1rem; line-height: 1.4; }
+    .random-btn { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); background: var(--warning); border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    .random-btn:hover { background: #d97706; }
+
+    .controls { display: flex; gap: 12px; margin-bottom: 16px; }
+    .btn { flex: 1; padding: 12px; border: none; border-radius: var(--radius); font-weight: bold; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-record { background: #ef4444; color: white; }
+    .btn-record.recording { background: #dc2626; animation: pulse 1.5s infinite; }
+    .btn-play { background: var(--success); color: white; }
+    .btn-stop { background: #64748b; color: white; }
+
+    .timer-display { font-size: 2.2rem; text-align: center; margin: 16px 0; font-weight: bold; letter-spacing: 2px; }
+    .timer-bar { height: 4px; background: #334155; border-radius: 2px; overflow: hidden; }
+    .timer-progress { height: 100%; background: var(--accent); width: 0%; transition: width 0.1s linear; }
+
+    .audio-player { display: none; margin: 12px 0; background: #0f172a; padding: 12px; border-radius: 8px; }
+    .audio-player.active { display: block; }
+    audio { width: 100%; }
+
+    .feedback-box { background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 14px; border-radius: var(--radius); margin-top: 12px; font-size: 0.95rem; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+    .feedback-box.show { opacity: 1; transform: translateY(0); }
+    .feedback-icon { font-size: 1.2rem; margin-right: 6px; }
+
+    .context-hint { background: #0f172a; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; text-align: center; display: none; }
+    .context-hint.active { display: block; }
+
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+    @media (max-width: 400px) { .btn { font-size: 0.9rem; padding: 10px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎙️ 1-Minute Challenge</h1>
+      <div class="subtitle">Bicara lancar. Fokus pada alur, bukan grammar sempurna.</div>
+    </header>
+
+    <div class="mode-selector">
+      <button class="mode-btn active" data-mode="standard">🎯 Standard</button>
+      <button class="mode-btn" data-mode="roleplay">🎭 Roleplay</button>
+      <button class="mode-btn" data-mode="duet">👥 Duet</button>
+    </div>
+
+    <div class="topic-box">
+      <div class="topic-text" id="topicText">Tekan tombol di bawah untuk mulai...</div>
+      <button class="random-btn" id="randomBtn">🎲 Acak Topik</button>
+    </div>
+
+    <div class="context-hint" id="contextHint">💡 Mode Standard: Jelaskan topiknya dengan kalimat sederhana.</div>
+
+    <div class="controls">
+      <button class="btn btn-record" id="recordBtn">🔴 Mulai Rekam</button>
+      <button class="btn btn-stop" id="stopBtn" disabled>⏹️ Stop</button>
+    </div>
+
+    <div class="timer-display" id="timer">01:00</div>
+    <div class="timer-bar"><div class="timer-progress" id="timerProgress"></div></div>
+
+    <div class="audio-player" id="audioPlayerBox">
+      <audio id="audioPlayer" controls></audio>
+    </div>
+
+    <div class="feedback-box" id="feedbackBox">
+      <span class="feedback-icon">✨</span> <span id="feedbackText">Great start! Keep going.</span>
+    </div>
+  </div>
+
+  <script>
+    // === DATA & STATE ===
+    const topics = [
+      "Describe your favorite place to relax.",
+      "Talk about a skill you want to learn.",
+      "What's the best gift you've ever received?",
+      "Describe your perfect weekend.",
+      "If you could teleport anywhere right now, where?",
+      "Talk about a book or movie that changed your mind about something.",
+      "What's a small habit that improved your life?",
+      "Describe your dream job in 3 sentences."
+    ];
+    const contextHints = {
+      standard: "💡 Mode Standard: Jelaskan topiknya dengan kalimat sederhana & alur jelas.",
+      roleplay: "🎭 Mode Roleplay: Bayangkan kamu sedang berbicara di situasi nyata (misal: di bandara, kafe, atau interview).",
+      duet: "👥 Mode Duet: Rekam 30 detik, lalu minta teman melanjutkan 30 detik. Fokus pada transisi topik."
+    };
+
+    let mediaRecorder, audioChunks = [], audioBlob, audioURL;
+    let timerInterval, timeLeft = 60, isRecording = false;
+    let currentMode = 'standard';
+
+    // === DOM ELEMENTS ===
+    const topicText = document.getElementById('topicText');
+    const randomBtn = document.getElementById('randomBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const timerDisplay = document.getElementById('timer');
+    const timerProgress = document.getElementById('timerProgress');
+    const audioPlayerBox = document.getElementById('audioPlayerBox');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackText = document.getElementById('feedbackText');
+    const contextHint = document.getElementById('contextHint');
+    const modeBtns = document.querySelectorAll('.mode-btn');
+
+    // === FUNCTIONS ===
+    function generateTopic() {
+      const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+      topicText.textContent = randomTopic;
+      resetState();
+    }
+
+    function updateContextHint() {
+      contextHint.textContent = contextHints[currentMode];
+      contextHint.classList.add('active');
+    }
+
+    function resetState() {
+      clearInterval(timerInterval);
+      timeLeft = 60;
+      isRecording = false;
+      timerDisplay.textContent = '01:00';
+      timerProgress.style.width = '0%';
+      recordBtn.disabled = false;
+      recordBtn.classList.remove('recording');
+      recordBtn.innerHTML = '🔴 Mulai Rekam';
+      stopBtn.disabled = true;
+      audioPlayerBox.classList.remove('active');
+      feedbackBox.classList.remove('show');
+      audioChunks = [];
+    }
+
+    function formatTime(sec) {
+      return `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      const startTime = Date.now();
+      const endTime = startTime + (timeLeft * 1000);
+      timerInterval = setInterval(() => {
+        const now = Date.now();
+        const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+        const elapsed = 60 - remaining;
+        
+        timerDisplay.textContent = formatTime(remaining);
+        timerProgress.style.width = `${(elapsed / 60) * 100}%`;
+        
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          stopRecording();
+        }
+        timeLeft = remaining;
+      }, 100);
+    }
+
+    async function startRecording() {
+      if (!topicText.textContent.includes('...') && !topics.includes(topicText.textContent)) return;
+      
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          audioURL = URL.createObjectURL(audioBlob);
+          audioPlayer.src = audioURL;
+          audioPlayerBox.classList.add('active');
+          showFeedback();
+        };
+        
+        mediaRecorder.start();
+        isRecording = true;
+        recordBtn.disabled = true;
+        recordBtn.classList.add('recording');
+        recordBtn.innerHTML = '⏺️ Merekam...';
+        stopBtn.disabled = false;
+        startTimer();
+      } catch (err) {
+        alert('Tidak bisa mengakses mikrofon. Pastikan izin diberikan atau gunakan HTTPS/localhost.');
+        console.error(err);
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        clearInterval(timerInterval);
+        isRecording = false;
+        recordBtn.disabled = false;
+        recordBtn.classList.remove('recording');
+        recordBtn.innerHTML = '🔴 Rekam Ulang';
+        stopBtn.disabled = true;
+      }
+    }
+
+    function showFeedback() {
+      const duration = 60 - timeLeft;
+      let msg = '';
+      if (duration < 15) msg = "Coba lebih lama! Targetkan minimal 45 detik tanpa jeda panjang.";
+      else if (duration < 35) msg = "Bagus! Coba tambahkan 1-2 contoh spesifik atau perasaan pribadi.";
+      else msg = "Luar biasa! Alur lancar. Coba rekam ulang dengan kecepatan bicara sedikit lebih cepat atau tambahkan kosakata baru.";
+      
+      feedbackText.textContent = msg;
+      feedbackBox.classList.add('show');
+    }
+
+    // === EVENT LISTENERS ===
+    randomBtn.addEventListener('click', generateTopic);
+    
+    recordBtn.addEventListener('click', startRecording);
+    stopBtn.addEventListener('click', stopRecording);
+    
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        updateContextHint();
+        resetState();
+        if (!topics.includes(topicText.textContent)) generateTopic();
+      });
+    });
+
+    // Init
+    updateContextHint();
+  </script>
+</body>
+</html>
