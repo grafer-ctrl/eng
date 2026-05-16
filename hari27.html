@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>OME TV Speaking Trainer</title>
+<title>Latihan Bicara Ala Ome TV</title>
 
 <style>
 
@@ -198,8 +198,8 @@ button{
 <div class="app">
 
   <div class="header">
-    <h1>OME TV Speaking Trainer</h1>
-    <p>Practice Real English Conversation</p>
+    <h1>Latihan Bicara Ala Ome Tv</h1>
+    <p>Practice Real English Conversation, Jawab dengan B Inggris Tanpa Takut Salah, jawab dengan speaker, audio anda akan di evaluasi oleh sistem</p>
   </div>
 
   <div class="chat" id="chat"></div>
@@ -246,317 +246,233 @@ const conversations = [
 
   {
     speaker:"B",
-    en:"China, but I’m using a VPN.",
-    id:"China, tapi aku pakai VPN.",
-    answers:["china","i am from china"]
+    en:"Korea, but I live in Vietnam.",
+    id:"Korea, tapi aku tinggal di Vietnam.",
+    answers:["korea","i am from korea"]
   },
 
   {
     speaker:"A",
-    en:"Your English is really good.",
-    id:"Bahasa Inggrismu bagus sekali.",
-    answers:["thank you","thanks"]
+    en:"Why are you living in Vietnam?",
+    id:"Kenapa kamu tinggal di Vietnam?",
+    answers:["my family lives here"]
   },
 
   {
     speaker:"B",
-    en:"Thank you so much.",
-    id:"Terima kasih banyak.",
-    answers:["you are welcome","no problem"]
-  },
-
-  {
-    speaker:"A",
-    en:"How old are you?",
-    id:"Umurmu berapa?",
-    answers:["i am twenty three","twenty three"]
-  },
-
-  {
-    speaker:"B",
-    en:"I’m twenty-three.",
-    id:"Aku dua puluh tiga tahun.",
-    answers:["23","twenty three"]
-  },
-
-  {
-    speaker:"A",
-    en:"You look younger than that.",
-    id:"Kamu terlihat lebih muda dari itu.",
-    answers:["really","thank you"]
-  },
-
-  {
-    speaker:"B",
-    en:"Really? Thank you.",
-    id:"Benarkah? Terima kasih.",
-    answers:["you are welcome","sure"]
-  },
-
-  {
-    speaker:"A",
-    en:"What’s your favorite number?",
-    id:"Angka favoritmu apa?",
-    answers:["four","my favorite number is four"]
-  },
-
-  {
-    speaker:"B",
-    en:"Maybe four. It’s my lucky number.",
-    id:"Mungkin empat. Itu angka keberuntunganku.",
-    answers:["nice","cool"]
-  },
-
-  {
-    speaker:"A",
-    en:"I choose ten.",
-    id:"Aku pilih sepuluh.",
-    answers:["why ten","why"]
-  },
-
-  {
-    speaker:"B",
-    en:"Why ten?",
-    id:"Kenapa sepuluh?",
-    answers:["because you look like a ten out of ten"]
-  },
-
-  {
-    speaker:"A",
-    en:"Because you look like a ten out of ten.",
-    id:"Karena kamu terlihat seperti nilai sepuluh dari sepuluh.",
-    answers:["oh my gosh","wow"]
-  },
-
-  {
-    speaker:"B",
-    en:"Oh my gosh.",
-    id:"Ya ampun.",
-    answers:["haha","cute"]
+    en:"My family lives here.",
+    id:"Keluargaku tinggal di sini.",
+    answers:["oh i see","nice"]
   },
 
   {
     speaker:"A",
     en:"Do you have a boyfriend?",
     id:"Kamu punya pacar?",
-    answers:["no","not yet"]
+    answers:["no i dont","no"]
   },
 
   {
     speaker:"B",
-    en:"Five minutes ago, no. But now I do.",
-    id:"Lima menit lalu belum. Tapi sekarang punya.",
-    answers:["who is the lucky guy","really"]
+    en:"No, I don’t.",
+    id:"Tidak, aku tidak punya.",
+    answers:["you look like suzy"]
   },
 
   {
     speaker:"A",
-    en:"Who is the lucky guy?",
-    id:"Siapa cowok beruntung itu?",
-    answers:["the guy in front of me"]
-  },
-
-  {
-    speaker:"B",
-    en:"The guy in front of me on the screen.",
-    id:"Cowok yang ada di depan layar ini.",
-    answers:["you are so good at flirting","haha"]
-  },
-
-  {
-    speaker:"A",
-    en:"You’re so good at flirting.",
-    id:"Kamu jago banget ngegombal.",
-    answers:["of course","maybe"]
-  },
-
-  {
-    speaker:"B",
-    en:"Of course.",
-    id:"Tentu saja.",
-    answers:["haha","nice"]
-  },
-
-  {
-    speaker:"A",
-    en:"What’s your favorite drink?",
-    id:"Minuman favoritmu apa?",
-    answers:["milk tea","coffee"]
-  },
-
-  {
-    speaker:"B",
-    en:"Milk tea.",
-    id:"Milk tea.",
-    answers:["is it sweet","sweet"]
-  },
-
-  {
-    speaker:"A",
-    en:"Is it sweet?",
-    id:"Manis?",
-    answers:["very sweet","yes"]
-  },
-
-  {
-    speaker:"B",
-    en:"Very sweet.",
-    id:"Sangat manis.",
-    answers:["maybe because you are so sweet"]
-  },
-
-  {
-    speaker:"A",
-    en:"Maybe because you’re so sweet.",
-    id:"Mungkin karena kamu sangat manis.",
-    answers:["i like that line","haha"]
-  },
-
-  {
-    speaker:"B",
-    en:"I like that line.",
-    id:"Aku suka gombalan itu.",
-    answers:["thank you","glad you like it"]
-  },
-
-  {
-    speaker:"A",
-    en:"You’re smart and funny.",
-    id:"Kamu pintar dan lucu.",
-    answers:["yeah because i am smart"]
-  },
-
-  {
-    speaker:"B",
-    en:"Yeah, because I’m smart.",
-    id:"Iya, karena aku pintar.",
-    answers:["haha","true"]
-  },
-
-  {
-    speaker:"A",
-    en:"Do you have Instagram?",
-    id:"Kamu punya Instagram?",
-    answers:["yes i do","yeah"]
-  },
-
-  {
-    speaker:"B",
-    en:"Yeah, I do.",
-    id:"Iya, punya.",
-    answers:["my name is dika"]
-  },
-
-  {
-    speaker:"A",
-    en:"My name is Dika.",
-    id:"Namaku Dika.",
-    answers:["nice to meet you dika"]
-  },
-
-  {
-    speaker:"B",
-    en:"Nice to meet you, Dika.",
-    id:"Senang bertemu denganmu, Dika.",
-    answers:["nice to meet you too"]
-  },
-
-  {
-    speaker:"A",
-    en:"I’m from Indonesia.",
-    id:"Aku dari Indonesia.",
+    en:"You look like Suzy.",
+    id:"Kamu mirip Suzy.",
     answers:["really","wow"]
   },
 
   {
     speaker:"B",
-    en:"Really? I visited Bali last week.",
-    id:"Serius? Aku baru mengunjungi Bali minggu lalu.",
-    answers:["why didnt you tell me"]
+    en:"Really?",
+    id:"Benarkah?",
+    answers:["yeah like a korean singer"]
   },
 
   {
     speaker:"A",
-    en:"Why didn’t you tell me?",
-    id:"Kenapa kamu tidak bilang?",
-    answers:["haha","sorry"]
+    en:"Yeah, like a Korean singer.",
+    id:"Iya, seperti penyanyi Korea.",
+    answers:["thank you","haha"]
   },
 
   {
     speaker:"B",
-    en:"Your English is not bad, by the way.",
-    id:"Ngomong-ngomong, bahasa Inggrismu tidak buruk.",
+    en:"My name is Mia.",
+    id:"Namaku Mia.",
+    answers:["nice name","beautiful name"]
+  },
+
+  {
+    speaker:"A",
+    en:"Teach me some Korean.",
+    id:"Ajari aku bahasa Korea.",
+    answers:["saranghae means i love you"]
+  },
+
+  {
+    speaker:"B",
+    en:"Saranghae means I love you.",
+    id:"Saranghae artinya Aku cinta kamu.",
+    answers:["what about mianhae"]
+  },
+
+  {
+    speaker:"A",
+    en:"What about Mianhae?",
+    id:"Kalau Mianhae?",
+    answers:["it means sorry"]
+  },
+
+  {
+    speaker:"B",
+    en:"It means Sorry.",
+    id:"Artinya Maaf.",
+    answers:["so if i say i love you you say sorry"]
+  },
+
+  {
+    speaker:"A",
+    en:"So if I say I love you, you say sorry?",
+    id:"Jadi kalau aku bilang aku cinta kamu, kamu bilang maaf?",
+    answers:["bad boy","haha"]
+  },
+
+  {
+    speaker:"B",
+    en:"Bad boy.",
+    id:"Cowok nakal.",
+    answers:["sorry","just kidding"]
+  },
+
+  {
+    speaker:"A",
+    en:"Can you sing a Korean song?",
+    id:"Bisa nyanyi lagu Korea?",
+    answers:["sure","okay"]
+  },
+
+  {
+    speaker:"B",
+    en:"Sure.",
+    id:"Tentu.",
+    answers:["wow","nice"]
+  },
+
+  {
+    speaker:"A",
+    en:"Did you meet interesting people here?",
+    id:"Kamu ketemu orang menarik di sini?",
+    answers:["most people are weird"]
+  },
+
+  {
+    speaker:"B",
+    en:"Most people are weird.",
+    id:"Kebanyakan orang aneh.",
+    answers:["but i am different right"]
+  },
+
+  {
+    speaker:"A",
+    en:"But I’m different, right?",
+    id:"Tapi aku beda, kan?",
+    answers:["maybe a little"]
+  },
+
+  {
+    speaker:"B",
+    en:"Maybe a little.",
+    id:"Mungkin sedikit.",
+    answers:["i will take that as a compliment"]
+  },
+
+  {
+    speaker:"A",
+    en:"You look like a hot teacher.",
+    id:"Kamu terlihat seperti guru yang cantik.",
+    answers:["stop it","haha"]
+  },
+
+  {
+    speaker:"B",
+    en:"Stop it.",
+    id:"Sudahlah.",
+    answers:["okay okay"]
+  },
+
+  {
+    speaker:"A",
+    en:"We should make our own K-drama together.",
+    id:"Kita harus bikin drama Korea kita sendiri.",
+    answers:["you are funny"]
+  },
+
+  {
+    speaker:"B",
+    en:"You’re funny.",
+    id:"Kamu lucu.",
     answers:["thank you"]
   },
 
   {
     speaker:"A",
-    en:"Thank you. You’re beautiful and funny too.",
-    id:"Terima kasih. Kamu juga cantik dan lucu.",
-    answers:["i have beauty brains and humor"]
+    en:"What’s your favorite number?",
+    id:"Angka favoritmu apa?",
+    answers:["six or seven"]
   },
 
   {
     speaker:"B",
-    en:"I have beauty, brains, and humor.",
-    id:"Aku punya kecantikan, otak, dan humor.",
-    answers:["that is dangerous"]
+    en:"Six or seven.",
+    id:"Enam atau tujuh.",
+    answers:["mine is sixty nine"]
   },
 
   {
     speaker:"A",
-    en:"That’s dangerous.",
-    id:"Itu berbahaya.",
-    answers:["haha","maybe"]
+    en:"Mine is sixty-nine.",
+    id:"Punyaku enam puluh sembilan.",
+    answers:["you make me embarrassed"]
   },
 
   {
     speaker:"B",
-    en:"Do you have a type?",
-    id:"Kamu punya tipe cewek?",
-    answers:["yeah you are my type"]
+    en:"You make me embarrassed.",
+    id:"Kamu bikin aku malu.",
+    answers:["sorry haha"]
   },
 
   {
     speaker:"A",
-    en:"Yeah. You’re my type.",
-    id:"Iya. Kamu tipeku.",
-    answers:["aww","cute"]
+    en:"Have a good night, Mia.",
+    id:"Selamat malam, Mia.",
+    answers:["it was nice talking to you"]
   },
 
   {
     speaker:"B",
-    en:"I like handsome guys with muscles.",
-    id:"Aku suka cowok tampan yang berotot.",
-    answers:["i am still working on it"]
+    en:"It was nice talking to you.",
+    id:"Senang ngobrol denganmu.",
+    answers:["this is not the end we should talk again"]
   },
 
   {
     speaker:"A",
-    en:"I’m still working on it.",
-    id:"Aku masih berusaha untuk itu.",
-    answers:["you are so shy"]
+    en:"This isn’t the end. We should talk again.",
+    id:"Ini bukan akhir. Kita harus ngobrol lagi.",
+    answers:["sure see you soon"]
   },
 
   {
     speaker:"B",
-    en:"You’re so shy.",
-    id:"Kamu pemalu sekali.",
-    answers:["maybe a little"]
-  },
-
-  {
-    speaker:"A",
-    en:"I like making friends from other countries.",
-    id:"Aku suka berteman dengan orang dari negara lain.",
-    answers:["so we are just friends"]
-  },
-
-  {
-    speaker:"B",
-    en:"So, we’re just friends?",
-    id:"Jadi, kita cuma teman?",
-    answers:["maybe more than friends","haha"]
+    en:"Sure, see you soon.",
+    id:"Tentu, sampai jumpa lagi.",
+    answers:["bye","goodbye"]
   }
 ];
 
