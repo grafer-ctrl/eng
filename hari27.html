@@ -1,379 +1,758 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>English Listening & Speaking Practice</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<title>OME TV Speaking Trainer</title>
 
-    body {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      color: white;
-    }
+<style>
 
-    .app {
-      width: 100%;
-      max-width: 700px;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 25px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 34px;
-    }
+body{
+  background:#0f172a;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
 
-    h2 {
-      margin-bottom: 15px;
-      font-size: 28px;
-      text-align: center;
-    }
+.app{
+  width:100%;
+  max-width:550px;
+  background:#111827;
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
+}
 
-    p {
-      line-height: 1.7;
-    }
+.header{
+  background:#1e293b;
+  padding:20px;
+  text-align:center;
+}
 
-    .instruction {
-      background: rgba(255,255,255,0.15);
-      padding: 20px;
-      border-radius: 15px;
-      margin-bottom: 25px;
-      font-size: 18px;
-      text-align: center;
-    }
+.header h1{
+  font-size:26px;
+}
 
-    .setting {
-      margin-bottom: 20px;
-    }
+.header p{
+  color:#94a3b8;
+  margin-top:5px;
+}
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 16px;
-    }
+.chat{
+  height:500px;
+  overflow-y:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
 
-    input[type="range"] {
-      width: 100%;
-    }
+.message{
+  max-width:85%;
+  padding:15px;
+  border-radius:18px;
+  line-height:1.5;
+  animation:fade .3s ease;
+}
 
-    .value {
-      margin-top: 5px;
-      font-size: 14px;
-      opacity: 0.9;
-    }
+.ai{
+  align-self:flex-start;
+  background:#2563eb;
+}
 
-    button {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 15px;
-      background: white;
-      color: #4f46e5;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 15px;
-    }
+.user{
+  align-self:flex-end;
+  background:#374151;
+}
 
-    button:hover {
-      transform: scale(1.02);
-    }
+.translation{
+  margin-top:8px;
+  font-size:13px;
+  color:#d1d5db;
+}
 
-    .hidden {
-      display: none;
-    }
+.answer-box{
+  margin-top:12px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+  font-size:14px;
+}
 
-    .topic-box {
-      background: rgba(255,255,255,0.15);
-      padding: 25px;
-      border-radius: 20px;
-      margin-top: 20px;
-      text-align: center;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+.answer-title{
+  color:#facc15;
+  margin-bottom:5px;
+}
 
-    .text-hidden {
-      font-size: 20px;
-      opacity: 0;
-      transition: 0.4s;
-      user-select: none;
-    }
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 
-    .text-show {
-      opacity: 1;
-    }
+.bottom{
+  background:#1e293b;
+  padding:20px;
+}
 
-    .timer {
-      font-size: 60px;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+.status{
+  text-align:center;
+  margin-bottom:15px;
+  color:#facc15;
+}
 
-    .desc {
-      margin-top: 15px;
-      font-size: 17px;
-      opacity: 0.9;
-    }
+.mic-area{
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
+}
 
-    .btn-group {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-    }
+.mic{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#3b82f6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  cursor:pointer;
+  transition:0.2s;
+}
 
-    .btn-group button {
-      margin-top: 0;
-    }
+.mic.active{
+  animation:pulse 1s infinite;
+}
 
-    @media(max-width: 600px) {
-      .btn-group {
-        flex-direction: column;
-      }
+@keyframes pulse{
+  0%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(59,130,246,.7);
+  }
 
-      .timer {
-        font-size: 45px;
-      }
-    }
-  </style>
+  70%{
+    transform:scale(1.1);
+    box-shadow:0 0 0 30px rgba(59,130,246,0);
+  }
+
+  100%{
+    transform:scale(1);
+  }
+}
+
+.result{
+  text-align:center;
+  min-height:40px;
+  margin-bottom:15px;
+}
+
+.score{
+  text-align:center;
+  color:#cbd5e1;
+  margin-bottom:20px;
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+}
+
+button{
+  flex:1;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  color:white;
+  font-size:15px;
+}
+
+.next-btn{
+  background:#22c55e;
+}
+
+.show-btn{
+  background:#f59e0b;
+}
+
+</style>
 </head>
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <!-- SCREEN 1 -->
-    <div id="screen1">
-      <h1>English Shadowing Practice</h1>
+  <div class="header">
+    <h1>OME TV Speaking Trainer</h1>
+    <p>Practice Real English Conversation</p>
+  </div>
 
-      <div class="instruction">
-        <strong>Instruksi:</strong><br><br>
-        Anda cukup dengarkan suara lalu tirukan pengucapannya.
-        Fokus pada pronunciation, kecepatan bicara, dan intonasi.
-      </div>
+  <div class="chat" id="chat"></div>
 
-      <div class="setting">
-        <label>Volume Suara</label>
-        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
-        <div class="value" id="volumeValue">100%</div>
-      </div>
+  <div class="bottom">
 
-      <div class="setting">
-        <label>Lamanya Timer</label>
-        <input type="range" id="timerSetting" min="1" max="10" value="5">
-        <div class="value" id="timerValue">5 Menit</div>
-      </div>
-
-      <div class="setting">
-        <label>Kecepatan Suara</label>
-        <input type="range" id="speed" min="0.5" max="1.5" step="0.1" value="1">
-        <div class="value" id="speedValue">1x</div>
-      </div>
-
-      <button onclick="startPractice()">Mulai Latihan</button>
+    <div class="status" id="status">
+      🎤 Press microphone and answer
     </div>
 
+    <div class="mic-area">
+      <div class="mic" id="micBtn">🎤</div>
+    </div>
 
-    <!-- SCREEN 2 -->
-    <div id="screen2" class="hidden">
+    <div class="result" id="result"></div>
 
-      <h2>Listen & Repeat</h2>
+    <div class="score" id="score">
+      Pronunciation Score: --
+    </div>
 
-      <div class="topic-box">
+    <div class="controls">
+      <button class="show-btn" onclick="showAnswer()">
+        Show Answer
+      </button>
 
-        <div id="practiceText" class="text-hidden">
-          Hello everyone! My name is Dias.
-        </div>
-
-        <div id="translationText" class="text-hidden" style="margin-top:15px; font-size:16px; opacity:0.85;">
-          Halo semuanya! Nama saya Dias.
-        </div>
-
-        <div class="timer" id="timer">05:00</div> id="timer">05:00</div>
-
-        <div class="desc">
-          Dengarkan dan tirukan kalimat tadi sebelum waktu habis.
-        </div>
-      </div>
-
-      <div class="btn-group">
-        <button onclick="showAnswer()">Kunci Jawaban</button>
-        <button onclick="repeatVoice()">Putar Ulang Suara</button>
-        <button onclick="nextTopic()">Next Topic</button>
-      </div>
-
+      <button class="next-btn" onclick="nextConversation()">
+        Next
+      </button>
     </div>
 
   </div>
 
+</div>
 
-  <script>
+<script>
 
-    const topics = [
-
+const conversations = [
   {
-    en: "Hello, my name is Andi. I am from Indonesia and I am 20 years old. I am a student and I like learning English in my free time. I also enjoy listening to music and watching movies. I am a friendly person and I like meeting new people. Nice to meet you!",
-    id: "Halo, nama saya Andi. Saya berasal dari Indonesia dan saya berusia 20 tahun. Saya seorang pelajar dan saya suka belajar bahasa Inggris di waktu luang saya. Saya juga senang mendengarkan musik dan menonton film. Saya adalah orang yang ramah dan saya suka bertemu orang baru. Senang bertemu denganmu!"
+    speaker:"A",
+    en:"Where are you from?",
+    id:"Kamu dari mana?",
+    answers:["where are you from","from where"]
   },
 
   {
-    en: "My hobby is playing football. I usually play football with my friends on the weekend. I like this hobby because it is fun and it makes my body healthy. Sometimes, I also watch football matches on TV and learn new skills from professional players. Playing football helps me relax and feel happy after a busy day.",
-    id: "Hobi saya adalah bermain sepak bola. Saya biasanya bermain sepak bola bersama teman-teman saya saat akhir pekan. Saya menyukai hobi ini karena menyenangkan dan membuat tubuh saya sehat. Terkadang, saya juga menonton pertandingan sepak bola di TV dan belajar keterampilan baru dari pemain profesional. Bermain sepak bola membantu saya rileks dan merasa bahagia setelah hari yang sibuk."
+    speaker:"B",
+    en:"China, but I’m using a VPN.",
+    id:"China, tapi aku pakai VPN.",
+    answers:["china","i am from china"]
   },
 
   {
-    en: "Hello, my name is Rina. I am 17 years old and I still study at senior high school. I live in Purworejo with my family. My hobby is listening to music and watching movies in my free time. I have two brothers and one sister. They are very kind and we often spend time together at home. Nice to meet you!",
-    id: "Halo, nama saya Rina. Saya berusia 17 tahun dan saya masih sekolah di SMA. Saya tinggal di Purworejo bersama keluarga saya. Hobi saya adalah mendengarkan musik dan menonton film di waktu luang. Saya memiliki dua saudara laki-laki dan satu saudara perempuan. Mereka sangat baik dan kami sering menghabiskan waktu bersama di rumah. Senang bertemu denganmu!"
+    speaker:"A",
+    en:"Your English is really good.",
+    id:"Bahasa Inggrismu bagus sekali.",
+    answers:["thank you","thanks"]
   },
 
   {
-    en: "Hello, my name is Budi. I am 16 years old. I live in Purworejo. I am still a student. My hobby is playing games. I have one brother and one sister. I love my family. Nice to meet you.",
-    id: "Halo, nama saya Budi. Saya berusia 16 tahun. Saya tinggal di Purworejo. Saya masih seorang pelajar. Hobi saya adalah bermain game. Saya memiliki satu saudara laki-laki dan satu saudara perempuan. Saya menyayangi keluarga saya. Senang bertemu denganmu."
+    speaker:"B",
+    en:"Thank you so much.",
+    id:"Terima kasih banyak.",
+    answers:["you are welcome","no problem"]
   },
 
   {
-    en: "I wake up at six o’clock in the morning. After that, I wash my face and brush my teeth. Then, I take a bath and have breakfast. I prepare my books and go to school. I feel happy to start my day.",
-    id: "Saya bangun tidur jam enam pagi. Setelah itu, saya mencuci muka dan menggosok gigi. Kemudian, saya mandi dan sarapan. Saya menyiapkan buku dan pergi ke sekolah. Saya merasa senang memulai hari saya."
+    speaker:"A",
+    en:"How old are you?",
+    id:"Umurmu berapa?",
+    answers:["i am twenty three","twenty three"]
   },
 
+  {
+    speaker:"B",
+    en:"I’m twenty-three.",
+    id:"Aku dua puluh tiga tahun.",
+    answers:["23","twenty three"]
+  },
+
+  {
+    speaker:"A",
+    en:"You look younger than that.",
+    id:"Kamu terlihat lebih muda dari itu.",
+    answers:["really","thank you"]
+  },
+
+  {
+    speaker:"B",
+    en:"Really? Thank you.",
+    id:"Benarkah? Terima kasih.",
+    answers:["you are welcome","sure"]
+  },
+
+  {
+    speaker:"A",
+    en:"What’s your favorite number?",
+    id:"Angka favoritmu apa?",
+    answers:["four","my favorite number is four"]
+  },
+
+  {
+    speaker:"B",
+    en:"Maybe four. It’s my lucky number.",
+    id:"Mungkin empat. Itu angka keberuntunganku.",
+    answers:["nice","cool"]
+  },
+
+  {
+    speaker:"A",
+    en:"I choose ten.",
+    id:"Aku pilih sepuluh.",
+    answers:["why ten","why"]
+  },
+
+  {
+    speaker:"B",
+    en:"Why ten?",
+    id:"Kenapa sepuluh?",
+    answers:["because you look like a ten out of ten"]
+  },
+
+  {
+    speaker:"A",
+    en:"Because you look like a ten out of ten.",
+    id:"Karena kamu terlihat seperti nilai sepuluh dari sepuluh.",
+    answers:["oh my gosh","wow"]
+  },
+
+  {
+    speaker:"B",
+    en:"Oh my gosh.",
+    id:"Ya ampun.",
+    answers:["haha","cute"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you have a boyfriend?",
+    id:"Kamu punya pacar?",
+    answers:["no","not yet"]
+  },
+
+  {
+    speaker:"B",
+    en:"Five minutes ago, no. But now I do.",
+    id:"Lima menit lalu belum. Tapi sekarang punya.",
+    answers:["who is the lucky guy","really"]
+  },
+
+  {
+    speaker:"A",
+    en:"Who is the lucky guy?",
+    id:"Siapa cowok beruntung itu?",
+    answers:["the guy in front of me"]
+  },
+
+  {
+    speaker:"B",
+    en:"The guy in front of me on the screen.",
+    id:"Cowok yang ada di depan layar ini.",
+    answers:["you are so good at flirting","haha"]
+  },
+
+  {
+    speaker:"A",
+    en:"You’re so good at flirting.",
+    id:"Kamu jago banget ngegombal.",
+    answers:["of course","maybe"]
+  },
+
+  {
+    speaker:"B",
+    en:"Of course.",
+    id:"Tentu saja.",
+    answers:["haha","nice"]
+  },
+
+  {
+    speaker:"A",
+    en:"What’s your favorite drink?",
+    id:"Minuman favoritmu apa?",
+    answers:["milk tea","coffee"]
+  },
+
+  {
+    speaker:"B",
+    en:"Milk tea.",
+    id:"Milk tea.",
+    answers:["is it sweet","sweet"]
+  },
+
+  {
+    speaker:"A",
+    en:"Is it sweet?",
+    id:"Manis?",
+    answers:["very sweet","yes"]
+  },
+
+  {
+    speaker:"B",
+    en:"Very sweet.",
+    id:"Sangat manis.",
+    answers:["maybe because you are so sweet"]
+  },
+
+  {
+    speaker:"A",
+    en:"Maybe because you’re so sweet.",
+    id:"Mungkin karena kamu sangat manis.",
+    answers:["i like that line","haha"]
+  },
+
+  {
+    speaker:"B",
+    en:"I like that line.",
+    id:"Aku suka gombalan itu.",
+    answers:["thank you","glad you like it"]
+  },
+
+  {
+    speaker:"A",
+    en:"You’re smart and funny.",
+    id:"Kamu pintar dan lucu.",
+    answers:["yeah because i am smart"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yeah, because I’m smart.",
+    id:"Iya, karena aku pintar.",
+    answers:["haha","true"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you have Instagram?",
+    id:"Kamu punya Instagram?",
+    answers:["yes i do","yeah"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yeah, I do.",
+    id:"Iya, punya.",
+    answers:["my name is dika"]
+  },
+
+  {
+    speaker:"A",
+    en:"My name is Dika.",
+    id:"Namaku Dika.",
+    answers:["nice to meet you dika"]
+  },
+
+  {
+    speaker:"B",
+    en:"Nice to meet you, Dika.",
+    id:"Senang bertemu denganmu, Dika.",
+    answers:["nice to meet you too"]
+  },
+
+  {
+    speaker:"A",
+    en:"I’m from Indonesia.",
+    id:"Aku dari Indonesia.",
+    answers:["really","wow"]
+  },
+
+  {
+    speaker:"B",
+    en:"Really? I visited Bali last week.",
+    id:"Serius? Aku baru mengunjungi Bali minggu lalu.",
+    answers:["why didnt you tell me"]
+  },
+
+  {
+    speaker:"A",
+    en:"Why didn’t you tell me?",
+    id:"Kenapa kamu tidak bilang?",
+    answers:["haha","sorry"]
+  },
+
+  {
+    speaker:"B",
+    en:"Your English is not bad, by the way.",
+    id:"Ngomong-ngomong, bahasa Inggrismu tidak buruk.",
+    answers:["thank you"]
+  },
+
+  {
+    speaker:"A",
+    en:"Thank you. You’re beautiful and funny too.",
+    id:"Terima kasih. Kamu juga cantik dan lucu.",
+    answers:["i have beauty brains and humor"]
+  },
+
+  {
+    speaker:"B",
+    en:"I have beauty, brains, and humor.",
+    id:"Aku punya kecantikan, otak, dan humor.",
+    answers:["that is dangerous"]
+  },
+
+  {
+    speaker:"A",
+    en:"That’s dangerous.",
+    id:"Itu berbahaya.",
+    answers:["haha","maybe"]
+  },
+
+  {
+    speaker:"B",
+    en:"Do you have a type?",
+    id:"Kamu punya tipe cewek?",
+    answers:["yeah you are my type"]
+  },
+
+  {
+    speaker:"A",
+    en:"Yeah. You’re my type.",
+    id:"Iya. Kamu tipeku.",
+    answers:["aww","cute"]
+  },
+
+  {
+    speaker:"B",
+    en:"I like handsome guys with muscles.",
+    id:"Aku suka cowok tampan yang berotot.",
+    answers:["i am still working on it"]
+  },
+
+  {
+    speaker:"A",
+    en:"I’m still working on it.",
+    id:"Aku masih berusaha untuk itu.",
+    answers:["you are so shy"]
+  },
+
+  {
+    speaker:"B",
+    en:"You’re so shy.",
+    id:"Kamu pemalu sekali.",
+    answers:["maybe a little"]
+  },
+
+  {
+    speaker:"A",
+    en:"I like making friends from other countries.",
+    id:"Aku suka berteman dengan orang dari negara lain.",
+    answers:["so we are just friends"]
+  },
+
+  {
+    speaker:"B",
+    en:"So, we’re just friends?",
+    id:"Jadi, kita cuma teman?",
+    answers:["maybe more than friends","haha"]
+  }
 ];
 
-    let currentTopic = 0;
-    let countdown;
+let current = 0;
 
-    const volumeSlider = document.getElementById('volume');
-    const timerSlider = document.getElementById('timerSetting');
-    const speedSlider = document.getElementById('speed');
+const chat = document.getElementById("chat");
 
-    volumeSlider.addEventListener('input', () => {
-      document.getElementById('volumeValue').innerText = Math.round(volumeSlider.value * 100) + '%';
-    });
+const micBtn = document.getElementById("micBtn");
 
-    timerSlider.addEventListener('input', () => {
-      document.getElementById('timerValue').innerText = timerSlider.value + ' Menit';
-    });
+const result = document.getElementById("result");
 
-    speedSlider.addEventListener('input', () => {
-      document.getElementById('speedValue').innerText = speedSlider.value + 'x';
-    });
+const score = document.getElementById("score");
 
-    function loadTopic() {
-      document.getElementById('practiceText').innerText = topics[currentTopic].en;
-      document.getElementById('translationText').innerText = topics[currentTopic].id;
+const statusText = document.getElementById("status");
+
+function addMessage(data){
+
+  const div = document.createElement("div");
+
+  div.className =
+    data.speaker === "A"
+    ? "message ai"
+    : "message user";
+
+  div.innerHTML = `
+    <strong>${data.speaker}</strong><br>
+    ${data.en}
+
+    <div class="translation">
+      ${data.id}
+    </div>
+
+    <div class="answer-box">
+      <div class="answer-title">
+        ✅ Answer Key:
+      </div>
+      <div class="answer-content" style="display:none">
+        ${data.answers.join("<br>")}
+      </div>
+    </div>
+  `;
+
+  chat.appendChild(div);
+
+  chat.scrollTop = chat.scrollHeight;
+
+}
+
+function loadConversation(){
+
+  if(current >= conversations.length){
+
+    statusText.innerHTML =
+      "🎉 Training Complete!";
+
+    result.innerHTML =
+      "Amazing job!";
+
+    speak("Training complete");
+
+    return;
+  }
+
+  const data = conversations[current];
+
+  addMessage(data);
+
+  speak(data.en);
+
+}
+
+function speak(text){
+
+  const speech =
+    new SpeechSynthesisUtterance(text);
+
+  speech.lang = "en-US";
+
+  speech.rate = 1;
+
+  speechSynthesis.speak(speech);
+
+}
+
+function showAnswer(){
+
+  const contents =
+    document.querySelectorAll(".answer-content");
+
+  if(contents.length > 0){
+
+    contents[contents.length - 1]
+      .style.display = "block";
+
+  }
+
+}
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+const recognition =
+  new SpeechRecognition();
+
+recognition.lang = "en-US";
+
+recognition.continuous = false;
+
+recognition.interimResults = false;
+
+micBtn.onclick = () => {
+
+  micBtn.classList.add("active");
+
+  result.innerHTML = "🎧 Listening...";
+
+  recognition.start();
+
+};
+
+recognition.onresult = (event) => {
+
+  micBtn.classList.remove("active");
+
+  const transcript =
+    event.results[0][0].transcript.toLowerCase();
+
+  result.innerHTML =
+    `🗣 You said: ${transcript}`;
+
+  checkAnswer(transcript);
+
+};
+
+recognition.onerror = () => {
+
+  micBtn.classList.remove("active");
+
+  result.innerHTML =
+    "❌ Microphone error";
+
+};
+
+function checkAnswer(userText){
+
+  const answers =
+    conversations[current].answers;
+
+  let matched = false;
+
+  answers.forEach(answer => {
+
+    if(userText.includes(answer)){
+
+      matched = true;
+
     }
 
-    function speakText() {
+  });
 
-      speechSynthesis.cancel();
+  if(matched){
 
-      const speech = new SpeechSynthesisUtterance(topics[currentTopic].en);
+    score.innerHTML =
+      "⭐ Pronunciation Score: 92%";
 
-      speech.lang = 'en-US';
-      speech.volume = volumeSlider.value;
-      speech.rate = speedSlider.value;
+    statusText.innerHTML =
+      "✅ Excellent Answer!";
 
-      speech.onend = () => {
-        document.getElementById('practiceText').classList.remove('text-show');
-        document.getElementById('translationText').classList.remove('text-show');
-        startTimer();
-      };
+    speak("Excellent");
 
-      speechSynthesis.speak(speech);
-    }
+  }else{
 
-    function startPractice() {
+    score.innerHTML =
+      "⭐ Pronunciation Score: 45%";
 
-      document.getElementById('screen1').classList.add('hidden');
-      document.getElementById('screen2').classList.remove('hidden');
+    statusText.innerHTML =
+      "😅 Try Again";
 
-      loadTopic();
+    speak("Try again");
 
-      document.getElementById('practiceText').classList.add('text-show');
-      document.getElementById('translationText').classList.add('text-show');
+  }
 
-      speakText();
-    }
+}
 
-    function startTimer() {
+function nextConversation(){
 
-      clearInterval(countdown);
+  current++;
 
-      let minutes = parseInt(timerSlider.value);
-      let time = minutes * 60;
+  loadConversation();
 
-      countdown = setInterval(() => {
+}
 
-        let mins = Math.floor(time / 60);
-        let secs = time % 60;
+loadConversation();
 
-        mins = mins < 10 ? '0' + mins : mins;
-        secs = secs < 10 ? '0' + secs : secs;
-
-        document.getElementById('timer').innerText = `${mins}:${secs}`;
-
-        if(time <= 0) {
-          clearInterval(countdown);
-          document.getElementById('timer').innerText = 'Selesai';
-        }
-
-        time--;
-
-      }, 1000);
-    }
-
-    function showAnswer() {
-      document.getElementById('practiceText').classList.add('text-show');
-      document.getElementById('translationText').classList.add('text-show');
-    }
-
-    function repeatVoice() {
-
-      clearInterval(countdown);
-
-      document.getElementById('practiceText').classList.add('text-show');
-      document.getElementById('translationText').classList.add('text-show');
-
-      speakText();
-    }
-
-    function nextTopic() {
-
-      clearInterval(countdown);
-
-      currentTopic++;
-
-      if(currentTopic >= topics.length) {
-        currentTopic = 0;
-      }
-
-      loadTopic();
-
-      document.getElementById('practiceText').classList.add('text-show');
-      document.getElementById('translationText').classList.add('text-show');
-
-      speakText();
-    }
-
-  </script>
+</script>
 
 </body>
 </html>
