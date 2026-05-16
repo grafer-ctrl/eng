@@ -1,447 +1,784 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Present Perfect Continuous</title>
+<title>Latihan Bicara Ala Ome TV</title>
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
 }
 
 body{
-    background:#f4f7fb;
-    padding:20px;
-    color:#222;
-    line-height:1.6;
+  background:#0f172a;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
 }
 
-.container{
-    max-width:1100px;
-    margin:auto;
+.app{
+  width:100%;
+  max-width:550px;
+  background:#111827;
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
 }
 
-.card{
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    margin-bottom:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+.header{
+  background:#1e293b;
+  padding:20px;
+  text-align:center;
 }
 
-h1{
-    text-align:center;
-    color:#2563eb;
-    margin-bottom:20px;
+.header h1{
+  font-size:26px;
 }
 
-h2{
-    color:#1d4ed8;
-    margin-bottom:10px;
+.header p{
+  color:#94a3b8;
+  margin-top:5px;
 }
 
-.rumus{
-    background:#eef4ff;
-    padding:20px;
-    border-radius:15px;
-    margin-top:15px;
+.chat{
+  height:500px;
+  overflow-y:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
 }
 
-.example{
-    background:#f9fafb;
-    border-left:5px solid #2563eb;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
+.message{
+  max-width:85%;
+  padding:15px;
+  border-radius:18px;
+  line-height:1.5;
+  animation:fade .3s ease;
 }
 
-.highlight{
-    color:#2563eb;
-    font-weight:bold;
+.ai{
+  align-self:flex-start;
+  background:#2563eb;
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:15px;
-    margin-top:20px;
+.user{
+  align-self:flex-end;
+  background:#374151;
 }
 
-.box{
-    background:#2563eb;
-    color:white;
-    padding:20px;
-    border-radius:15px;
+.translation{
+  margin-top:8px;
+  font-size:13px;
+  color:#d1d5db;
 }
 
-.memory{
-    background:#dcfce7;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
+.answer-box{
+  margin-top:12px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+  font-size:14px;
 }
 
-.score-box{
-    position:sticky;
-    top:10px;
-    background:#2563eb;
-    color:white;
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    margin-bottom:20px;
-    z-index:10;
+.answer-title{
+  color:#facc15;
+  margin-bottom:5px;
 }
 
-.quiz-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:15px;
-    margin-top:20px;
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
-.question{
-    background:#f3f4f6;
-    padding:20px;
-    border-radius:15px;
+.bottom{
+  background:#1e293b;
+  padding:20px;
 }
 
-.question p{
-    margin-bottom:15px;
-    font-weight:bold;
+.status{
+  text-align:center;
+  margin-bottom:15px;
+  color:#facc15;
 }
 
-button{
-    padding:10px 15px;
-    margin:5px;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
-    font-size:15px;
+.mic-area{
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
 }
 
-button:hover{
-    background:#1d4ed8;
+.mic{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#3b82f6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.mic.active{
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  0%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(59,130,246,.7);
+  }
+
+  70%{
+    transform:scale(1.1);
+    box-shadow:0 0 0 30px rgba(59,130,246,0);
+  }
+
+  100%{
+    transform:scale(1);
+  }
 }
 
 .result{
-    margin-top:10px;
-    font-weight:bold;
+  text-align:center;
+  min-height:40px;
+  margin-bottom:15px;
 }
 
-.finish{
-    margin-top:30px;
-    text-align:center;
+.score{
+  text-align:center;
+  color:#cbd5e1;
+  margin-bottom:20px;
 }
 
-.final-score{
-    margin-top:20px;
-    font-size:24px;
-    font-weight:bold;
-    color:#2563eb;
+.controls{
+  display:flex;
+  gap:10px;
 }
 
-@media(max-width:600px){
+button{
+  flex:1;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  color:white;
+  font-size:15px;
+}
 
-    body{
-        padding:10px;
-    }
+.next-btn{
+  background:#22c55e;
+}
 
-    .card{
-        padding:18px;
-    }
-
-    h1{
-        font-size:28px;
-    }
-
+.show-btn{
+  background:#f59e0b;
 }
 
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="app">
 
-<div class="score-box">
-    <h2>🎯 Score</h2>
-    <div id="score">0 / 50</div>
-</div>
+  <div class="header">
+    <h1>Latihan Bicara Ala Ome Tv</h1>
+    <p>Practice Real English Conversation, Jawab dengan B Inggris Tanpa Takut Salah, jawab dengan speaker, audio anda akan di evaluasi oleh sistem</p>
+  </div>
 
-<div class="card">
+  <div class="chat" id="chat"></div>
 
-<h1>📖 PRESENT PERFECT CONTINUOUS</h1>
+  <div class="bottom">
 
-<p>
-Digunakan untuk:
-<span class="highlight">
-aktivitas yang sudah dimulai dan masih berlangsung sampai sekarang.
-</span>
-</p>
+    <div class="status" id="status">
+      🎤 Press microphone and answer
+    </div>
 
-<div class="rumus">
+    <div class="mic-area">
+      <div class="mic" id="micBtn">🎤</div>
+    </div>
 
-<h2>📐 Rumus</h2>
+    <div class="result" id="result"></div>
 
-<p><b>(+)</b> S + have/has + been + V-ing + O</p>
-<p><b>(-)</b> S + have/has + not + been + V-ing + O</p>
-<p><b>(?)</b> Have/Has + S + been + V-ing + O?</p>
+    <div class="score" id="score">
+      Pronunciation Score: --
+    </div>
 
-</div>
+    <div class="controls">
+      <button class="show-btn" onclick="showAnswer()">
+        Show Answer
+      </button>
 
-<div class="example">
+      <button class="next-btn" onclick="nextConversation()">
+        Next
+      </button>
+    </div>
 
-<h2>📝 Contoh</h2>
-
-<p><b>(+)</b> She has been waiting for an hour.</p>
-<p>Dia sudah menunggu selama satu jam.</p>
-
-<br>
-
-<p><b>(-)</b> She has not been waiting for an hour.</p>
-<p>Dia belum menunggu selama satu jam.</p>
-
-<br>
-
-<p><b>(?)</b> Has she been waiting for an hour?</p>
-<p>Apakah dia sudah menunggu selama satu jam?</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>🔥 Trik Cepat Hafal</h2>
-
-<div class="grid">
-
-<div class="box">
-<h3>1️⃣ Kata Kunci</h3>
-<p>
-for, since, all day,
-recently, lately
-</p>
-</div>
-
-<div class="box">
-<h3>2️⃣ Have / Has Been</h3>
-<p>
-I/You/We/They → have been
-<br><br>
-He/She/It → has been
-</p>
-</div>
-
-<div class="box">
-<h3>3️⃣ Gunakan Verb + ING</h3>
-<p>
-study → studying
-<br>
-wait → waiting
-<br>
-play → playing
-</p>
-</div>
-
-</div>
-
-<div class="memory">
-
-<h2>🧠 Cara Cepat Paham</h2>
-
-<p>✅ Selalu pakai HAVE/HAS + BEEN</p>
-<p>✅ Kata kerja harus tambah ING</p>
-<p>✅ Dipakai untuk aktivitas yang masih berlangsung</p>
-<p>✅ Kata kunci sering memakai FOR dan SINCE</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>🎮 Quiz Interaktif 50 Soal</h2>
-
-<div class="quiz-container" id="quizContainer"></div>
-
-<div class="finish">
-
-<button onclick="showFinalScore()">
-Lihat Hasil
-</button>
-
-<div class="final-score" id="finalScore"></div>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 
 <script>
 
-const quizData = [
+const conversations = [
+  {
+    speaker:"A",
+    en:"How old are you?",
+    id:"Umurmu berapa?",
+    answers:["i am nineteen years old","nineteen"]
+  },
 
-{q:"1. She ___ been studying all day.",a:"has",o:["have","has"]},
-{q:"2. They ___ been playing football.",a:"have",o:["has","have"]},
-{q:"3. I ___ been waiting here.",a:"have",o:["have","has"]},
-{q:"4. He ___ been sleeping since noon.",a:"has",o:["has","have"]},
-{q:"5. We ___ been working hard.",a:"have",o:["has","have"]},
+  {
+    speaker:"B",
+    en:"I’m nineteen years old.",
+    id:"Aku berumur sembilan belas tahun.",
+    answers:["you look younger than your age"]
+  },
 
-{q:"6. She has been ___ for two hours.",a:"studying",o:["study","studying"]},
-{q:"7. I have been ___ TV.",a:"watching",o:["watch","watching"]},
-{q:"8. They have been ___ English.",a:"learning",o:["learn","learning"]},
-{q:"9. He has been ___ games.",a:"playing",o:["play","playing"]},
-{q:"10. We have been ___ dinner.",a:"cooking",o:["cook","cooking"]},
+  {
+    speaker:"A",
+    en:"You look younger than your age.",
+    id:"Kamu terlihat lebih muda dari umurmu.",
+    answers:["really thank you","thank you"]
+  },
 
-{q:"11. ___ she been reading?",a:"Has",o:["Has","Have"]},
-{q:"12. ___ they been working?",a:"Have",o:["Have","Has"]},
-{q:"13. ___ you been waiting long?",a:"Have",o:["Do","Have"]},
-{q:"14. ___ he been sleeping?",a:"Has",o:["Has","Does"]},
-{q:"15. ___ we been talking too much?",a:"Have",o:["Have","Has"]},
+  {
+    speaker:"B",
+    en:"Really? Thank you.",
+    id:"Benarkah? Terima kasih.",
+    answers:["you are welcome"]
+  },
 
-{q:"16. She has not been ___.",a:"studying",o:["study","studying"]},
-{q:"17. They have not been ___.",a:"working",o:["work","working"]},
-{q:"18. I have not been ___.",a:"sleeping",o:["sleep","sleeping"]},
-{q:"19. He has not been ___.",a:"running",o:["run","running"]},
-{q:"20. We have not been ___.",a:"playing",o:["play","playing"]},
+  {
+    speaker:"A",
+    en:"When is your birthday?",
+    id:"Kapan ulang tahunmu?",
+    answers:["my birthday is in july"]
+  },
 
-{q:"21. My mother has been ___ since morning.",a:"cooking",o:["cook","cooking"]},
-{q:"22. The dog has been ___ loudly.",a:"barking",o:["bark","barking"]},
-{q:"23. They have been ___ basketball.",a:"playing",o:["play","playing"]},
-{q:"24. She has been ___ music.",a:"listening to",o:["listen","listening to"]},
-{q:"25. I have been ___ my homework.",a:"doing",o:["do","doing"]},
+  {
+    speaker:"B",
+    en:"My birthday is in July.",
+    id:"Ulang tahunku di bulan Juli.",
+    answers:["nice","cool"]
+  },
 
-{q:"26. We have been ___ English for years.",a:"studying",o:["study","studying"]},
-{q:"27. He has been ___ movies all night.",a:"watching",o:["watch","watching"]},
-{q:"28. They have been ___ online games.",a:"playing",o:["play","playing"]},
-{q:"29. She has been ___ letters.",a:"writing",o:["write","writing"]},
-{q:"30. I have been ___ to school lately.",a:"walking",o:["walk","walking"]},
+  {
+    speaker:"A",
+    en:"Are you still in school?",
+    id:"Kamu masih sekolah?",
+    answers:["yes i am a high school student"]
+  },
 
-{q:"31. ___ they been eating?",a:"Have",o:["Have","Are"]},
-{q:"32. ___ she been talking?",a:"Has",o:["Has","Is"]},
-{q:"33. ___ we been waiting long?",a:"Have",o:["Have","Do"]},
-{q:"34. ___ he been studying English?",a:"Has",o:["Has","Are"]},
-{q:"35. ___ I been speaking too fast?",a:"Have",o:["Have","Am"]},
+  {
+    speaker:"B",
+    en:"Yes, I’m a high school student.",
+    id:"Iya, aku siswa SMA.",
+    answers:["what grade are you in"]
+  },
 
-{q:"36. She has been ___ for three hours.",a:"dancing",o:["dance","dancing"]},
-{q:"37. They have been ___ fast.",a:"running",o:["run","running"]},
-{q:"38. I have been ___ coding recently.",a:"learning",o:["learn","learning"]},
-{q:"39. He has been ___ his room.",a:"cleaning",o:["clean","cleaning"]},
-{q:"40. We have been ___ YouTube videos.",a:"watching",o:["watch","watching"]},
+  {
+    speaker:"A",
+    en:"What grade are you in?",
+    id:"Kamu kelas berapa?",
+    answers:["i am in twelfth grade"]
+  },
 
-{q:"41. My father has been ___ coffee.",a:"drinking",o:["drink","drinking"]},
-{q:"42. The baby has been ___.",a:"crying",o:["cry","crying"]},
-{q:"43. They have been ___ together since morning.",a:"working",o:["work","working"]},
-{q:"44. She has been ___ her phone.",a:"using",o:["use","using"]},
-{q:"45. I have been ___ all day.",a:"working",o:["work","working"]},
+  {
+    speaker:"B",
+    en:"I’m in twelfth grade.",
+    id:"Aku kelas dua belas.",
+    answers:["nice","wow"]
+  },
 
-{q:"46. We have been ___ English recently.",a:"studying",o:["study","studying"]},
-{q:"47. He has been ___ breakfast.",a:"eating",o:["eat","eating"]},
-{q:"48. They have been ___ in the park.",a:"walking",o:["walk","walking"]},
-{q:"49. She has been ___ English.",a:"speaking",o:["speak","speaking"]},
-{q:"50. I have been ___ to music.",a:"listening",o:["listen","listening"]}
+  {
+    speaker:"A",
+    en:"What is your favorite subject?",
+    id:"Pelajaran favoritmu apa?",
+    answers:["i like english the most"]
+  },
 
+  {
+    speaker:"B",
+    en:"I like English the most.",
+    id:"Aku paling suka bahasa Inggris.",
+    answers:["do you like math"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you like math?",
+    id:"Kamu suka matematika?",
+    answers:["not really its difficult for me"]
+  },
+
+  {
+    speaker:"B",
+    en:"Not really. It’s difficult for me.",
+    id:"Tidak terlalu. Itu sulit bagiku.",
+    answers:["same here","me too"]
+  },
+
+  {
+    speaker:"A",
+    en:"Are you a college student?",
+    id:"Kamu mahasiswa?",
+    answers:["yes i study business management"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yes, I study business management.",
+    id:"Iya, aku belajar manajemen bisnis.",
+    answers:["nice major","cool"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you work or study?",
+    id:"Kamu kerja atau sekolah?",
+    answers:["i work part time at a cafe"]
+  },
+
+  {
+    speaker:"B",
+    en:"I work part-time at a café.",
+    id:"Aku kerja paruh waktu di kafe.",
+    answers:["what is your job"]
+  },
+
+  {
+    speaker:"A",
+    en:"What is your job?",
+    id:"Apa pekerjaanmu?",
+    answers:["i am a graphic designer"]
+  },
+
+  {
+    speaker:"B",
+    en:"I’m a graphic designer.",
+    id:"Aku seorang desainer grafis.",
+    answers:["do you enjoy your job"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you enjoy your job?",
+    id:"Kamu menikmati pekerjaanmu?",
+    answers:["yes its fun and interesting"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yes, it’s fun and interesting.",
+    id:"Iya, menyenangkan dan menarik.",
+    answers:["thats great","awesome"]
+  },
+
+  {
+    speaker:"A",
+    en:"What do you usually do after school?",
+    id:"Biasanya kamu ngapain setelah sekolah?",
+    answers:["i usually play games and watch youtube"]
+  },
+
+  {
+    speaker:"B",
+    en:"I usually play games and watch YouTube.",
+    id:"Biasanya aku main game dan nonton YouTube.",
+    answers:["same","nice"]
+  },
+
+  {
+    speaker:"A",
+    en:"What are your hobbies?",
+    id:"Apa hobimu?",
+    answers:["i like listening to music"]
+  },
+
+  {
+    speaker:"B",
+    en:"I like listening to music.",
+    id:"Aku suka mendengarkan musik.",
+    answers:["what kind of music"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you play any sports?",
+    id:"Kamu bermain olahraga?",
+    answers:["yes i play badminton"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yes, I play badminton.",
+    id:"Iya, aku bermain badminton.",
+    answers:["badminton is fun"]
+  },
+
+  {
+    speaker:"A",
+    en:"What do you do in your free time?",
+    id:"Apa yang kamu lakukan di waktu luang?",
+    answers:["i like drawing and reading books"]
+  },
+
+  {
+    speaker:"B",
+    en:"I like drawing and reading books.",
+    id:"Aku suka menggambar dan membaca buku.",
+    answers:["thats cool","nice hobby"]
+  },
+
+  {
+    speaker:"A",
+    en:"Where are you from?",
+    id:"Kamu dari mana?",
+    answers:["i am from seoul south korea"]
+  },
+
+  {
+    speaker:"B",
+    en:"I’m from Seoul, South Korea.",
+    id:"Aku dari Seoul, Korea Selatan.",
+    answers:["is your city beautiful"]
+  },
+
+  {
+    speaker:"A",
+    en:"Is your city beautiful?",
+    id:"Kotamu indah?",
+    answers:["yes especially at night"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yes, especially at night.",
+    id:"Iya, terutama saat malam hari.",
+    answers:["wow","sounds beautiful"]
+  },
+
+  {
+    speaker:"A",
+    en:"What is special about your city?",
+    id:"Apa yang spesial dari kotamu?",
+    answers:["the food and culture are amazing"]
+  },
+
+  {
+    speaker:"B",
+    en:"The food and culture are amazing.",
+    id:"Makanan dan budayanya luar biasa.",
+    answers:["i want to visit someday"]
+  },
+
+  {
+    speaker:"A",
+    en:"Is your city crowded?",
+    id:"Kotamu ramai?",
+    answers:["yes but its very exciting"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yes, but it’s very exciting.",
+    id:"Iya, tapi sangat seru.",
+    answers:["sounds fun"]
+  },
+
+  {
+    speaker:"A",
+    en:"What places should tourists visit there?",
+    id:"Tempat apa yang harus dikunjungi turis di sana?",
+    answers:["they should visit the downtown area"]
+  },
+
+  {
+    speaker:"B",
+    en:"They should visit the downtown area.",
+    id:"Mereka harus mengunjungi pusat kota.",
+    answers:["nice recommendation"]
+  },
+
+  {
+    speaker:"A",
+    en:"Is the weather good in your city?",
+    id:"Apakah cuaca di kotamu bagus?",
+    answers:["yes its usually sunny"]
+  },
+
+  {
+    speaker:"B",
+    en:"Yes, it’s usually sunny.",
+    id:"Iya, biasanya cerah.",
+    answers:["thats nice"]
+  },
+
+  {
+    speaker:"A",
+    en:"What food is famous in your city?",
+    id:"Makanan apa yang terkenal di kotamu?",
+    answers:["spicy noodles are very popular here"]
+  },
+
+  {
+    speaker:"B",
+    en:"Spicy noodles are very popular here.",
+    id:"Mi pedas sangat populer di sini.",
+    answers:["i love spicy food"]
+  },
+
+  {
+    speaker:"A",
+    en:"Do you want to live there forever?",
+    id:"Kamu ingin tinggal di sana selamanya?",
+    answers:["maybe because i love my city"]
+  },
+
+  {
+    speaker:"B",
+    en:"Maybe, because I love my city.",
+    id:"Mungkin, karena aku mencintai kotaku.",
+    answers:["i understand"]
+  },
+
+  {
+    speaker:"A",
+    en:"I want to visit your city someday.",
+    id:"Aku ingin mengunjungi kotamu suatu hari nanti.",
+    answers:["you should come its really fun here"]
+  },
+
+  {
+    speaker:"B",
+    en:"You should come. It’s really fun here.",
+    id:"Kamu harus datang. Di sini sangat menyenangkan.",
+    answers:["thank you"]
+  },
+
+  {
+    speaker:"A",
+    en:"It was nice talking to you.",
+    id:"Senang ngobrol denganmu.",
+    answers:["nice talking to you too bye"]
+  },
+
+  {
+    speaker:"B",
+    en:"Nice talking to you too. Bye.",
+    id:"Senang ngobrol denganmu juga. Dadah.",
+    answers:["bye","goodbye"]
+  }
 ];
 
-const quizContainer = document.getElementById("quizContainer");
+let current = 0;
 
-let score = 0;
-let answered = [];
+const chat = document.getElementById("chat");
 
-quizData.forEach((quiz,index)=>{
+const micBtn = document.getElementById("micBtn");
 
-const div = document.createElement("div");
+const result = document.getElementById("result");
 
-div.classList.add("question");
+const score = document.getElementById("score");
 
-div.innerHTML = `
-<p>${quiz.q}</p>
+const statusText = document.getElementById("status");
 
-<button onclick="checkAnswer(${index}, '${quiz.o[0]}')">
-${quiz.o[0]}
-</button>
+function addMessage(data){
 
-<button onclick="checkAnswer(${index}, '${quiz.o[1]}')">
-${quiz.o[1]}
-</button>
+  const div = document.createElement("div");
 
-<div class="result" id="result${index}"></div>
-`;
+  div.className =
+    data.speaker === "A"
+    ? "message ai"
+    : "message user";
 
-quizContainer.appendChild(div);
+  div.innerHTML = `
+    <strong>${data.speaker}</strong><br>
+    ${data.en}
 
-});
+    <div class="translation">
+      ${data.id}
+    </div>
 
-function checkAnswer(index,selected){
+    <div class="answer-box">
+      <div class="answer-title">
+        ✅ Answer Key:
+      </div>
+      <div class="answer-content" style="display:none">
+        ${data.answers.join("<br>")}
+      </div>
+    </div>
+  `;
 
-if(answered[index]) return;
+  chat.appendChild(div);
 
-answered[index] = true;
-
-const result =
-document.getElementById(`result${index}`);
-
-if(selected === quizData[index].a){
-
-result.innerHTML = "✅ Benar!";
-result.style.color = "green";
-
-score++;
-
-}else{
-
-result.innerHTML =
-`❌ Salah! Jawaban benar: ${quizData[index].a}`;
-
-result.style.color = "red";
+  chat.scrollTop = chat.scrollHeight;
 
 }
 
-document.getElementById("score").innerHTML =
-`${score} / 50`;
+function loadConversation(){
+
+  if(current >= conversations.length){
+
+    statusText.innerHTML =
+      "🎉 Training Complete!";
+
+    result.innerHTML =
+      "Amazing job!";
+
+    speak("Training complete");
+
+    return;
+  }
+
+  const data = conversations[current];
+
+  addMessage(data);
+
+  speak(data.en);
 
 }
 
-function showFinalScore(){
+function speak(text){
 
-let text = "";
+  const speech =
+    new SpeechSynthesisUtterance(text);
 
-if(score >= 45){
+  speech.lang = "en-US";
 
-text =
-"🔥 AMAZING! Kamu sangat paham Present Perfect Continuous!";
+  speech.rate = 1;
 
-}else if(score >= 35){
-
-text =
-"👏 Bagus! Pemahaman kamu sudah kuat.";
-
-}else if(score >= 25){
-
-text =
-"👍 Lumayan! Tinggal latihan lagi.";
-
-}else{
-
-text =
-"📚 Tetap semangat belajar lagi ya!";
-}
-
-document.getElementById("finalScore").innerHTML =
-`Skor Akhir: ${score}/50 <br><br>${text}`;
+  speechSynthesis.speak(speech);
 
 }
+
+function showAnswer(){
+
+  const contents =
+    document.querySelectorAll(".answer-content");
+
+  if(contents.length > 0){
+
+    contents[contents.length - 1]
+      .style.display = "block";
+
+  }
+
+}
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+const recognition =
+  new SpeechRecognition();
+
+recognition.lang = "en-US";
+
+recognition.continuous = false;
+
+recognition.interimResults = false;
+
+micBtn.onclick = () => {
+
+  micBtn.classList.add("active");
+
+  result.innerHTML = "🎧 Listening...";
+
+  recognition.start();
+
+};
+
+recognition.onresult = (event) => {
+
+  micBtn.classList.remove("active");
+
+  const transcript =
+    event.results[0][0].transcript.toLowerCase();
+
+  result.innerHTML =
+    `🗣 You said: ${transcript}`;
+
+  checkAnswer(transcript);
+
+};
+
+recognition.onerror = () => {
+
+  micBtn.classList.remove("active");
+
+  result.innerHTML =
+    "❌ Microphone error";
+
+};
+
+function checkAnswer(userText){
+
+  const answers =
+    conversations[current].answers;
+
+  let matched = false;
+
+  answers.forEach(answer => {
+
+    if(userText.includes(answer)){
+
+      matched = true;
+
+    }
+
+  });
+
+  if(matched){
+
+    score.innerHTML =
+      "⭐ Pronunciation Score: 92%";
+
+    statusText.innerHTML =
+      "✅ Excellent Answer!";
+
+    speak("Excellent");
+
+  }else{
+
+    score.innerHTML =
+      "⭐ Pronunciation Score: 45%";
+
+    statusText.innerHTML =
+      "😅 Try Again";
+
+    speak("Try again");
+
+  }
+
+}
+
+function nextConversation(){
+
+  current++;
+
+  loadConversation();
+
+}
+
+loadConversation();
 
 </script>
 
