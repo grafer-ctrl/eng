@@ -1,444 +1,563 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shadowing Conversation Trainer</title>
 
-<title>Belajar Present Continuous Interaktif</title>
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
-body{
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.6;
-    padding:20px;
-}
-
-.container{
-    max-width:1100px;
-    margin:auto;
-}
-
-.card{
-    background:white;
-    padding:25px;
-    margin-bottom:20px;
-    border-radius:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-}
-
-h1{
-    text-align:center;
-    color:#2563eb;
-    margin-bottom:20px;
-}
-
-h2{
-    color:#1d4ed8;
-    margin-bottom:10px;
-}
-
-h3{
-    margin-bottom:10px;
-}
-
-.rumus{
-    background:#eef4ff;
-    padding:20px;
-    border-radius:15px;
-    margin-top:15px;
-}
-
-.example{
-    background:#f9fafb;
-    border-left:5px solid #2563eb;
-    padding:20px;
-    margin-top:15px;
-    border-radius:10px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:15px;
-    margin-top:20px;
-}
-
-.box{
-    background:#2563eb;
-    color:white;
-    padding:20px;
-    border-radius:15px;
-}
-
-.highlight{
-    color:#2563eb;
-    font-weight:bold;
-}
-
-.memory{
-    background:#dcfce7;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
-}
-
-.quiz-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:15px;
-    margin-top:20px;
-}
-
-.question{
-    background:#f3f4f6;
-    padding:20px;
-    border-radius:15px;
-}
-
-.question p{
-    margin-bottom:10px;
-    font-weight:bold;
-}
-
-button{
-    padding:10px 15px;
-    margin:5px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    background:#2563eb;
-    color:white;
-    font-size:15px;
-}
-
-button:hover{
-    background:#1d4ed8;
-}
-
-.result{
-    margin-top:10px;
-    font-weight:bold;
-}
-
-.score-box{
-    position:sticky;
-    top:10px;
-    background:#2563eb;
-    color:white;
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.finish{
-    margin-top:30px;
-    text-align:center;
-}
-
-.finish button{
-    padding:15px 25px;
-    font-size:18px;
-}
-
-.final-score{
-    margin-top:20px;
-    font-size:25px;
-    font-weight:bold;
-    color:#2563eb;
-}
-
-@media(max-width:600px){
-
-    body{
-        padding:10px;
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
     }
 
-    .card{
-        padding:18px;
+    body{
+      background:#0f172a;
+      color:white;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .app{
+      width:100%;
+      max-width:500px;
+      background:#111827;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 0 30px rgba(0,0,0,0.4);
+    }
+
+    .screen{
+      display:none;
+      padding:25px;
+    }
+
+    .active{
+      display:block;
     }
 
     h1{
-        font-size:28px;
+      font-size:28px;
+      margin-bottom:10px;
     }
 
-}
+    .subtitle{
+      color:#94a3b8;
+      margin-bottom:25px;
+    }
 
-</style>
+    .card{
+      background:#1e293b;
+      padding:20px;
+      border-radius:15px;
+      margin-bottom:20px;
+    }
+
+    .setting{
+      margin-bottom:15px;
+    }
+
+    .setting label{
+      display:block;
+      margin-bottom:8px;
+      color:#cbd5e1;
+    }
+
+    input[type=range]{
+      width:100%;
+    }
+
+    button{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:12px;
+      background:#3b82f6;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    button:hover{
+      transform:scale(1.02);
+    }
+
+    .chat-box{
+      display:flex;
+      flex-direction:column;
+      gap:15px;
+      min-height:350px;
+      margin-bottom:20px;
+    }
+
+    .bubble{
+      max-width:80%;
+      padding:15px;
+      border-radius:15px;
+      line-height:1.5;
+      animation:fadeIn 0.3s ease;
+    }
+
+    .left{
+      background:#1e40af;
+      align-self:flex-start;
+    }
+
+    .right{
+      background:#374151;
+      align-self:flex-end;
+    }
+
+    .speaker{
+      font-size:12px;
+      opacity:0.7;
+      margin-bottom:5px;
+    }
+
+    .translation{
+      margin-top:8px;
+      font-size:14px;
+      color:#cbd5e1;
+      display:none;
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+    }
+
+    .controls button{
+      flex:1;
+    }
+
+    .timer{
+      text-align:center;
+      margin-bottom:15px;
+      color:#facc15;
+      font-size:18px;
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="app">
 
-<div class="score-box">
-    <h2>🎯 Score</h2>
-    <div id="score">0 / 50</div>
-</div>
+  <!-- SCREEN 1 -->
+  <div class="screen active" id="setupScreen">
 
-<div class="card">
+    <h1>Shadowing Trainer</h1>
+    <div class="subtitle">
+      Practice real English conversations naturally.
+    </div>
 
-<h1>📖 PRESENT CONTINUOUS TENSE</h1>
+    <div class="card">
+      <h3>TOPIC</h3>
+      <p>Talking About Country</p>
+      <br>
 
-<p>
-Digunakan untuk:
-<span class="highlight">
-aktivitas yang sedang terjadi sekarang dan rencana dekat.
-</span>
-</p>
+      <h3>LEVEL</h3>
+      <p>Beginner</p>
+    </div>
 
-<div class="rumus">
+    <div class="card">
 
-<h2>📐 Rumus</h2>
+      <div class="setting">
+        <label>Voice Speed</label>
+        <input type="range" min="0.5" max="1.5" step="0.1" value="1" id="speed">
+      </div>
 
-<p><b>(+)</b> S + am/is/are + V-ing + O</p>
-<p><b>(-)</b> S + am/is/are + not + V-ing + O</p>
-<p><b>(?)</b> Am/Is/Are + S + V-ing + O?</p>
+      <div class="setting">
+        <label>Volume</label>
+        <input type="range" min="0" max="1" step="0.1" value="1" id="volume">
+      </div>
 
-</div>
+      <div class="setting">
+        <label>Timer (seconds)</label>
+        <input type="range" min="3" max="10" step="1" value="5" id="timerRange">
+      </div>
 
-<div class="example">
+    </div>
 
-<h2>📝 Contoh</h2>
+    <button onclick="startTraining()">
+      START TRAINING
+    </button>
 
-<p><b>(+)</b> They are studying English now.</p>
-<p>Mereka sedang belajar bahasa Inggris sekarang.</p>
+  </div>
 
-<br>
+  <!-- SCREEN 2 -->
+  <div class="screen" id="chatScreen">
 
-<p><b>(-)</b> They are not studying English now.</p>
-<p>Mereka tidak sedang belajar bahasa Inggris sekarang.</p>
+    <div class="timer" id="timerText">
+      Listen and repeat...
+    </div>
 
-<br>
+    <div class="chat-box" id="chatBox"></div>
 
-<p><b>(?)</b> Are they studying English now?</p>
-<p>Apakah mereka sedang belajar bahasa Inggris sekarang?</p>
+    <div class="controls">
+      <button onclick="showTranslation()">
+        Show Translation
+      </button>
 
-</div>
+      <button onclick="nextConversation()">
+        Next
+      </button>
+    </div>
 
-</div>
-
-<div class="card">
-
-<h2>🔥 Trik Cepat Hafal</h2>
-
-<div class="grid">
-
-<div class="box">
-<h3>1️⃣ Kata Kunci</h3>
-<p>
-now, right now, at the moment,
-currently, today
-</p>
-</div>
-
-<div class="box">
-<h3>2️⃣ Gunakan TO BE</h3>
-<p>
-I → am
-<br>
-He/She/It → is
-<br>
-You/We/They → are
-</p>
-</div>
-
-<div class="box">
-<h3>3️⃣ Verb + ING</h3>
-<p>
-play → playing
-<br>
-study → studying
-<br>
-read → reading
-</p>
-</div>
-
-</div>
-
-<div class="memory">
-
-<h2>🧠 Cara Super Cepat Paham</h2>
-
-<p>✅ Selalu pakai am/is/are</p>
-<p>✅ Kata kerja harus tambah ING</p>
-<p>✅ Negatif = am/is/are + not</p>
-<p>✅ Pertanyaan = Am/Is/Are di depan</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>🎮 Quiz Interaktif 50 Soal</h2>
-
-<div class="quiz-container" id="quizContainer"></div>
-
-<div class="finish">
-<button onclick="showFinalScore()">Lihat Hasil</button>
-
-<div class="final-score" id="finalScore"></div>
-</div>
-
-</div>
+  </div>
 
 </div>
 
 <script>
 
-const quizData = [
+const conversations = [
+  {
+    speaker:"A",
+    en:"Gabi, how are you?",
+    id:"Gabi, apa kabar?"
+  },
 
-{q:"1. She ___ studying now.",a:"is",options:["is","are"]},
-{q:"2. They ___ playing football.",a:"are",options:["is","are"]},
-{q:"3. I ___ eating breakfast.",a:"am",options:["am","is"]},
-{q:"4. He ___ watching TV.",a:"is",options:["is","am"]},
-{q:"5. We ___ learning English.",a:"are",options:["are","is"]},
-{q:"6. She is ___ a book.",a:"reading",options:["read","reading"]},
-{q:"7. They are ___ music.",a:"listening",options:["listen","listening"]},
-{q:"8. I am ___ coffee.",a:"drinking",options:["drink","drinking"]},
-{q:"9. He is ___ a game.",a:"playing",options:["play","playing"]},
-{q:"10. We are ___ dinner.",a:"cooking",options:["cook","cooking"]},
+  {
+    speaker:"B",
+    en:"I’ve been great, just super busy lately.",
+    id:"Aku baik-baik saja, cuma akhir-akhir ini sangat sibuk."
+  },
 
-{q:"11. ___ she sleeping?",a:"Is",options:["Do","Is"]},
-{q:"12. ___ they studying?",a:"Are",options:["Are","Does"]},
-{q:"13. ___ you working now?",a:"Are",options:["Are","Is"]},
-{q:"14. ___ he reading?",a:"Is",options:["Is","Do"]},
-{q:"15. ___ I talking too fast?",a:"Am",options:["Am","Are"]},
+  {
+    speaker:"A",
+    en:"Every time I text you, you’re always busy.",
+    id:"Setiap kali aku chat kamu, kamu selalu sibuk."
+  },
 
-{q:"16. She ___ not eating.",a:"is",options:["is","are"]},
-{q:"17. They ___ not sleeping.",a:"are",options:["is","are"]},
-{q:"18. I ___ not studying.",a:"am",options:["am","is"]},
-{q:"19. He ___ not running.",a:"is",options:["are","is"]},
-{q:"20. We ___ not playing.",a:"are",options:["am","are"]},
+  {
+    speaker:"B",
+    en:"I only have about 10 minutes before I leave.",
+    id:"Aku cuma punya waktu sekitar 10 menit sebelum pergi."
+  },
 
-{q:"21. My mother is ___ now.",a:"cooking",options:["cook","cooking"]},
-{q:"22. The dog is ___ loudly.",a:"barking",options:["bark","barking"]},
-{q:"23. They are ___ basketball.",a:"playing",options:["play","playing"]},
-{q:"24. She is ___ to music.",a:"listening",options:["listen","listening"]},
-{q:"25. I am ___ my homework.",a:"doing",options:["do","doing"]},
+  {
+    speaker:"A",
+    en:"Why didn’t you tell me? I wanted to surprise you.",
+    id:"Kenapa kamu tidak bilang? Aku ingin mengejutkanmu."
+  },
 
-{q:"26. We are ___ English now.",a:"studying",options:["study","studying"]},
-{q:"27. He is ___ a movie.",a:"watching",options:["watch","watching"]},
-{q:"28. They are ___ online games.",a:"playing",options:["play","playing"]},
-{q:"29. She is ___ a letter.",a:"writing",options:["write","writing"]},
-{q:"30. I am ___ to school.",a:"going",options:["go","going"]},
+  {
+    speaker:"B",
+    en:"That’s actually sweet.",
+    id:"Itu sebenarnya manis."
+  },
 
-{q:"31. ___ they eating?",a:"Are",options:["Are","Am"]},
-{q:"32. ___ she talking?",a:"Is",options:["Do","Is"]},
-{q:"33. ___ we waiting?",a:"Are",options:["Are","Does"]},
-{q:"34. ___ he sleeping now?",a:"Is",options:["Is","Are"]},
-{q:"35. ___ I speaking clearly?",a:"Am",options:["Am","Do"]},
+  {
+    speaker:"A",
+    en:"Guys, she’s a dance teacher.",
+    id:"Guys, dia guru dance."
+  },
 
-{q:"36. She ___ dancing now.",a:"is",options:["is","am"]},
-{q:"37. They ___ running fast.",a:"are",options:["is","are"]},
-{q:"38. I ___ learning coding.",a:"am",options:["am","are"]},
-{q:"39. He ___ cleaning his room.",a:"is",options:["are","is"]},
-{q:"40. We ___ watching YouTube.",a:"are",options:["is","are"]},
+  {
+    speaker:"B",
+    en:"Yeah, I’m going to practice soon.",
+    id:"Iya, aku sebentar lagi latihan."
+  },
 
-{q:"41. My father is ___ coffee.",a:"drinking",options:["drink","drinking"]},
-{q:"42. The baby is ___.",a:"crying",options:["cry","crying"]},
-{q:"43. They are ___ together.",a:"studying",options:["study","studying"]},
-{q:"44. She is ___ her phone.",a:"using",options:["use","using"]},
-{q:"45. I am ___ now.",a:"working",options:["work","working"]},
+  {
+    speaker:"A",
+    en:"How was your day?",
+    id:"Bagaimana harimu?"
+  },
 
-{q:"46. We are ___ TV.",a:"watching",options:["watch","watching"]},
-{q:"47. He is ___ breakfast.",a:"eating",options:["eat","eating"]},
-{q:"48. They are ___ in the park.",a:"walking",options:["walk","walking"]},
-{q:"49. She is ___ English.",a:"speaking",options:["speak","speaking"]},
-{q:"50. I am ___ music.",a:"listening to",options:["listen","listening to"]}
+  {
+    speaker:"B",
+    en:"It was okay. I had school and some practice.",
+    id:"Lumayan. Aku sekolah dan ada latihan juga."
+  },
 
+  {
+    speaker:"A",
+    en:"You look so beautiful today.",
+    id:"Kamu terlihat sangat cantik hari ini."
+  },
+
+  {
+    speaker:"B",
+    en:"Thank you.",
+    id:"Terima kasih."
+  },
+
+  {
+    speaker:"A",
+    en:"Did you eat already?",
+    id:"Kamu sudah makan?"
+  },
+
+  {
+    speaker:"B",
+    en:"Yeah, but I can’t really eat too much before practice.",
+    id:"Iya, tapi aku tidak bisa makan terlalu banyak sebelum latihan."
+  },
+
+  {
+    speaker:"A",
+    en:"How many times do you eat every day?",
+    id:"Kamu makan berapa kali sehari?"
+  },
+
+  {
+    speaker:"B",
+    en:"Usually two or three times.",
+    id:"Biasanya dua atau tiga kali."
+  },
+
+  {
+    speaker:"A",
+    en:"You look skinnier now.",
+    id:"Kamu terlihat lebih kurus sekarang."
+  },
+
+  {
+    speaker:"B",
+    en:"No, trust me, I’m not dieting.",
+    id:"Tidak, percaya deh, aku tidak diet."
+  },
+
+  {
+    speaker:"A",
+    en:"How old are you again? Nineteen?",
+    id:"Umurmu berapa lagi? Sembilan belas?"
+  },
+
+  {
+    speaker:"B",
+    en:"Yeah, nineteen.",
+    id:"Iya, sembilan belas."
+  },
+
+  {
+    speaker:"A",
+    en:"Do you still remember my age?",
+    id:"Kamu masih ingat umurku?"
+  },
+
+  {
+    speaker:"B",
+    en:"You lied to me before, so I don’t know anymore.",
+    id:"Kamu pernah bohong sebelumnya, jadi aku tidak tahu lagi."
+  },
+
+  {
+    speaker:"A",
+    en:"My nickname is Deion.",
+    id:"Nama panggilanku Deion."
+  },
+
+  {
+    speaker:"B",
+    en:"What’s your full name?",
+    id:"Siapa nama lengkapmu?"
+  },
+
+  {
+    speaker:"A",
+    en:"My full name is “I’m the only one for you.”",
+    id:"Nama lengkapku adalah “Aku satu-satunya untukmu.”"
+  },
+
+  {
+    speaker:"B",
+    en:"Oh my God, that’s cheesy.",
+    id:"Ya ampun, itu gombal banget."
+  },
+
+  {
+    speaker:"A",
+    en:"How’s the weather in Poland?",
+    id:"Bagaimana cuaca di Polandia?"
+  },
+
+  {
+    speaker:"B",
+    en:"It’s kind of cold now.",
+    id:"Sekarang agak dingin."
+  },
+
+  {
+    speaker:"A",
+    en:"I just wanted to talk to you for 10 minutes.",
+    id:"Aku cuma ingin ngobrol denganmu selama 10 menit."
+  },
+
+  {
+    speaker:"B",
+    en:"I appreciate that.",
+    id:"Aku menghargai itu."
+  },
+
+  {
+    speaker:"A",
+    en:"Thank you for making time for me.",
+    id:"Terima kasih sudah meluangkan waktu untukku."
+  },
+
+  {
+    speaker:"B",
+    en:"Of course.",
+    id:"Tentu saja."
+  },
+
+  {
+    speaker:"A",
+    en:"Be careful on your way.",
+    id:"Hati-hati di jalan ya."
+  },
+
+  {
+    speaker:"B",
+    en:"You too. Talk to you soon.",
+    id:"Kamu juga. Sampai ngobrol lagi nanti."
+  }
 ];
 
-const quizContainer = document.getElementById("quizContainer");
+let current = 0;
 
-let score = 0;
-let answered = [];
+const chatBox = document.getElementById("chatBox");
 
-quizData.forEach((quiz,index)=>{
+function startTraining(){
 
-const div = document.createElement("div");
-div.classList.add("question");
+  document.getElementById("setupScreen")
+    .classList.remove("active");
 
-div.innerHTML = `
-<p>${quiz.q}</p>
+  document.getElementById("chatScreen")
+    .classList.add("active");
 
-<button onclick="checkAnswer(${index}, '${quiz.options[0]}')">
-${quiz.options[0]}
-</button>
-
-<button onclick="checkAnswer(${index}, '${quiz.options[1]}')">
-${quiz.options[1]}
-</button>
-
-<div class="result" id="result${index}"></div>
-`;
-
-quizContainer.appendChild(div);
-
-});
-
-function checkAnswer(index,selected){
-
-if(answered[index]) return;
-
-answered[index] = true;
-
-const result = document.getElementById(`result${index}`);
-
-if(selected === quizData[index].a){
-
-result.innerHTML = "✅ Benar!";
-result.style.color = "green";
-
-score++;
-
-}else{
-
-result.innerHTML =
-`❌ Salah! Jawaban benar: ${quizData[index].a}`;
-
-result.style.color = "red";
+  showConversation();
 
 }
 
-document.getElementById("score").innerHTML =
-`${score} / 50`;
+function showConversation(){
+
+  if(current >= conversations.length){
+
+    document.getElementById("timerText")
+      .innerHTML = "🎉 Training Complete!";
+
+    return;
+  }
+
+  const data = conversations[current];
+
+  const bubble = document.createElement("div");
+
+  bubble.className =
+    "bubble " + (data.speaker === "A" ? "left" : "right");
+
+  bubble.innerHTML = `
+
+    <div class="speaker">
+      ${data.speaker}
+    </div>
+
+    <div class="english">
+      ${data.en}
+    </div>
+
+    <div class="translation">
+      ${data.id}
+    </div>
+
+  `;
+
+  chatBox.appendChild(bubble);
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  speakText(data.en);
+
+  startTimer();
 
 }
 
-function showFinalScore(){
+function showTranslation(){
 
-let text = "";
+  const translations =
+    document.querySelectorAll(".translation");
 
-if(score >= 45){
+  if(translations.length > 0){
 
-text = "🔥 AMAZING! Kamu sangat paham Present Continuous!";
+    translations[translations.length - 1]
+      .style.display = "block";
 
-}else if(score >= 35){
+  }
 
-text = "👏 Bagus! Pemahaman kamu sudah kuat.";
-
-}else if(score >= 25){
-
-text = "👍 Lumayan! Tinggal latihan lagi.";
-
-}else{
-
-text = "📚 Tetap semangat belajar lagi ya!";
 }
 
-document.getElementById("finalScore").innerHTML =
-`Skor Akhir: ${score}/50 <br><br> ${text}`;
+function nextConversation(){
+
+  current++;
+
+  showConversation();
+
+}
+
+function speakText(text){
+
+  const speech =
+    new SpeechSynthesisUtterance(text);
+
+  speech.lang = "en-US";
+
+  speech.rate =
+    document.getElementById("speed").value;
+
+  speech.volume =
+    document.getElementById("volume").value;
+
+  speechSynthesis.speak(speech);
+
+}
+
+function startTimer(){
+
+  let time =
+    document.getElementById("timerRange").value;
+
+  const timerText =
+    document.getElementById("timerText");
+
+  timerText.innerHTML =
+    `🎤 Repeat in ${time}s`;
+
+  const countdown = setInterval(() => {
+
+    time--;
+
+    timerText.innerHTML =
+      `🎤 Repeat in ${time}s`;
+
+    if(time <= 0){
+
+      clearInterval(countdown);
+
+      timerText.innerHTML =
+        "✅ Good! Continue...";
+
+    }
+
+  },1000);
 
 }
 
