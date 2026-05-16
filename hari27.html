@@ -1,449 +1,379 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Listening & Speaking Practice</title>
 
-<title>Present Perfect Quiz Interaktif</title>
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
-body{
-    background:#f4f7fb;
-    color:#222;
-    padding:20px;
-    line-height:1.6;
-}
-
-.container{
-    max-width:1100px;
-    margin:auto;
-}
-
-.card{
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    margin-bottom:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
-}
-
-h1{
-    text-align:center;
-    color:#2563eb;
-    margin-bottom:20px;
-}
-
-h2{
-    color:#1d4ed8;
-    margin-bottom:10px;
-}
-
-.rumus{
-    background:#eef4ff;
-    padding:20px;
-    border-radius:15px;
-    margin-top:15px;
-}
-
-.example{
-    background:#f9fafb;
-    border-left:5px solid #2563eb;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:15px;
-    margin-top:20px;
-}
-
-.box{
-    background:#2563eb;
-    color:white;
-    padding:20px;
-    border-radius:15px;
-}
-
-.memory{
-    background:#dcfce7;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
-}
-
-.highlight{
-    color:#2563eb;
-    font-weight:bold;
-}
-
-.score-box{
-    position:sticky;
-    top:10px;
-    background:#2563eb;
-    color:white;
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    margin-bottom:20px;
-    z-index:10;
-}
-
-.quiz-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:15px;
-    margin-top:20px;
-}
-
-.question{
-    background:#f3f4f6;
-    padding:20px;
-    border-radius:15px;
-}
-
-.question p{
-    margin-bottom:15px;
-    font-weight:bold;
-}
-
-button{
-    padding:10px 15px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    margin:5px;
-    background:#2563eb;
-    color:white;
-    font-size:15px;
-}
-
-button:hover{
-    background:#1d4ed8;
-}
-
-.result{
-    margin-top:10px;
-    font-weight:bold;
-}
-
-.finish{
-    margin-top:30px;
-    text-align:center;
-}
-
-.final-score{
-    margin-top:20px;
-    font-size:24px;
-    font-weight:bold;
-    color:#2563eb;
-}
-
-@media(max-width:600px){
-
-    body{
-        padding:10px;
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
-    .card{
-        padding:18px;
+    body {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: white;
     }
 
-    h1{
-        font-size:28px;
+    .app {
+      width: 100%;
+      max-width: 700px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
 
-}
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 34px;
+    }
 
-</style>
+    h2 {
+      margin-bottom: 15px;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    p {
+      line-height: 1.7;
+    }
+
+    .instruction {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .setting {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .value {
+      margin-top: 5px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 15px;
+      background: white;
+      color: #4f46e5;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      transform: scale(1.02);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .topic-box {
+      background: rgba(255,255,255,0.15);
+      padding: 25px;
+      border-radius: 20px;
+      margin-top: 20px;
+      text-align: center;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .text-hidden {
+      font-size: 20px;
+      opacity: 0;
+      transition: 0.4s;
+      user-select: none;
+    }
+
+    .text-show {
+      opacity: 1;
+    }
+
+    .timer {
+      font-size: 60px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .desc {
+      margin-top: 15px;
+      font-size: 17px;
+      opacity: 0.9;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn-group button {
+      margin-top: 0;
+    }
+
+    @media(max-width: 600px) {
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .timer {
+        font-size: 45px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
+  <div class="app">
 
-<div class="score-box">
-    <h2>🎯 Score</h2>
-    <div id="score">0 / 50</div>
-</div>
+    <!-- SCREEN 1 -->
+    <div id="screen1">
+      <h1>English Shadowing Practice</h1>
 
-<div class="card">
+      <div class="instruction">
+        <strong>Instruksi:</strong><br><br>
+        Anda cukup dengarkan suara lalu tirukan pengucapannya.
+        Fokus pada pronunciation, kecepatan bicara, dan intonasi.
+      </div>
 
-<h1>📖 PRESENT PERFECT</h1>
+      <div class="setting">
+        <label>Volume Suara</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+        <div class="value" id="volumeValue">100%</div>
+      </div>
 
-<p>
-Digunakan untuk:
-<span class="highlight">
-kejadian yang telah terjadi, pengalaman, dan hasil.
-</span>
-</p>
+      <div class="setting">
+        <label>Lamanya Timer</label>
+        <input type="range" id="timerSetting" min="1" max="10" value="5">
+        <div class="value" id="timerValue">5 Menit</div>
+      </div>
 
-<div class="rumus">
+      <div class="setting">
+        <label>Kecepatan Suara</label>
+        <input type="range" id="speed" min="0.5" max="1.5" step="0.1" value="1">
+        <div class="value" id="speedValue">1x</div>
+      </div>
 
-<h2>📐 Rumus</h2>
+      <button onclick="startPractice()">Mulai Latihan</button>
+    </div>
 
-<p><b>(+)</b> S + have/has + V3 + O</p>
-<p><b>(-)</b> S + have/has + not + V3 + O</p>
-<p><b>(?)</b> Have/Has + S + V3 + O?</p>
 
-</div>
+    <!-- SCREEN 2 -->
+    <div id="screen2" class="hidden">
 
-<div class="example">
+      <h2>Listen & Repeat</h2>
 
-<h2>📝 Contoh</h2>
+      <div class="topic-box">
 
-<p><b>(+)</b> I have finished my homework.</p>
-<p>Saya telah menyelesaikan PR saya.</p>
+        <div id="practiceText" class="text-hidden">
+          Hello everyone! My name is Dias.
+        </div>
 
-<br>
+        <div id="translationText" class="text-hidden" style="margin-top:15px; font-size:16px; opacity:0.85;">
+          Halo semuanya! Nama saya Dias.
+        </div>
 
-<p><b>(-)</b> I have not finished my homework.</p>
-<p>Saya belum menyelesaikan PR saya.</p>
+        <div class="timer" id="timer">05:00</div> id="timer">05:00</div>
 
-<br>
+        <div class="desc">
+          Dengarkan dan tirukan kalimat tadi sebelum waktu habis.
+        </div>
+      </div>
 
-<p><b>(?)</b> Have you finished your homework?</p>
-<p>Apakah kamu sudah menyelesaikan PR-mu?</p>
+      <div class="btn-group">
+        <button onclick="showAnswer()">Kunci Jawaban</button>
+        <button onclick="repeatVoice()">Putar Ulang Suara</button>
+        <button onclick="nextTopic()">Next Topic</button>
+      </div>
 
-</div>
+    </div>
 
-</div>
+  </div>
 
-<div class="card">
 
-<h2>🔥 Trik Cepat Hafal</h2>
+  <script>
 
-<div class="grid">
+    const topics = [
 
-<div class="box">
-<h3>1️⃣ Kata Kunci</h3>
-<p>
-already, yet, ever, never,
-just, recently
-</p>
-</div>
+  {
+    en: "Hello, my name is Andi. I am from Indonesia and I am 20 years old. I am a student and I like learning English in my free time. I also enjoy listening to music and watching movies. I am a friendly person and I like meeting new people. Nice to meet you!",
+    id: "Halo, nama saya Andi. Saya berasal dari Indonesia dan saya berusia 20 tahun. Saya seorang pelajar dan saya suka belajar bahasa Inggris di waktu luang saya. Saya juga senang mendengarkan musik dan menonton film. Saya adalah orang yang ramah dan saya suka bertemu orang baru. Senang bertemu denganmu!"
+  },
 
-<div class="box">
-<h3>2️⃣ Have / Has</h3>
-<p>
-I/You/We/They → HAVE
-<br><br>
-He/She/It → HAS
-</p>
-</div>
+  {
+    en: "My hobby is playing football. I usually play football with my friends on the weekend. I like this hobby because it is fun and it makes my body healthy. Sometimes, I also watch football matches on TV and learn new skills from professional players. Playing football helps me relax and feel happy after a busy day.",
+    id: "Hobi saya adalah bermain sepak bola. Saya biasanya bermain sepak bola bersama teman-teman saya saat akhir pekan. Saya menyukai hobi ini karena menyenangkan dan membuat tubuh saya sehat. Terkadang, saya juga menonton pertandingan sepak bola di TV dan belajar keterampilan baru dari pemain profesional. Bermain sepak bola membantu saya rileks dan merasa bahagia setelah hari yang sibuk."
+  },
 
-<div class="box">
-<h3>3️⃣ Gunakan V3</h3>
-<p>
-eat → eaten
-<br>
-write → written
-<br>
-go → gone
-</p>
-</div>
+  {
+    en: "Hello, my name is Rina. I am 17 years old and I still study at senior high school. I live in Purworejo with my family. My hobby is listening to music and watching movies in my free time. I have two brothers and one sister. They are very kind and we often spend time together at home. Nice to meet you!",
+    id: "Halo, nama saya Rina. Saya berusia 17 tahun dan saya masih sekolah di SMA. Saya tinggal di Purworejo bersama keluarga saya. Hobi saya adalah mendengarkan musik dan menonton film di waktu luang. Saya memiliki dua saudara laki-laki dan satu saudara perempuan. Mereka sangat baik dan kami sering menghabiskan waktu bersama di rumah. Senang bertemu denganmu!"
+  },
 
-</div>
+  {
+    en: "Hello, my name is Budi. I am 16 years old. I live in Purworejo. I am still a student. My hobby is playing games. I have one brother and one sister. I love my family. Nice to meet you.",
+    id: "Halo, nama saya Budi. Saya berusia 16 tahun. Saya tinggal di Purworejo. Saya masih seorang pelajar. Hobi saya adalah bermain game. Saya memiliki satu saudara laki-laki dan satu saudara perempuan. Saya menyayangi keluarga saya. Senang bertemu denganmu."
+  },
 
-<div class="memory">
-
-<h2>🧠 Cara Cepat Paham</h2>
-
-<p>✅ Selalu pakai HAVE atau HAS</p>
-<p>✅ Kata kerja bentuk V3</p>
-<p>✅ Pertanyaan pakai Have/Has di depan</p>
-<p>✅ Negatif = have/has + not</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>🎮 Quiz Interaktif 50 Soal</h2>
-
-<div class="quiz-container" id="quizContainer"></div>
-
-<div class="finish">
-
-<button onclick="showFinalScore()">
-Lihat Hasil
-</button>
-
-<div class="final-score" id="finalScore"></div>
-
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-const quizData = [
-
-{q:"1. I ___ finished my homework.",a:"have",o:["have","has"]},
-{q:"2. She ___ eaten breakfast.",a:"has",o:["have","has"]},
-{q:"3. They ___ gone home.",a:"have",o:["has","have"]},
-{q:"4. He ___ written a letter.",a:"has",o:["has","have"]},
-{q:"5. We ___ watched the movie.",a:"have",o:["have","has"]},
-
-{q:"6. She has ___ the room.",a:"cleaned",o:["clean","cleaned"]},
-{q:"7. I have ___ coffee.",a:"drunk",o:["drink","drunk"]},
-{q:"8. They have ___ English.",a:"studied",o:["study","studied"]},
-{q:"9. He has ___ dinner.",a:"eaten",o:["eat","eaten"]},
-{q:"10. We have ___ TV.",a:"watched",o:["watch","watched"]},
-
-{q:"11. ___ you finished?",a:"Have",o:["Have","Has"]},
-{q:"12. ___ she gone home?",a:"Has",o:["Do","Has"]},
-{q:"13. ___ they studied English?",a:"Have",o:["Have","Does"]},
-{q:"14. ___ he eaten dinner?",a:"Has",o:["Has","Do"]},
-{q:"15. ___ we arrived?",a:"Have",o:["Have","Has"]},
-
-{q:"16. I have not ___ yet.",a:"finished",o:["finish","finished"]},
-{q:"17. She has not ___ breakfast.",a:"eaten",o:["eat","eaten"]},
-{q:"18. They have not ___ home.",a:"gone",o:["go","gone"]},
-{q:"19. He has not ___ the book.",a:"read",o:["reads","read"]},
-{q:"20. We have not ___ the movie.",a:"watched",o:["watch","watched"]},
-
-{q:"21. My father has ___ coffee.",a:"made",o:["make","made"]},
-{q:"22. The teacher has ___ the lesson.",a:"explained",o:["explain","explained"]},
-{q:"23. They have ___ football.",a:"played",o:["play","played"]},
-{q:"24. She has ___ a new phone.",a:"bought",o:["buy","bought"]},
-{q:"25. I have ___ my keys.",a:"lost",o:["lose","lost"]},
-
-{q:"26. We have ___ to Bali.",a:"been",o:["be","been"]},
-{q:"27. He has ___ his homework.",a:"done",o:["do","done"]},
-{q:"28. They have ___ online games.",a:"played",o:["play","played"]},
-{q:"29. She has ___ a song.",a:"written",o:["write","written"]},
-{q:"30. I have ___ breakfast.",a:"cooked",o:["cook","cooked"]},
-
-{q:"31. ___ they arrived?",a:"Have",o:["Have","Are"]},
-{q:"32. ___ she finished the test?",a:"Has",o:["Is","Has"]},
-{q:"33. ___ we cleaned the room?",a:"Have",o:["Have","Do"]},
-{q:"34. ___ he spoken English?",a:"Has",o:["Has","Are"]},
-{q:"35. ___ I made a mistake?",a:"Have",o:["Have","Am"]},
-
-{q:"36. She has ___ her homework.",a:"finished",o:["finish","finished"]},
-{q:"37. They have ___ fast.",a:"run",o:["running","run"]},
-{q:"38. I have ___ coding.",a:"learned",o:["learn","learned"]},
-{q:"39. He has ___ his room.",a:"cleaned",o:["clean","cleaned"]},
-{q:"40. We have ___ YouTube videos.",a:"watched",o:["watch","watched"]},
-
-{q:"41. My mother has ___ tea.",a:"drunk",o:["drink","drunk"]},
-{q:"42. The baby has ___.",a:"slept",o:["sleep","slept"]},
-{q:"43. They have ___ together.",a:"worked",o:["work","worked"]},
-{q:"44. She has ___ her phone.",a:"used",o:["use","used"]},
-{q:"45. I have ___ all day.",a:"worked",o:["work","worked"]},
-
-{q:"46. We have ___ English.",a:"studied",o:["study","studied"]},
-{q:"47. He has ___ breakfast.",a:"eaten",o:["eat","eaten"]},
-{q:"48. They have ___ in the park.",a:"walked",o:["walk","walked"]},
-{q:"49. She has ___ English.",a:"spoken",o:["speak","spoken"]},
-{q:"50. I have ___ music.",a:"listened to",o:["listen","listened to"]}
+  {
+    en: "I wake up at six o’clock in the morning. After that, I wash my face and brush my teeth. Then, I take a bath and have breakfast. I prepare my books and go to school. I feel happy to start my day.",
+    id: "Saya bangun tidur jam enam pagi. Setelah itu, saya mencuci muka dan menggosok gigi. Kemudian, saya mandi dan sarapan. Saya menyiapkan buku dan pergi ke sekolah. Saya merasa senang memulai hari saya."
+  },
 
 ];
 
-const quizContainer = document.getElementById("quizContainer");
+    let currentTopic = 0;
+    let countdown;
 
-let score = 0;
-let answered = [];
+    const volumeSlider = document.getElementById('volume');
+    const timerSlider = document.getElementById('timerSetting');
+    const speedSlider = document.getElementById('speed');
 
-quizData.forEach((quiz,index)=>{
+    volumeSlider.addEventListener('input', () => {
+      document.getElementById('volumeValue').innerText = Math.round(volumeSlider.value * 100) + '%';
+    });
 
-const div = document.createElement("div");
+    timerSlider.addEventListener('input', () => {
+      document.getElementById('timerValue').innerText = timerSlider.value + ' Menit';
+    });
 
-div.classList.add("question");
+    speedSlider.addEventListener('input', () => {
+      document.getElementById('speedValue').innerText = speedSlider.value + 'x';
+    });
 
-div.innerHTML = `
-<p>${quiz.q}</p>
+    function loadTopic() {
+      document.getElementById('practiceText').innerText = topics[currentTopic].en;
+      document.getElementById('translationText').innerText = topics[currentTopic].id;
+    }
 
-<button onclick="checkAnswer(${index}, '${quiz.o[0]}')">
-${quiz.o[0]}
-</button>
+    function speakText() {
 
-<button onclick="checkAnswer(${index}, '${quiz.o[1]}')">
-${quiz.o[1]}
-</button>
+      speechSynthesis.cancel();
 
-<div class="result" id="result${index}"></div>
-`;
+      const speech = new SpeechSynthesisUtterance(topics[currentTopic].en);
 
-quizContainer.appendChild(div);
+      speech.lang = 'en-US';
+      speech.volume = volumeSlider.value;
+      speech.rate = speedSlider.value;
 
-});
+      speech.onend = () => {
+        document.getElementById('practiceText').classList.remove('text-show');
+        document.getElementById('translationText').classList.remove('text-show');
+        startTimer();
+      };
 
-function checkAnswer(index,selected){
+      speechSynthesis.speak(speech);
+    }
 
-if(answered[index]) return;
+    function startPractice() {
 
-answered[index] = true;
+      document.getElementById('screen1').classList.add('hidden');
+      document.getElementById('screen2').classList.remove('hidden');
 
-const result =
-document.getElementById(`result${index}`);
+      loadTopic();
 
-if(selected === quizData[index].a){
+      document.getElementById('practiceText').classList.add('text-show');
+      document.getElementById('translationText').classList.add('text-show');
 
-result.innerHTML = "✅ Benar!";
-result.style.color = "green";
+      speakText();
+    }
 
-score++;
+    function startTimer() {
 
-}else{
+      clearInterval(countdown);
 
-result.innerHTML =
-`❌ Salah! Jawaban benar: ${quizData[index].a}`;
+      let minutes = parseInt(timerSlider.value);
+      let time = minutes * 60;
 
-result.style.color = "red";
+      countdown = setInterval(() => {
 
-}
+        let mins = Math.floor(time / 60);
+        let secs = time % 60;
 
-document.getElementById("score").innerHTML =
-`${score} / 50`;
+        mins = mins < 10 ? '0' + mins : mins;
+        secs = secs < 10 ? '0' + secs : secs;
 
-}
+        document.getElementById('timer').innerText = `${mins}:${secs}`;
 
-function showFinalScore(){
+        if(time <= 0) {
+          clearInterval(countdown);
+          document.getElementById('timer').innerText = 'Selesai';
+        }
 
-let text = "";
+        time--;
 
-if(score >= 45){
+      }, 1000);
+    }
 
-text =
-"🔥 AMAZING! Kamu sangat paham Present Perfect!";
+    function showAnswer() {
+      document.getElementById('practiceText').classList.add('text-show');
+      document.getElementById('translationText').classList.add('text-show');
+    }
 
-}else if(score >= 35){
+    function repeatVoice() {
 
-text =
-"👏 Bagus! Pemahaman kamu sudah kuat.";
+      clearInterval(countdown);
 
-}else if(score >= 25){
+      document.getElementById('practiceText').classList.add('text-show');
+      document.getElementById('translationText').classList.add('text-show');
 
-text =
-"👍 Lumayan! Tinggal latihan lagi.";
+      speakText();
+    }
 
-}else{
+    function nextTopic() {
 
-text =
-"📚 Tetap semangat belajar lagi ya!";
-}
+      clearInterval(countdown);
 
-document.getElementById("finalScore").innerHTML =
-`Skor Akhir: ${score}/50 <br><br>${text}`;
+      currentTopic++;
 
-}
+      if(currentTopic >= topics.length) {
+        currentTopic = 0;
+      }
 
-</script>
+      loadTopic();
+
+      document.getElementById('practiceText').classList.add('text-show');
+      document.getElementById('translationText').classList.add('text-show');
+
+      speakText();
+    }
+
+  </script>
 
 </body>
 </html>
