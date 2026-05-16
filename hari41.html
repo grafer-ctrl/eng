@@ -1,262 +1,482 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1-Minute Speaking Challenge</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --radius: 12px;
-      --shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-    .container { background: var(--card); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 480px; box-shadow: var(--shadow); }
-    header { text-align: center; margin-bottom: 20px; }
-    h1 { font-size: 1.5rem; margin-bottom: 4px; }
-    .subtitle { color: var(--text-muted); font-size: 0.9rem; }
-    
-    .mode-selector { display: flex; gap: 8px; margin-bottom: 16px; }
-    .mode-btn { flex: 1; padding: 8px 0; background: transparent; border: 1px solid #334155; color: var(--text-muted); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
-    .mode-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
-    .mode-btn:hover { border-color: var(--accent); }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    .topic-box { background: #0f172a; padding: 16px; border-radius: var(--radius); margin-bottom: 16px; min-height: 80px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px dashed #334155; position: relative; }
-    .topic-text { font-size: 1.1rem; line-height: 1.4; }
-    .random-btn { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); background: var(--warning); border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-    .random-btn:hover { background: #d97706; }
+<title>AI Speaking Simulator</title>
 
-    .controls { display: flex; gap: 12px; margin-bottom: 16px; }
-    .btn { flex: 1; padding: 12px; border: none; border-radius: var(--radius); font-weight: bold; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-record { background: #ef4444; color: white; }
-    .btn-record.recording { background: #dc2626; animation: pulse 1.5s infinite; }
-    .btn-play { background: var(--success); color: white; }
-    .btn-stop { background: #64748b; color: white; }
+<style>
 
-    .timer-display { font-size: 2.2rem; text-align: center; margin: 16px 0; font-weight: bold; letter-spacing: 2px; }
-    .timer-bar { height: 4px; background: #334155; border-radius: 2px; overflow: hidden; }
-    .timer-progress { height: 100%; background: var(--accent); width: 0%; transition: width 0.1s linear; }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
 
-    .audio-player { display: none; margin: 12px 0; background: #0f172a; padding: 12px; border-radius: 8px; }
-    .audio-player.active { display: block; }
-    audio { width: 100%; }
+body{
+  background:#0f172a;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
 
-    .feedback-box { background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 14px; border-radius: var(--radius); margin-top: 12px; font-size: 0.95rem; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
-    .feedback-box.show { opacity: 1; transform: translateY(0); }
-    .feedback-icon { font-size: 1.2rem; margin-right: 6px; }
+.app{
+  width:100%;
+  max-width:500px;
+  background:#111827;
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
+}
 
-    .context-hint { background: #0f172a; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; text-align: center; display: none; }
-    .context-hint.active { display: block; }
+.header{
+  padding:20px;
+  background:#1e293b;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-    @media (max-width: 400px) { .btn { font-size: 0.9rem; padding: 10px; } }
-  </style>
+.title{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.level{
+  background:#2563eb;
+  padding:8px 14px;
+  border-radius:20px;
+  font-size:13px;
+}
+
+.character{
+  text-align:center;
+  padding:25px 20px 10px;
+}
+
+.avatar{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:linear-gradient(45deg,#60a5fa,#8b5cf6);
+  margin:auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:42px;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+  100%{transform:scale(1);}
+}
+
+.character h2{
+  margin-top:15px;
+}
+
+.character p{
+  color:#94a3b8;
+  margin-top:5px;
+}
+
+.chat{
+  padding:20px;
+  height:350px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.message{
+  max-width:80%;
+  padding:15px;
+  border-radius:18px;
+  line-height:1.5;
+  animation:fade .3s ease;
+}
+
+.ai{
+  background:#1d4ed8;
+  align-self:flex-start;
+}
+
+.user{
+  background:#374151;
+  align-self:flex-end;
+}
+
+.translation{
+  margin-top:8px;
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.bottom{
+  padding:20px;
+  background:#1e293b;
+}
+
+.question{
+  margin-bottom:15px;
+  color:#facc15;
+  text-align:center;
+}
+
+.mic-area{
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+.mic{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#2563eb;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.mic.active{
+  animation:listening 1s infinite;
+}
+
+@keyframes listening{
+  0%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(59,130,246,.6);
+  }
+
+  70%{
+    transform:scale(1.1);
+    box-shadow:0 0 0 25px rgba(59,130,246,0);
+  }
+
+  100%{
+    transform:scale(1);
+  }
+}
+
+.result{
+  text-align:center;
+  margin-bottom:15px;
+  min-height:40px;
+}
+
+.score{
+  text-align:center;
+  font-size:14px;
+  color:#94a3b8;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  background:#22c55e;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🎙️ 1-Minute Challenge</h1>
-      <div class="subtitle">Bicara lancar. Fokus pada alur, bukan grammar sempurna.</div>
-    </header>
 
-    <div class="mode-selector">
-      <button class="mode-btn active" data-mode="standard">🎯 Standard</button>
-      <button class="mode-btn" data-mode="roleplay">🎭 Roleplay</button>
-      <button class="mode-btn" data-mode="duet">👥 Duet</button>
-    </div>
+<div class="app">
 
-    <div class="topic-box">
-      <div class="topic-text" id="topicText">Tekan tombol di bawah untuk mulai...</div>
-      <button class="random-btn" id="randomBtn">🎲 Acak Topik</button>
-    </div>
-
-    <div class="context-hint" id="contextHint">💡 Mode Standard: Jelaskan topiknya dengan kalimat sederhana.</div>
-
-    <div class="controls">
-      <button class="btn btn-record" id="recordBtn">🔴 Mulai Rekam</button>
-      <button class="btn btn-stop" id="stopBtn" disabled>⏹️ Stop</button>
-    </div>
-
-    <div class="timer-display" id="timer">01:00</div>
-    <div class="timer-bar"><div class="timer-progress" id="timerProgress"></div></div>
-
-    <div class="audio-player" id="audioPlayerBox">
-      <audio id="audioPlayer" controls></audio>
-    </div>
-
-    <div class="feedback-box" id="feedbackBox">
-      <span class="feedback-icon">✨</span> <span id="feedbackText">Great start! Keep going.</span>
-    </div>
+  <div class="header">
+    <div class="title">AI Speaking Simulator</div>
+    <div class="level">BEGINNER</div>
   </div>
 
-  <script>
-    // === DATA & STATE ===
-    const topics = [
-      "Describe your favorite place to relax.",
-      "Talk about a skill you want to learn.",
-      "What's the best gift you've ever received?",
-      "Describe your perfect weekend.",
-      "If you could teleport anywhere right now, where?",
-      "Talk about a book or movie that changed your mind about something.",
-      "What's a small habit that improved your life?",
-      "Describe your dream job in 3 sentences."
-    ];
-    const contextHints = {
-      standard: "💡 Mode Standard: Jelaskan topiknya dengan kalimat sederhana & alur jelas.",
-      roleplay: "🎭 Mode Roleplay: Bayangkan kamu sedang berbicara di situasi nyata (misal: di bandara, kafe, atau interview).",
-      duet: "👥 Mode Duet: Rekam 30 detik, lalu minta teman melanjutkan 30 detik. Fokus pada transisi topik."
-    };
+  <div class="character">
 
-    let mediaRecorder, audioChunks = [], audioBlob, audioURL;
-    let timerInterval, timeLeft = 60, isRecording = false;
-    let currentMode = 'standard';
+    <div class="avatar">
+      🇰🇷
+    </div>
 
-    // === DOM ELEMENTS ===
-    const topicText = document.getElementById('topicText');
-    const randomBtn = document.getElementById('randomBtn');
-    const recordBtn = document.getElementById('recordBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const timerDisplay = document.getElementById('timer');
-    const timerProgress = document.getElementById('timerProgress');
-    const audioPlayerBox = document.getElementById('audioPlayerBox');
-    const audioPlayer = document.getElementById('audioPlayer');
-    const feedbackBox = document.getElementById('feedbackBox');
-    const feedbackText = document.getElementById('feedbackText');
-    const contextHint = document.getElementById('contextHint');
-    const modeBtns = document.querySelectorAll('.mode-btn');
+    <h2>Yuna</h2>
+    <p>Talk with Yuna from Korea</p>
 
-    // === FUNCTIONS ===
-    function generateTopic() {
-      const randomTopic = topics[Math.floor(Math.random() * topics.length)];
-      topicText.textContent = randomTopic;
-      resetState();
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="bottom">
+
+    <div class="question" id="questionText">
+      Press microphone and answer
+    </div>
+
+    <div class="mic-area">
+
+      <div class="mic" id="micBtn">
+        🎤
+      </div>
+
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="score" id="score">
+      Pronunciation Score: --
+    </div>
+
+    <br>
+
+    <button onclick="nextQuestion()">
+      NEXT QUESTION
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const chat = document.getElementById("chat");
+
+const result = document.getElementById("result");
+
+const score = document.getElementById("score");
+
+const micBtn = document.getElementById("micBtn");
+
+const questionText = document.getElementById("questionText");
+
+const conversations = [
+
+{
+  question:"Where are you from?",
+  translation:"Kamu dari mana?",
+  answers:[
+    "i am from indonesia",
+    "i'm from indonesia",
+    "indonesia"
+  ]
+},
+
+{
+  question:"Why are you living in Vietnam?",
+  translation:"Kenapa kamu tinggal di Vietnam?",
+  answers:[
+    "my family lives here",
+    "because my family lives here"
+  ]
+},
+
+{
+  question:"Do you have a boyfriend?",
+  translation:"Kamu punya pacar?",
+  answers:[
+    "no i don't",
+    "no",
+    "i don't"
+  ]
+}
+
+];
+
+let current = 0;
+
+function addAIMessage(text, translation){
+
+  const div = document.createElement("div");
+
+  div.className = "message ai";
+
+  div.innerHTML = `
+    <strong>Yuna</strong><br>
+    ${text}
+    <div class="translation">
+      ${translation}
+    </div>
+  `;
+
+  chat.appendChild(div);
+
+  chat.scrollTop = chat.scrollHeight;
+
+}
+
+function addUserMessage(text){
+
+  const div = document.createElement("div");
+
+  div.className = "message user";
+
+  div.innerHTML = `
+    <strong>You</strong><br>
+    ${text}
+  `;
+
+  chat.appendChild(div);
+
+  chat.scrollTop = chat.scrollHeight;
+
+}
+
+function speak(text){
+
+  const speech = new SpeechSynthesisUtterance(text);
+
+  speech.lang = "en-US";
+
+  speech.rate = 1;
+
+  speechSynthesis.speak(speech);
+
+}
+
+function loadQuestion(){
+
+  const data = conversations[current];
+
+  addAIMessage(data.question, data.translation);
+
+  speak(data.question);
+
+  questionText.innerHTML =
+    "🎤 Answer Yuna in English";
+
+}
+
+loadQuestion();
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+const recognition =
+  new SpeechRecognition();
+
+recognition.lang = "en-US";
+
+recognition.continuous = false;
+
+recognition.interimResults = false;
+
+micBtn.onclick = () => {
+
+  micBtn.classList.add("active");
+
+  result.innerHTML = "🎧 Listening...";
+
+  recognition.start();
+
+};
+
+recognition.onresult = (event) => {
+
+  micBtn.classList.remove("active");
+
+  const transcript =
+    event.results[0][0].transcript.toLowerCase();
+
+  addUserMessage(transcript);
+
+  checkAnswer(transcript);
+
+};
+
+recognition.onerror = () => {
+
+  micBtn.classList.remove("active");
+
+  result.innerHTML =
+    "❌ Microphone error";
+
+};
+
+function checkAnswer(userAnswer){
+
+  const correctAnswers =
+    conversations[current].answers;
+
+  let matched = false;
+
+  correctAnswers.forEach(answer => {
+
+    if(userAnswer.includes(answer)){
+
+      matched = true;
+
     }
 
-    function updateContextHint() {
-      contextHint.textContent = contextHints[currentMode];
-      contextHint.classList.add('active');
-    }
+  });
 
-    function resetState() {
-      clearInterval(timerInterval);
-      timeLeft = 60;
-      isRecording = false;
-      timerDisplay.textContent = '01:00';
-      timerProgress.style.width = '0%';
-      recordBtn.disabled = false;
-      recordBtn.classList.remove('recording');
-      recordBtn.innerHTML = '🔴 Mulai Rekam';
-      stopBtn.disabled = true;
-      audioPlayerBox.classList.remove('active');
-      feedbackBox.classList.remove('show');
-      audioChunks = [];
-    }
+  if(matched){
 
-    function formatTime(sec) {
-      return `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
-    }
+    result.innerHTML =
+      "✅ Great job!";
 
-    function startTimer() {
-      const startTime = Date.now();
-      const endTime = startTime + (timeLeft * 1000);
-      timerInterval = setInterval(() => {
-        const now = Date.now();
-        const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
-        const elapsed = 60 - remaining;
-        
-        timerDisplay.textContent = formatTime(remaining);
-        timerProgress.style.width = `${(elapsed / 60) * 100}%`;
-        
-        if (remaining <= 0) {
-          clearInterval(timerInterval);
-          stopRecording();
-        }
-        timeLeft = remaining;
-      }, 100);
-    }
+    score.innerHTML =
+      "Pronunciation Score: 92%";
 
-    async function startRecording() {
-      if (!topicText.textContent.includes('...') && !topics.includes(topicText.textContent)) return;
-      
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = () => {
-          stream.getTracks().forEach(t => t.stop());
-          audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          audioURL = URL.createObjectURL(audioBlob);
-          audioPlayer.src = audioURL;
-          audioPlayerBox.classList.add('active');
-          showFeedback();
-        };
-        
-        mediaRecorder.start();
-        isRecording = true;
-        recordBtn.disabled = true;
-        recordBtn.classList.add('recording');
-        recordBtn.innerHTML = '⏺️ Merekam...';
-        stopBtn.disabled = false;
-        startTimer();
-      } catch (err) {
-        alert('Tidak bisa mengakses mikrofon. Pastikan izin diberikan atau gunakan HTTPS/localhost.');
-        console.error(err);
-      }
-    }
+    speak("Great job!");
 
-    function stopRecording() {
-      if (mediaRecorder && isRecording) {
-        mediaRecorder.stop();
-        clearInterval(timerInterval);
-        isRecording = false;
-        recordBtn.disabled = false;
-        recordBtn.classList.remove('recording');
-        recordBtn.innerHTML = '🔴 Rekam Ulang';
-        stopBtn.disabled = true;
-      }
-    }
+  }else{
 
-    function showFeedback() {
-      const duration = 60 - timeLeft;
-      let msg = '';
-      if (duration < 15) msg = "Coba lebih lama! Targetkan minimal 45 detik tanpa jeda panjang.";
-      else if (duration < 35) msg = "Bagus! Coba tambahkan 1-2 contoh spesifik atau perasaan pribadi.";
-      else msg = "Luar biasa! Alur lancar. Coba rekam ulang dengan kecepatan bicara sedikit lebih cepat atau tambahkan kosakata baru.";
-      
-      feedbackText.textContent = msg;
-      feedbackBox.classList.add('show');
-    }
+    result.innerHTML =
+      "😅 Try again!";
 
-    // === EVENT LISTENERS ===
-    randomBtn.addEventListener('click', generateTopic);
-    
-    recordBtn.addEventListener('click', startRecording);
-    stopBtn.addEventListener('click', stopRecording);
-    
-    modeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        modeBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentMode = btn.dataset.mode;
-        updateContextHint();
-        resetState();
-        if (!topics.includes(topicText.textContent)) generateTopic();
-      });
-    });
+    score.innerHTML =
+      "Pronunciation Score: 45%";
 
-    // Init
-    updateContextHint();
-  </script>
+    speak("Try again");
+
+  }
+
+}
+
+function nextQuestion(){
+
+  current++;
+
+  if(current >= conversations.length){
+
+    result.innerHTML =
+      "🎉 Conversation Complete!";
+
+    questionText.innerHTML =
+      "You finished the training";
+
+    speak("Congratulations");
+
+    return;
+  }
+
+  loadQuestion();
+
+}
+
+</script>
+
 </body>
 </html>
