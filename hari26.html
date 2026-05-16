@@ -1,567 +1,639 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shadowing Conversation Trainer</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Shadowing SpeakEasy | Latihan Percakapan + Terjemahan</title>
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    body{
-      background:#0f172a;
-      color:white;
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:20px;
+    body {
+      background: radial-gradient(circle at 10% 30%, #0B1120, #030712);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .app{
-      width:100%;
-      max-width:500px;
-      background:#111827;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 0 30px rgba(0,0,0,0.4);
+    /* Main container */
+    .app {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      box-shadow: 0 30px 45px -20px black, 0 0 0 1px rgba(56, 189, 248, 0.2);
+      overflow: hidden;
+      transition: all 0.2s;
     }
 
-    .screen{
-      display:none;
-      padding:25px;
+    /* Screens */
+    .screen {
+      display: none;
+      padding: 1.8rem;
+      animation: fadeUp 0.35s ease;
     }
 
-    .active{
-      display:block;
+    .active-screen {
+      display: block;
     }
 
-    h1{
-      font-size:28px;
-      margin-bottom:10px;
-    }
-
-    .subtitle{
-      color:#94a3b8;
-      margin-bottom:25px;
-    }
-
-    .card{
-      background:#1e293b;
-      padding:20px;
-      border-radius:15px;
-      margin-bottom:20px;
-    }
-
-    .setting{
-      margin-bottom:15px;
-    }
-
-    .setting label{
-      display:block;
-      margin-bottom:8px;
-      color:#cbd5e1;
-    }
-
-    input[type=range]{
-      width:100%;
-    }
-
-    button{
-      width:100%;
-      padding:15px;
-      border:none;
-      border-radius:12px;
-      background:#3b82f6;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-      transition:0.2s;
-    }
-
-    button:hover{
-      transform:scale(1.02);
-    }
-
-    .chat-box{
-      display:flex;
-      flex-direction:column;
-      gap:15px;
-      min-height:350px;
-      margin-bottom:20px;
-    }
-
-    .bubble{
-      max-width:80%;
-      padding:15px;
-      border-radius:15px;
-      line-height:1.5;
-      animation:fadeIn 0.3s ease;
-    }
-
-    .left{
-      background:#1e40af;
-      align-self:flex-start;
-    }
-
-    .right{
-      background:#374151;
-      align-self:flex-end;
-    }
-
-    .speaker{
-      font-size:12px;
-      opacity:0.7;
-      margin-bottom:5px;
-    }
-
-    .translation{
-      margin-top:8px;
-      font-size:14px;
-      color:#cbd5e1;
-      display:none;
-    }
-
-    .controls{
-      display:flex;
-      gap:10px;
-    }
-
-    .controls button{
-      flex:1;
-    }
-
-    .timer{
-      text-align:center;
-      margin-bottom:15px;
-      color:#facc15;
-      font-size:18px;
-    }
-
-    @keyframes fadeIn{
-      from{
-        opacity:0;
-        transform:translateY(10px);
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
       }
-      to{
-        opacity:1;
-        transform:translateY(0);
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
+    }
+
+    /* Header */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #F0F9FF, #7DD3FC);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .badge {
+      background: #2563EB20;
+      border: 1px solid #3B82F6;
+      border-radius: 40px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #93C5FD;
+    }
+    .sub {
+      color: #9CA3AF;
+      font-size: 0.85rem;
+      margin-top: 6px;
+      margin-bottom: 24px;
+      border-left: 3px solid #3B82F6;
+      padding-left: 12px;
+    }
+
+    /* Card */
+    .card-glow {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 1.75rem;
+      padding: 1.3rem;
+      margin-bottom: 24px;
+      border: 1px solid rgba(71, 85, 105, 0.6);
+    }
+
+    .topic-row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .chip {
+      background: #0F172A;
+      padding: 5px 14px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #BAE6FD;
+    }
+
+    /* Slider styling */
+    .setting {
+      margin-bottom: 1.3rem;
+    }
+    .setting-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #CBD5E1;
+      margin-bottom: 6px;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 5px;
+      -webkit-appearance: none;
+      background: #2D3A5E;
+      border-radius: 10px;
+    }
+    input[type="range"]:focus {
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #60A5FA;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 6px #3B82F6;
+      border: none;
+    }
+    .value-number {
+      background: #0F172A;
+      padding: 2px 8px;
+      border-radius: 24px;
+      font-family: monospace;
+      font-size: 0.7rem;
+    }
+
+    /* button utama */
+    .btn-main {
+      background: linear-gradient(95deg, #2563EB, #1E40AF);
+      width: 100%;
+      border: none;
+      padding: 14px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 6px 14px #1E3A8A40;
+    }
+    .btn-main:hover {
+      transform: scale(1.01);
+      background: linear-gradient(95deg, #3B82F6, #2563EB);
+    }
+
+    /* Chat area (percakapan) */
+    .chat-window {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 1.5rem;
+      padding: 8px 4px 8px 8px;
+      margin-bottom: 16px;
+    }
+    .chat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 420px;
+      max-height: 460px;
+      overflow-y: auto;
+      padding-right: 8px;
+      scroll-behavior: smooth;
+    }
+    .chat-box::-webkit-scrollbar {
+      width: 4px;
+    }
+    .chat-box::-webkit-scrollbar-track {
+      background: #1e293b;
+      border-radius: 10px;
+    }
+    .chat-box::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
+    }
+
+    /* Bubbles */
+    .message {
+      max-width: 88%;
+      padding: 12px 16px;
+      border-radius: 24px;
+      line-height: 1.45;
+      font-size: 0.95rem;
+      animation: popMessage 0.25s ease;
+      transition: 0.1s;
+    }
+    @keyframes popMessage {
+      0% { opacity: 0; transform: translateY(12px);}
+      100% { opacity: 1; transform: translateY(0);}
+    }
+    .left {
+      align-self: flex-start;
+      background: linear-gradient(115deg, #1E3A8A, #1E40AF);
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .right {
+      align-self: flex-end;
+      background: #2D3A5E;
+      border-bottom-right-radius: 6px;
+      background: #1E293B;
+      border: 1px solid #334155;
+    }
+    .speaker-name {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: #A5D8FF;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .english {
+      font-weight: 600;
+      font-size: 1rem;
+      color: white;
+      word-break: break-word;
+    }
+    .translation-area {
+      margin-top: 10px;
+      background: #0F172A70;
+      border-radius: 18px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: #C7D2FE;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: baseline;
+      backdrop-filter: blur(2px);
+    }
+    .translation-area span:first-child {
+      background: #2563EB40;
+      padding: 2px 8px;
+      border-radius: 24px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    /* Timer */
+    .timer-card {
+      background: #0F172A;
+      border-radius: 60px;
+      padding: 8px 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      width: 100%;
+      justify-content: center;
+      border: 1px solid #FACC1540;
+    }
+    .timer-icon {
+      font-size: 1.2rem;
+    }
+    .timer-value {
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #FDE047;
+    }
+
+    /* Control buttons */
+    .action-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .action-btn {
+      flex: 1;
+      background: #1E293B;
+      border: none;
+      padding: 12px 6px;
+      border-radius: 44px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #E2E8F0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .action-btn.primary-action {
+      background: #3B82F6;
+      color: white;
+      box-shadow: 0 2px 6px #2563EB;
+    }
+    .action-btn.secondary-action {
+      background: #312E81;
+      border: 1px solid #818CF8;
+    }
+    .complete-message {
+      text-align: center;
+      background: #065F4660;
+      border-radius: 2rem;
+      padding: 14px;
+      margin-top: 8px;
+      color: #A7F3D0;
     }
   </style>
 </head>
 <body>
-
 <div class="app">
+  <!-- LAYAR SETUP / PENGATURAN -->
+  <div class="screen active-screen" id="setupScreen">
+    <div class="logo-area">
+      <h1>🗣️ SpeakEasy</h1>
+      <div class="badge">Shadowing + ID</div>
+    </div>
+    <div class="sub">Tiru percakapan natural • dengar & ulang • dengan terjemahan Indonesia</div>
 
-  <!-- SCREEN 1 -->
-  <div class="screen active" id="setupScreen">
-
-    <h1>Shadowing Trainer</h1>
-    <div class="subtitle">
-      Practice real English conversations naturally.
+    <div class="card-glow">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 600;">📌 Topik hari ini</span>
+        <span class="chip">Percakapan santai</span>
+      </div>
+      <p style="margin: 10px 0 5px; color: #E2E8F0;">"Ngobrol tentang kabar, cuaca & keseharian"</p>
+      <div class="topic-row">
+        <span class="chip">🎯 Pemula - Menengah</span>
+        <span class="chip">🌐 EN → 🇮🇩 ID</span>
+        <span class="chip">⏱️ Metode Shadowing</span>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>TOPIC</h3>
-      <p>Talking About Country</p>
-      <br>
-
-      <h3>LEVEL</h3>
-      <p>Beginner</p>
+    <div class="card-glow">
+      <div class="setting">
+        <div class="setting-header"><span>⚡ Kecepatan Suara</span><span id="speedDisplay" class="value-number">1.0x</span></div>
+        <input type="range" id="speedControl" min="0.5" max="1.4" step="0.05" value="0.95">
+      </div>
+      <div class="setting">
+        <div class="setting-header"><span>🔊 Volume</span><span id="volDisplay" class="value-number">100%</span></div>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+      </div>
+      <div class="setting">
+        <div class="setting-header"><span>⏳ Waktu jeda (ulang)</span><span id="pauseDisplay" class="value-number">5 detik</span></div>
+        <input type="range" id="pauseControl" min="3" max="120" step="1" value="5">
+      </div>
+      <p style="font-size: 0.7rem; color: #7E8AA2; margin-top: 8px;">💡 Setelah mendengar kalimat, tirukan saat jeda muncul. Klik "Lihat Terjemahan" untuk sorotan.</p>
     </div>
 
-    <div class="card">
-
-      <div class="setting">
-        <label>Voice Speed</label>
-        <input type="range" min="0.5" max="1.5" step="0.1" value="1" id="speed">
-      </div>
-
-      <div class="setting">
-        <label>Volume</label>
-        <input type="range" min="0" max="1" step="0.1" value="1" id="volume">
-      </div>
-
-      <div class="setting">
-        <label>Timer (seconds)</label>
-        <input type="range" min="3" max="10" step="1" value="5" id="timerRange">
-      </div>
-
-    </div>
-
-    <button onclick="startTraining()">
-      START TRAINING
-    </button>
-
+    <button class="btn-main" id="startTrainingBtn">🎧 Mulai Latihan Shadowing</button>
   </div>
 
-  <!-- SCREEN 2 -->
+  <!-- LAYAR PERCAKAPAN (Chat) -->
   <div class="screen" id="chatScreen">
-
-    <div class="timer" id="timerText">
-      Listen and repeat...
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+      <div class="logo-area" style="gap:4px"><h2 style="font-size: 1.4rem;">💬 Latihan</h2><span class="badge">Terjemahan otomatis</span></div>
+      <span style="font-size: 12px; background:#1E293B; padding: 4px 10px; border-radius: 20px;">🇮🇩 ID selalu tampil</span>
     </div>
 
-    <div class="chat-box" id="chatBox"></div>
-
-    <div class="controls">
-      <button onclick="showTranslation()">
-        Show Translation
-      </button>
-
-      <button onclick="nextConversation()">
-        Next
-      </button>
+    <div class="timer-card">
+      <span class="timer-icon">⏲️</span>
+      <span class="timer-value" id="timerStatusLabel">Siap mendengarkan...</span>
     </div>
 
+    <div class="chat-window">
+      <div class="chat-box" id="conversationContainer">
+        <!-- bubble percakapan akan muncul disini dengan terjemahan selalu terlihat -->
+      </div>
+    </div>
+
+    <div class="action-group">
+      <button class="action-btn secondary-action" id="showTransBtn">📖 Sorot Terjemahan Terbaru</button>
+      <button class="action-btn primary-action" id="nextDialogBtn">➡️ Lanjut Percakapan</button>
+    </div>
+    <div id="infoHelper" style="font-size: 12px; text-align: center; margin-top: 14px; color:#7E8AA2;">✨ Setiap pesan menampilkan English + Indonesia. Tekan Lanjut untuk ke kalimat berikutnya.</div>
   </div>
-
 </div>
 
 <script>
+  // ---------- DATA PERCAKAPAN (LENGKAP DENGAN BAHASA INDONESIA) ----------
+  const conversationData = [
+    { speaker: "A", name: "Deion", en: "Gabi, how are you?", id: "Gabi, apa kabar?" },
+    { speaker: "B", name: "Gabi", en: "I’ve been great, just super busy lately.", id: "Aku baik-baik saja, cuma akhir-akhir ini sangat sibuk." },
+    { speaker: "A", name: "Deion", en: "Every time I text you, you’re always busy.", id: "Setiap kali aku chat kamu, kamu selalu sibuk." },
+    { speaker: "B", name: "Gabi", en: "I only have about 10 minutes before I leave.", id: "Aku cuma punya waktu sekitar 10 menit sebelum pergi." },
+    { speaker: "A", name: "Deion", en: "Why didn’t you tell me? I wanted to surprise you.", id: "Kenapa kamu tidak bilang? Aku ingin mengejutkanmu." },
+    { speaker: "B", name: "Gabi", en: "That’s actually sweet.", id: "Itu sebenarnya manis." },
+    { speaker: "A", name: "Deion", en: "Guys, she’s a dance teacher.", id: "Guys, dia guru dance." },
+    { speaker: "B", name: "Gabi", en: "Yeah, I’m going to practice soon.", id: "Iya, aku sebentar lagi latihan." },
+    { speaker: "A", name: "Deion", en: "How was your day?", id: "Bagaimana harimu?" },
+    { speaker: "B", name: "Gabi", en: "It was okay. I had school and some practice.", id: "Lumayan. Aku sekolah dan ada latihan juga." },
+    { speaker: "A", name: "Deion", en: "You look so beautiful today.", id: "Kamu terlihat sangat cantik hari ini." },
+    { speaker: "B", name: "Gabi", en: "Thank you.", id: "Terima kasih." },
+    { speaker: "A", name: "Deion", en: "Did you eat already?", id: "Kamu sudah makan?" },
+    { speaker: "B", name: "Gabi", en: "Yeah, but I can’t really eat too much before practice.", id: "Iya, tapi aku tidak bisa makan terlalu banyak sebelum latihan." },
+    { speaker: "A", name: "Deion", en: "How many times do you eat every day?", id: "Kamu makan berapa kali sehari?" },
+    { speaker: "B", name: "Gabi", en: "Usually two or three times.", id: "Biasanya dua atau tiga kali." },
+    { speaker: "A", name: "Deion", en: "You look skinnier now.", id: "Kamu terlihat lebih kurus sekarang." },
+    { speaker: "B", name: "Gabi", en: "No, trust me, I’m not dieting.", id: "Tidak, percaya deh, aku tidak diet." },
+    { speaker: "A", name: "Deion", en: "How old are you again? Nineteen?", id: "Umurmu berapa lagi? Sembilan belas?" },
+    { speaker: "B", name: "Gabi", en: "Yeah, nineteen.", id: "Iya, sembilan belas." },
+    { speaker: "A", name: "Deion", en: "Do you still remember my age?", id: "Kamu masih ingat umurku?" },
+    { speaker: "B", name: "Gabi", en: "You lied to me before, so I don’t know anymore.", id: "Kamu pernah bohong sebelumnya, jadi aku tidak tahu lagi." },
+    { speaker: "A", name: "Deion", en: "My nickname is Deion.", id: "Nama panggilanku Deion." },
+    { speaker: "B", name: "Gabi", en: "What’s your full name?", id: "Siapa nama lengkapmu?" },
+    { speaker: "A", name: "Deion", en: "My full name is “I’m the only one for you.”", id: "Nama lengkapku adalah “Aku satu-satunya untukmu.”" },
+    { speaker: "B", name: "Gabi", en: "Oh my God, that’s cheesy.", id: "Ya ampun, itu gombal banget." },
+    { speaker: "A", name: "Deion", en: "How’s the weather in Poland?", id: "Bagaimana cuaca di Polandia?" },
+    { speaker: "B", name: "Gabi", en: "It’s kind of cold now.", id: "Sekarang agak dingin." },
+    { speaker: "A", name: "Deion", en: "I just wanted to talk to you for 10 minutes.", id: "Aku cuma ingin ngobrol denganmu selama 10 menit." },
+    { speaker: "B", name: "Gabi", en: "I appreciate that.", id: "Aku menghargai itu." },
+    { speaker: "A", name: "Deion", en: "Thank you for making time for me.", id: "Terima kasih sudah meluangkan waktu untukku." },
+    { speaker: "B", name: "Gabi", en: "Of course.", id: "Tentu saja." },
+    { speaker: "A", name: "Deion", en: "Be careful on your way.", id: "Hati-hati di jalan ya." },
+    { speaker: "B", name: "Gabi", en: "You too. Talk to you soon.", id: "Kamu juga. Sampai ngobrol lagi nanti." }
+  ];
 
-const conversations = [
-  {
-    speaker:"A",
-    en:"Gabi, how are you?",
-    id:"Gabi, apa kabar?"
-  },
+  // DOM elements
+  const setupDiv = document.getElementById('setupScreen');
+  const chatDiv = document.getElementById('chatScreen');
+  const startBtn = document.getElementById('startTrainingBtn');
+  const nextBtn = document.getElementById('nextDialogBtn');
+  const transBtn = document.getElementById('showTransBtn');
+  const chatContainer = document.getElementById('conversationContainer');
+  const timerLabel = document.getElementById('timerStatusLabel');
 
-  {
-    speaker:"B",
-    en:"I’ve been great, just super busy lately.",
-    id:"Aku baik-baik saja, cuma akhir-akhir ini sangat sibuk."
-  },
+  // sliders
+  const speedSlider = document.getElementById('speedControl');
+  const volSlider = document.getElementById('volumeControl');
+  const pauseSlider = document.getElementById('pauseControl');
+  const speedDisplay = document.getElementById('speedDisplay');
+  const volDisplay = document.getElementById('volDisplay');
+  const pauseDisplay = document.getElementById('pauseDisplay');
 
-  {
-    speaker:"A",
-    en:"Every time I text you, you’re always busy.",
-    id:"Setiap kali aku chat kamu, kamu selalu sibuk."
-  },
+  // state variables
+  let currentIdx = 0;
+  let timerInterval = null;
+  let trainingComplete = false;
 
-  {
-    speaker:"B",
-    en:"I only have about 10 minutes before I leave.",
-    id:"Aku cuma punya waktu sekitar 10 menit sebelum pergi."
-  },
-
-  {
-    speaker:"A",
-    en:"Why didn’t you tell me? I wanted to surprise you.",
-    id:"Kenapa kamu tidak bilang? Aku ingin mengejutkanmu."
-  },
-
-  {
-    speaker:"B",
-    en:"That’s actually sweet.",
-    id:"Itu sebenarnya manis."
-  },
-
-  {
-    speaker:"A",
-    en:"Guys, she’s a dance teacher.",
-    id:"Guys, dia guru dance."
-  },
-
-  {
-    speaker:"B",
-    en:"Yeah, I’m going to practice soon.",
-    id:"Iya, aku sebentar lagi latihan."
-  },
-
-  {
-    speaker:"A",
-    en:"How was your day?",
-    id:"Bagaimana harimu?"
-  },
-
-  {
-    speaker:"B",
-    en:"It was okay. I had school and some practice.",
-    id:"Lumayan. Aku sekolah dan ada latihan juga."
-  },
-
-  {
-    speaker:"A",
-    en:"You look so beautiful today.",
-    id:"Kamu terlihat sangat cantik hari ini."
-  },
-
-  {
-    speaker:"B",
-    en:"Thank you.",
-    id:"Terima kasih."
-  },
-
-  {
-    speaker:"A",
-    en:"Did you eat already?",
-    id:"Kamu sudah makan?"
-  },
-
-  {
-    speaker:"B",
-    en:"Yeah, but I can’t really eat too much before practice.",
-    id:"Iya, tapi aku tidak bisa makan terlalu banyak sebelum latihan."
-  },
-
-  {
-    speaker:"A",
-    en:"How many times do you eat every day?",
-    id:"Kamu makan berapa kali sehari?"
-  },
-
-  {
-    speaker:"B",
-    en:"Usually two or three times.",
-    id:"Biasanya dua atau tiga kali."
-  },
-
-  {
-    speaker:"A",
-    en:"You look skinnier now.",
-    id:"Kamu terlihat lebih kurus sekarang."
-  },
-
-  {
-    speaker:"B",
-    en:"No, trust me, I’m not dieting.",
-    id:"Tidak, percaya deh, aku tidak diet."
-  },
-
-  {
-    speaker:"A",
-    en:"How old are you again? Nineteen?",
-    id:"Umurmu berapa lagi? Sembilan belas?"
-  },
-
-  {
-    speaker:"B",
-    en:"Yeah, nineteen.",
-    id:"Iya, sembilan belas."
-  },
-
-  {
-    speaker:"A",
-    en:"Do you still remember my age?",
-    id:"Kamu masih ingat umurku?"
-  },
-
-  {
-    speaker:"B",
-    en:"You lied to me before, so I don’t know anymore.",
-    id:"Kamu pernah bohong sebelumnya, jadi aku tidak tahu lagi."
-  },
-
-  {
-    speaker:"A",
-    en:"My nickname is Deion.",
-    id:"Nama panggilanku Deion."
-  },
-
-  {
-    speaker:"B",
-    en:"What’s your full name?",
-    id:"Siapa nama lengkapmu?"
-  },
-
-  {
-    speaker:"A",
-    en:"My full name is “I’m the only one for you.”",
-    id:"Nama lengkapku adalah “Aku satu-satunya untukmu.”"
-  },
-
-  {
-    speaker:"B",
-    en:"Oh my God, that’s cheesy.",
-    id:"Ya ampun, itu gombal banget."
-  },
-
-  {
-    speaker:"A",
-    en:"How’s the weather in Poland?",
-    id:"Bagaimana cuaca di Polandia?"
-  },
-
-  {
-    speaker:"B",
-    en:"It’s kind of cold now.",
-    id:"Sekarang agak dingin."
-  },
-
-  {
-    speaker:"A",
-    en:"I just wanted to talk to you for 10 minutes.",
-    id:"Aku cuma ingin ngobrol denganmu selama 10 menit."
-  },
-
-  {
-    speaker:"B",
-    en:"I appreciate that.",
-    id:"Aku menghargai itu."
-  },
-
-  {
-    speaker:"A",
-    en:"Thank you for making time for me.",
-    id:"Terima kasih sudah meluangkan waktu untukku."
-  },
-
-  {
-    speaker:"B",
-    en:"Of course.",
-    id:"Tentu saja."
-  },
-
-  {
-    speaker:"A",
-    en:"Be careful on your way.",
-    id:"Hati-hati di jalan ya."
-  },
-
-  {
-    speaker:"B",
-    en:"You too. Talk to you soon.",
-    id:"Kamu juga. Sampai ngobrol lagi nanti."
-  }
-];
-
-let current = 0;
-
-const chatBox = document.getElementById("chatBox");
-
-function startTraining(){
-
-  document.getElementById("setupScreen")
-    .classList.remove("active");
-
-  document.getElementById("chatScreen")
-    .classList.add("active");
-
-  showConversation();
-
-}
-
-function showConversation(){
-
-  if(current >= conversations.length){
-
-    document.getElementById("timerText")
-      .innerHTML = "🎉 Training Complete!";
-
-    return;
+  // update display values
+  speedSlider.addEventListener('input', () => { speedDisplay.innerText = parseFloat(speedSlider.value).toFixed(2)+'x'; });
+  volSlider.addEventListener('input', () => { volDisplay.innerText = Math.round(volSlider.value*100)+'%'; });
+  pauseSlider.addEventListener('input', () => { pauseDisplay.innerText = pauseSlider.value+' detik'; });
+  
+  function stopCountdown() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
   }
 
-  const data = conversations[current];
-
-  const bubble = document.createElement("div");
-
-  bubble.className =
-    "bubble " + (data.speaker === "A" ? "left" : "right");
-
-  bubble.innerHTML = `
-
-    <div class="speaker">
-      ${data.speaker}
-    </div>
-
-    <div class="english">
-      ${data.en}
-    </div>
-
-    <div class="translation">
-      ${data.id}
-    </div>
-
-  `;
-
-  chatBox.appendChild(bubble);
-
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  speakText(data.en);
-
-  startTimer();
-
-}
-
-function showTranslation(){
-
-  const translations =
-    document.querySelectorAll(".translation");
-
-  if(translations.length > 0){
-
-    translations[translations.length - 1]
-      .style.display = "block";
-
+  // Fungsi bicara (TTS)
+  function speakPhrase(text) {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = parseFloat(speedSlider.value);
+    utterance.volume = parseFloat(volSlider.value);
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
   }
 
-}
+  // Memulai timer jeda untuk shadowing (setelah audio diputar)
+  function startShadowTimer() {
+    stopCountdown();
+    let secondsLeft = parseInt(pauseSlider.value);
+    if (isNaN(secondsLeft)) secondsLeft = 5;
+    timerLabel.innerText = `🎤 Ulang dalam ${secondsLeft}s → sambil nunggu timer ucapkan keras-keras! dengan B Inggris`;
+    timerInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft >= 0) {
+        timerLabel.innerText = `🎤 Ulang dalam ${secondsLeft}s → sambil nunggu timer ucapkan keras-keras! dengan B Inggris!`;
+      }
+      if (secondsLeft < 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        timerLabel.innerText = `✅ Bagus! Klik "Lanjut" untuk kalimat berikutnya.`;
+      }
+    }, 1000);
+  }
 
-function nextConversation(){
-
-  current++;
-
-  showConversation();
-
-}
-
-function speakText(text){
-
-  const speech =
-    new SpeechSynthesisUtterance(text);
-
-  speech.lang = "en-US";
-
-  speech.rate =
-    document.getElementById("speed").value;
-
-  speech.volume =
-    document.getElementById("volume").value;
-
-  speechSynthesis.speak(speech);
-
-}
-
-function startTimer(){
-
-  let time =
-    document.getElementById("timerRange").value;
-
-  const timerText =
-    document.getElementById("timerText");
-
-  timerText.innerHTML =
-    `🎤 Repeat in ${time}s`;
-
-  const countdown = setInterval(() => {
-
-    time--;
-
-    timerText.innerHTML =
-      `🎤 Repeat in ${time}s`;
-
-    if(time <= 0){
-
-      clearInterval(countdown);
-
-      timerText.innerHTML =
-        "✅ Good! Continue...";
-
+  // Menambahkan bubble percakapan (terjemahan langsung terlihat)
+  function appendMessage(index) {
+    if (index >= conversationData.length) {
+      if (!trainingComplete) {
+        trainingComplete = true;
+        const completeDiv = document.createElement('div');
+        completeDiv.className = 'message left';
+        completeDiv.style.background = '#065F46';
+        completeDiv.style.textAlign = 'center';
+        completeDiv.innerHTML = `
+          <div class="speaker-name">🎉 SELESAI</div>
+          <div class="english">✨ Latihan shadowing selesai! Hebat sekali. ✨</div>
+          <div class="translation-area"><span>🇮🇩</span> Kamu telah menyelesaikan semua ${conversationData.length} percakapan. Refresh untuk mengulang.</div>
+        `;
+        chatContainer.appendChild(completeDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        timerLabel.innerText = "🏆 Selesai! Luar biasa. Muat ulang halaman untuk latihan ulang.";
+        stopCountdown();
+        window.speechSynthesis.cancel();
+      }
+      return false;
     }
 
-  },1000);
+    const item = conversationData[index];
+    const bubble = document.createElement('div');
+    bubble.className = `message ${item.speaker === 'A' ? 'left' : 'right'}`;
+    const speakerIcon = item.speaker === 'A' ? '👨' : '👩';
+    bubble.innerHTML = `
+      <div class="speaker-name">${speakerIcon} ${item.name}</div>
+      <div class="english">${escapeHtml(item.en)}</div>
+      <div class="translation-area">
+        <span>🇮🇩 Indonesia</span> ${escapeHtml(item.id)}
+      </div>
+    `;
+    chatContainer.appendChild(bubble);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    // Putar audio dalam Bahasa Inggris
+    speakPhrase(item.en);
+    // Jalankan timer shadowing
+    startShadowTimer();
+    return true;
+  }
 
-}
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
 
+  // Menampilkan sorotan pada terjemahan terbaru (lebih intuitif)
+  function highlightLastTranslation() {
+    if (chatContainer.children.length === 0) return;
+    const lastMsg = chatContainer.lastElementChild;
+    const transDiv = lastMsg.querySelector('.translation-area');
+    if (transDiv) {
+      transDiv.style.transition = '0.2s';
+      transDiv.style.backgroundColor = '#2D3F6E';
+      transDiv.style.borderRadius = '20px';
+      transDiv.style.padding = '6px 12px';
+      setTimeout(() => {
+        if (transDiv) transDiv.style.backgroundColor = '';
+      }, 700);
+      timerLabel.innerText = "🔍 Terjemahan disorot! Baca arti kalimat.";
+      setTimeout(() => {
+        if (!trainingComplete && currentIdx < conversationData.length) timerLabel.innerText = `🎙️ Lanjutkan shadowing.`;
+      }, 1500);
+    } else {
+      timerLabel.innerText = "💡 Terjemahan selalu muncul di bawah setiap pesan.";
+    }
+  }
+
+  // Fungsi untuk melanjutkan ke dialog berikutnya
+  function nextConversation() {
+    if (trainingComplete) return;
+    stopCountdown();
+    currentIdx++;
+    if (currentIdx < conversationData.length) {
+      appendMessage(currentIdx);
+    } else if (currentIdx === conversationData.length) {
+      // Menampilkan pesan akhir jika belum ada
+      if (chatContainer.children.length <= conversationData.length) {
+        const endMsg = document.createElement('div');
+        endMsg.className = 'message left';
+        endMsg.style.background = '#0F3B3F';
+        endMsg.innerHTML = `
+          <div class="speaker-name">🏁 AKHIR</div>
+          <div class="english">Great shadowing! Conversation completed ✔️</div>
+          <div class="translation-area"><span>🇮🇩</span> Latihan selesai, skill speakingmu meningkat!</div>
+        `;
+        chatContainer.appendChild(endMsg);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+      trainingComplete = true;
+      timerLabel.innerText = "✅ Selesai! Refresh browser untuk mulai baru.";
+      window.speechSynthesis.cancel();
+      stopCountdown();
+    }
+  }
+
+  // reset dan mulai latihan dari awal
+  function initTraining() {
+    window.speechSynthesis.cancel();
+    stopCountdown();
+    currentIdx = 0;
+    trainingComplete = false;
+    chatContainer.innerHTML = '';
+    // ganti layar
+    setupDiv.classList.remove('active-screen');
+    chatDiv.classList.add('active-screen');
+    // tambahkan pesan pertama
+    const success = appendMessage(0);
+    if (!success) {
+      // fallback
+    }
+  }
+
+  // Event listeners
+  startBtn.addEventListener('click', initTraining);
+  nextBtn.addEventListener('click', nextConversation);
+  transBtn.addEventListener('click', highlightLastTranslation);
+  
+  // inisialisasi tampilan slider
+  speedDisplay.innerText = speedSlider.value + 'x';
+  volDisplay.innerText = Math.round(volSlider.value*100) + '%';
+  pauseDisplay.innerText = pauseSlider.value + ' detik';
+  
+  // tambahkan hint tambahan untuk memudahkan
+  console.log("SpeakEasy Trainer Siap — Selalu tampilkan terjemahan Indonesia pada setiap gelembung.");
 </script>
-
 </body>
 </html>
