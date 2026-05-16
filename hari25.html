@@ -1,684 +1,713 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Belajar Simple Present Interaktif</title>
+<title>OME TV Speaking Trainer</title>
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
 }
 
 body{
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.6;
-    padding:20px;
+  background:#0f172a;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
 }
 
-.container{
-    max-width:1100px;
-    margin:auto;
+.app{
+  width:100%;
+  max-width:550px;
+  background:#111827;
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
 }
 
-.card{
-    background:white;
-    padding:25px;
-    margin-bottom:20px;
-    border-radius:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+.header{
+  background:#1e293b;
+  padding:20px;
+  text-align:center;
 }
 
-h1{
-    text-align:center;
-    color:#2563eb;
-    margin-bottom:20px;
+.header h1{
+  font-size:26px;
 }
 
-h2{
-    color:#1d4ed8;
-    margin-bottom:10px;
+.header p{
+  color:#94a3b8;
+  margin-top:5px;
 }
 
-h3{
-    margin-bottom:10px;
+.chat{
+  height:500px;
+  overflow-y:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
 }
 
-.rumus{
-    background:#eef4ff;
-    padding:20px;
-    border-radius:15px;
-    margin-top:15px;
+.message{
+  max-width:85%;
+  padding:15px;
+  border-radius:18px;
+  line-height:1.5;
+  animation:fade .3s ease;
 }
 
-.example{
-    background:#f9fafb;
-    border-left:5px solid #2563eb;
-    padding:20px;
-    margin-top:15px;
-    border-radius:10px;
+.ai{
+  align-self:flex-start;
+  background:#2563eb;
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:15px;
-    margin-top:20px;
+.user{
+  align-self:flex-end;
+  background:#374151;
 }
 
-.box{
-    background:#2563eb;
-    color:white;
-    padding:20px;
-    border-radius:15px;
+.translation{
+  margin-top:8px;
+  font-size:13px;
+  color:#d1d5db;
 }
 
-.highlight{
-    color:#2563eb;
-    font-weight:bold;
+.answer-box{
+  margin-top:12px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+  font-size:14px;
 }
 
-.memory{
-    background:#dcfce7;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
+.answer-title{
+  color:#facc15;
+  margin-bottom:5px;
 }
 
-.quiz-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:15px;
-    margin-top:20px;
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
-.question{
-    background:#f3f4f6;
-    padding:20px;
-    border-radius:15px;
+.bottom{
+  background:#1e293b;
+  padding:20px;
 }
 
-.question p{
-    margin-bottom:10px;
-    font-weight:bold;
+.status{
+  text-align:center;
+  margin-bottom:15px;
+  color:#facc15;
 }
 
-button{
-    padding:10px 15px;
-    margin:5px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    background:#2563eb;
-    color:white;
-    font-size:15px;
+.mic-area{
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
 }
 
-button:hover{
-    background:#1d4ed8;
+.mic{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#3b82f6;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.mic.active{
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  0%{
+    transform:scale(1);
+    box-shadow:0 0 0 0 rgba(59,130,246,.7);
+  }
+
+  70%{
+    transform:scale(1.1);
+    box-shadow:0 0 0 30px rgba(59,130,246,0);
+  }
+
+  100%{
+    transform:scale(1);
+  }
 }
 
 .result{
-    margin-top:10px;
-    font-weight:bold;
+  text-align:center;
+  min-height:40px;
+  margin-bottom:15px;
 }
 
-.score-box{
-    position:sticky;
-    top:10px;
-    background:#2563eb;
-    color:white;
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    margin-bottom:20px;
+.score{
+  text-align:center;
+  color:#cbd5e1;
+  margin-bottom:20px;
 }
 
-.finish{
-    margin-top:30px;
-    text-align:center;
+.controls{
+  display:flex;
+  gap:10px;
 }
 
-.finish button{
-    padding:15px 25px;
-    font-size:18px;
+button{
+  flex:1;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  color:white;
+  font-size:15px;
 }
 
-.final-score{
-    margin-top:20px;
-    font-size:25px;
-    font-weight:bold;
-    color:#2563eb;
+.next-btn{
+  background:#22c55e;
 }
 
-@media(max-width:600px){
-
-    body{
-        padding:10px;
-    }
-
-    .card{
-        padding:18px;
-    }
-
-    h1{
-        font-size:28px;
-    }
-
+.show-btn{
+  background:#f59e0b;
 }
 
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="app">
 
-<div class="score-box">
-    <h2>🎯 Score</h2>
-    <div id="score">0 / 50</div>
-</div>
+  <div class="header">
+    <h1>OME TV Speaking Trainer</h1>
+    <p>Practice Real English Conversation</p>
+  </div>
 
-<div class="card">
+  <div class="chat" id="chat"></div>
 
-<h1>📖 SIMPLE PRESENT TENSE</h1>
+  <div class="bottom">
 
-<p>
-Digunakan untuk:
-<span class="highlight">
-kebiasaan, rutinitas, fakta umum, dan aktivitas sehari-hari.
-</span>
-</p>
+    <div class="status" id="status">
+      🎤 Press microphone and answer
+    </div>
 
-<div class="rumus">
+    <div class="mic-area">
+      <div class="mic" id="micBtn">🎤</div>
+    </div>
 
-<h2>📐 Rumus</h2>
+    <div class="result" id="result"></div>
 
-<p><b>(+)</b> S + V1 (s/es) + O</p>
-<p><b>(-)</b> S + do/does + not + V1 + O</p>
-<p><b>(?)</b> Do/Does + S + V1 + O?</p>
+    <div class="score" id="score">
+      Pronunciation Score: --
+    </div>
 
-</div>
+    <div class="controls">
+      <button class="show-btn" onclick="showAnswer()">
+        Show Answer
+      </button>
 
-<div class="example">
+      <button class="next-btn" onclick="nextConversation()">
+        Next
+      </button>
+    </div>
 
-<h2>📝 Contoh</h2>
-
-<p><b>(+)</b> She reads a book every night.</p>
-<p>Dia membaca buku setiap malam.</p>
-
-<br>
-
-<p><b>(-)</b> She does not read a book every night.</p>
-<p>Dia tidak membaca buku setiap malam.</p>
-
-<br>
-
-<p><b>(?)</b> Does she read a book every night?</p>
-<p>Apakah dia membaca buku setiap malam?</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>🔥 Trik Cepat Hafal</h2>
-
-<div class="grid">
-
-<div class="box">
-<h3>1️⃣ Kata Kunci</h3>
-<p>
-always, usually, often, every day,
-sometimes, never
-</p>
-</div>
-
-<div class="box">
-<h3>2️⃣ He / She / It</h3>
-<p>
-Tambahkan s/es pada kata kerja.
-<br><br>
-read → reads
-go → goes
-</p>
-</div>
-
-<div class="box">
-<h3>3️⃣ Do / Does</h3>
-<p>
-I/You/We/They → DO
-<br><br>
-He/She/It → DOES
-</p>
-</div>
-
-</div>
-
-<div class="memory">
-
-<h2>🧠 Cara Super Cepat Paham</h2>
-
-<p>✅ Kalimat positif = langsung pakai kata kerja</p>
-<p>✅ He/She/It = verb tambah s/es</p>
-<p>✅ Negatif = do/does + not + V1</p>
-<p>✅ Pertanyaan = Do/Does di depan</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2>🎮 Quiz Interaktif 50 Soal</h2>
-
-<div class="quiz-container" id="quizContainer"></div>
-
-<div class="finish">
-<button onclick="showFinalScore()">Lihat Hasil</button>
-
-<div class="final-score" id="finalScore"></div>
-</div>
-
-</div>
+  </div>
 
 </div>
 
 <script>
 
-const quizData = [
+const conversations = [
 
 {
-q:"1. She ___ to school every day.",
-a:"goes",
-options:["go","goes"]
+  speaker:"A",
+  en:"Hello.",
+  id:"Halo.",
+  answers:["hello","hi"]
 },
 
 {
-q:"2. They ___ football every weekend.",
-a:"play",
-options:["plays","play"]
+  speaker:"B",
+  en:"Hi.",
+  id:"Hai.",
+  answers:["hi","hello"]
 },
 
 {
-q:"3. ___ he like coffee?",
-a:"Does",
-options:["Do","Does"]
+  speaker:"A",
+  en:"How are you?",
+  id:"Apa kabar?",
+  answers:[
+    "i'm good",
+    "i am good",
+    "good",
+    "fine"
+  ]
 },
 
 {
-q:"4. I ___ English every night.",
-a:"study",
-options:["study","studies"]
+  speaker:"B",
+  en:"I’m good. How about you?",
+  id:"Aku baik. Kamu bagaimana?",
+  answers:[
+    "i'm good too",
+    "i am good too",
+    "good too"
+  ]
 },
 
 {
-q:"5. We ___ TV after dinner.",
-a:"watch",
-options:["watches","watch"]
+  speaker:"A",
+  en:"What’s your name?",
+  id:"Siapa namamu?",
+  answers:[
+    "my name is dika",
+    "i'm dika",
+    "dika"
+  ]
 },
 
 {
-q:"6. She ___ not eat meat.",
-a:"does",
-options:["do","does"]
+  speaker:"B",
+  en:"My name is Anna. What’s your name?",
+  id:"Namaku Anna. Siapa namamu?",
+  answers:[
+    "my name is dika",
+    "dika"
+  ]
 },
 
 {
-q:"7. ___ they work here?",
-a:"Do",
-options:["Does","Do"]
+  speaker:"A",
+  en:"Where are you from?",
+  id:"Kamu dari mana?",
+  answers:[
+    "i'm from indonesia",
+    "i am from indonesia",
+    "indonesia"
+  ]
 },
 
 {
-q:"8. My father ___ a car.",
-a:"drives",
-options:["drive","drives"]
+  speaker:"B",
+  en:"I’m from Russia.",
+  id:"Aku dari Rusia.",
+  answers:[
+    "wow i'm from indonesia",
+    "i'm from indonesia"
+  ]
 },
 
 {
-q:"9. The cat ___ milk.",
-a:"likes",
-options:["like","likes"]
+  speaker:"A",
+  en:"How old are you?",
+  id:"Umurmu berapa?",
+  answers:[
+    "i'm twenty years old",
+    "i am twenty years old",
+    "twenty"
+  ]
 },
 
 {
-q:"10. I ___ not sleep late.",
-a:"do",
-options:["do","does"]
+  speaker:"B",
+  en:"I’m nineteen years old.",
+  id:"Aku sembilan belas tahun.",
+  answers:[
+    "i'm twenty years old",
+    "twenty"
+  ]
 },
 
 {
-q:"11. He ___ basketball.",
-a:"plays",
-options:["play","plays"]
+  speaker:"A",
+  en:"Do you like music?",
+  id:"Kamu suka musik?",
+  answers:[
+    "yes i do",
+    "yes",
+    "i love music"
+  ]
 },
 
 {
-q:"12. ___ she cook every day?",
-a:"Does",
-options:["Do","Does"]
+  speaker:"B",
+  en:"Yes, I love music.",
+  id:"Iya, aku suka musik.",
+  answers:[
+    "what kind of music do you like"
+  ]
 },
 
 {
-q:"13. We ___ in Indonesia.",
-a:"live",
-options:["lives","live"]
+  speaker:"A",
+  en:"Do you play games?",
+  id:"Kamu main game?",
+  answers:[
+    "yes sometimes",
+    "yes i do",
+    "sometimes"
+  ]
 },
 
 {
-q:"14. They ___ not study math.",
-a:"do",
-options:["does","do"]
+  speaker:"B",
+  en:"Minecraft and Valorant.",
+  id:"Minecraft dan Valorant.",
+  answers:[
+    "nice i play mobile legends",
+    "mobile legends"
+  ]
 },
 
 {
-q:"15. My mom ___ tea every morning.",
-a:"drinks",
-options:["drink","drinks"]
+  speaker:"A",
+  en:"What’s your hobby?",
+  id:"Hobimu apa?",
+  answers:[
+    "i like singing",
+    "singing"
+  ]
 },
 
 {
-q:"16. ___ you understand?",
-a:"Do",
-options:["Do","Does"]
+  speaker:"B",
+  en:"I like drawing.",
+  id:"Aku suka menggambar.",
+  answers:[
+    "wow that's cool",
+    "cool"
+  ]
 },
 
 {
-q:"17. He ___ TV at night.",
-a:"watches",
-options:["watch","watches"]
+  speaker:"A",
+  en:"Do you like traveling?",
+  id:"Kamu suka traveling?",
+  answers:[
+    "yes i really do",
+    "yes"
+  ]
 },
 
 {
-q:"18. She ___ her homework.",
-a:"does",
-options:["do","does"]
+  speaker:"B",
+  en:"Japan.",
+  id:"Jepang.",
+  answers:[
+    "japan is beautiful"
+  ]
 },
 
 {
-q:"19. I ___ coffee every morning.",
-a:"drink",
-options:["drink","drinks"]
+  speaker:"A",
+  en:"What food do you like?",
+  id:"Kamu suka makanan apa?",
+  answers:[
+    "i like pizza and noodles",
+    "pizza and noodles"
+  ]
 },
 
 {
-q:"20. ___ they play games?",
-a:"Do",
-options:["Do","Does"]
+  speaker:"B",
+  en:"I like pizza and noodles.",
+  id:"Aku suka pizza dan mie.",
+  answers:[
+    "i love noodles too"
+  ]
 },
 
 {
-q:"21. The sun ___ in the east.",
-a:"rises",
-options:["rise","rises"]
+  speaker:"A",
+  en:"Do you like coffee?",
+  id:"Kamu suka kopi?",
+  answers:[
+    "yes especially iced coffee",
+    "yes"
+  ]
 },
 
 {
-q:"22. We ___ English together.",
-a:"learn",
-options:["learns","learn"]
+  speaker:"B",
+  en:"You have a nice smile.",
+  id:"Senyummu bagus.",
+  answers:[
+    "thank you so much",
+    "thank you"
+  ]
 },
 
 {
-q:"23. She ___ not like milk.",
-a:"does",
-options:["do","does"]
+  speaker:"A",
+  en:"Are you shy?",
+  id:"Kamu pemalu?",
+  answers:[
+    "a little bit",
+    "yes a little"
+  ]
 },
 
 {
-q:"24. ___ he go to work?",
-a:"Does",
-options:["Do","Does"]
+  speaker:"B",
+  en:"Cats.",
+  id:"Kucing.",
+  answers:[
+    "me too cats are cute"
+  ]
 },
 
 {
-q:"25. They ___ soccer every Sunday.",
-a:"play",
-options:["plays","play"]
+  speaker:"A",
+  en:"Do you like watching anime?",
+  id:"Kamu suka nonton anime?",
+  answers:[
+    "yes very much",
+    "yes"
+  ]
 },
 
 {
-q:"26. My brother ___ online games.",
-a:"likes",
-options:["like","likes"]
+  speaker:"B",
+  en:"Demon Slayer.",
+  id:"Demon Slayer.",
+  answers:[
+    "that's awesome",
+    "cool"
+  ]
 },
 
 {
-q:"27. I ___ my room every day.",
-a:"clean",
-options:["cleans","clean"]
+  speaker:"A",
+  en:"What’s your dream job?",
+  id:"Pekerjaan impianmu apa?",
+  answers:[
+    "i want to be a teacher",
+    "teacher"
+  ]
 },
 
 {
-q:"28. ___ she read books?",
-a:"Does",
-options:["Do","Does"]
-},
-
-{
-q:"29. He ___ not drink soda.",
-a:"does",
-options:["do","does"]
-},
-
-{
-q:"30. We ___ breakfast at 7 AM.",
-a:"eat",
-options:["eats","eat"]
-},
-
-{
-q:"31. The teacher ___ English.",
-a:"teaches",
-options:["teach","teaches"]
-},
-
-{
-q:"32. ___ they live here?",
-a:"Do",
-options:["Do","Does"]
-},
-
-{
-q:"33. She ___ happy every day.",
-a:"feels",
-options:["feel","feels"]
-},
-
-{
-q:"34. I ___ not watch horror movies.",
-a:"do",
-options:["does","do"]
-},
-
-{
-q:"35. He ___ the guitar.",
-a:"plays",
-options:["play","plays"]
-},
-
-{
-q:"36. ___ your mother cook well?",
-a:"Does",
-options:["Do","Does"]
-},
-
-{
-q:"37. We ___ to music.",
-a:"listen",
-options:["listens","listen"]
-},
-
-{
-q:"38. She ___ her teeth every morning.",
-a:"brushes",
-options:["brush","brushes"]
-},
-
-{
-q:"39. They ___ not eat spicy food.",
-a:"do",
-options:["does","do"]
-},
-
-{
-q:"40. ___ he study English?",
-a:"Does",
-options:["Do","Does"]
-},
-
-{
-q:"41. I ___ to bed at 10 PM.",
-a:"go",
-options:["go","goes"]
-},
-
-{
-q:"42. My sister ___ dancing.",
-a:"likes",
-options:["like","likes"]
-},
-
-{
-q:"43. ___ we need money?",
-a:"Do",
-options:["Do","Does"]
-},
-
-{
-q:"44. The dog ___ loudly.",
-a:"barks",
-options:["bark","barks"]
-},
-
-{
-q:"45. She ___ not wake up early.",
-a:"does",
-options:["do","does"]
-},
-
-{
-q:"46. They ___ books every month.",
-a:"buy",
-options:["buys","buy"]
-},
-
-{
-q:"47. ___ he speak English?",
-a:"Does",
-options:["Do","Does"]
-},
-
-{
-q:"48. We ___ to school together.",
-a:"walk",
-options:["walks","walk"]
-},
-
-{
-q:"49. My father ___ coffee every morning.",
-a:"drinks",
-options:["drink","drinks"]
-},
-
-{
-q:"50. I ___ not play tennis.",
-a:"do",
-options:["does","do"]
+  speaker:"B",
+  en:"Thank you too.",
+  id:"Terima kasih juga.",
+  answers:[
+    "have a nice day"
+  ]
 }
 
 ];
 
-const quizContainer = document.getElementById("quizContainer");
+let current = 0;
 
-let score = 0;
-let answered = [];
+const chat = document.getElementById("chat");
 
-quizData.forEach((quiz,index)=>{
+const micBtn = document.getElementById("micBtn");
 
-const div = document.createElement("div");
-div.classList.add("question");
+const result = document.getElementById("result");
 
-div.innerHTML = `
-<p>${quiz.q}</p>
+const score = document.getElementById("score");
 
-<button onclick="checkAnswer(${index}, '${quiz.options[0]}')">
-${quiz.options[0]}
-</button>
+const statusText = document.getElementById("status");
 
-<button onclick="checkAnswer(${index}, '${quiz.options[1]}')">
-${quiz.options[1]}
-</button>
+function addMessage(data){
 
-<div class="result" id="result${index}"></div>
-`;
+  const div = document.createElement("div");
 
-quizContainer.appendChild(div);
+  div.className =
+    data.speaker === "A"
+    ? "message ai"
+    : "message user";
 
-});
+  div.innerHTML = `
+    <strong>${data.speaker}</strong><br>
+    ${data.en}
 
-function checkAnswer(index,selected){
+    <div class="translation">
+      ${data.id}
+    </div>
 
-if(answered[index]) return;
+    <div class="answer-box">
+      <div class="answer-title">
+        ✅ Answer Key:
+      </div>
+      <div class="answer-content" style="display:none">
+        ${data.answers.join("<br>")}
+      </div>
+    </div>
+  `;
 
-answered[index] = true;
+  chat.appendChild(div);
 
-const result = document.getElementById(`result${index}`);
-
-if(selected === quizData[index].a){
-
-result.innerHTML = "✅ Benar!";
-result.style.color = "green";
-
-score++;
-
-}else{
-
-result.innerHTML =
-`❌ Salah! Jawaban benar: ${quizData[index].a}`;
-
-result.style.color = "red";
+  chat.scrollTop = chat.scrollHeight;
 
 }
 
-document.getElementById("score").innerHTML =
-`${score} / 50`;
+function loadConversation(){
+
+  if(current >= conversations.length){
+
+    statusText.innerHTML =
+      "🎉 Training Complete!";
+
+    result.innerHTML =
+      "Amazing job!";
+
+    speak("Training complete");
+
+    return;
+  }
+
+  const data = conversations[current];
+
+  addMessage(data);
+
+  speak(data.en);
 
 }
 
-function showFinalScore(){
+function speak(text){
 
-let text = "";
+  const speech =
+    new SpeechSynthesisUtterance(text);
 
-if(score >= 45){
+  speech.lang = "en-US";
 
-text = "🔥 AMAZING! Kamu sangat paham Simple Present!";
+  speech.rate = 1;
 
-}else if(score >= 35){
-
-text = "👏 Bagus! Pemahaman kamu sudah kuat.";
-
-}else if(score >= 25){
-
-text = "👍 Lumayan! Tinggal latihan lagi.";
-
-}else{
-
-text = "📚 Tetap semangat belajar lagi ya!";
-}
-
-document.getElementById("finalScore").innerHTML =
-`Skor Akhir: ${score}/50 <br><br> ${text}`;
+  speechSynthesis.speak(speech);
 
 }
+
+function showAnswer(){
+
+  const contents =
+    document.querySelectorAll(".answer-content");
+
+  if(contents.length > 0){
+
+    contents[contents.length - 1]
+      .style.display = "block";
+
+  }
+
+}
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+const recognition =
+  new SpeechRecognition();
+
+recognition.lang = "en-US";
+
+recognition.continuous = false;
+
+recognition.interimResults = false;
+
+micBtn.onclick = () => {
+
+  micBtn.classList.add("active");
+
+  result.innerHTML = "🎧 Listening...";
+
+  recognition.start();
+
+};
+
+recognition.onresult = (event) => {
+
+  micBtn.classList.remove("active");
+
+  const transcript =
+    event.results[0][0].transcript.toLowerCase();
+
+  result.innerHTML =
+    `🗣 You said: ${transcript}`;
+
+  checkAnswer(transcript);
+
+};
+
+recognition.onerror = () => {
+
+  micBtn.classList.remove("active");
+
+  result.innerHTML =
+    "❌ Microphone error";
+
+};
+
+function checkAnswer(userText){
+
+  const answers =
+    conversations[current].answers;
+
+  let matched = false;
+
+  answers.forEach(answer => {
+
+    if(userText.includes(answer)){
+
+      matched = true;
+
+    }
+
+  });
+
+  if(matched){
+
+    score.innerHTML =
+      "⭐ Pronunciation Score: 92%";
+
+    statusText.innerHTML =
+      "✅ Excellent Answer!";
+
+    speak("Excellent");
+
+  }else{
+
+    score.innerHTML =
+      "⭐ Pronunciation Score: 45%";
+
+    statusText.innerHTML =
+      "😅 Try Again";
+
+    speak("Try again");
+
+  }
+
+}
+
+function nextConversation(){
+
+  current++;
+
+  loadConversation();
+
+}
+
+loadConversation();
 
 </script>
 
